@@ -7,6 +7,18 @@
 
 import UIKit
 
+// Если я правильно понял задание со звездочкой, то вот вариант моего решения
+/// If Product -> Scheme -> Edit Scheme... -> Run -> Build Configuration is "Release"
+/// then print fuction is disabled, else if Build Configuration is "Debug" it is enabled
+
+func print(_ items: Any..., separator: String = " ", terminator: String = "\n") {
+    #if DEBUG
+        items.forEach {
+            Swift.print($0, separator: separator, terminator: terminator)
+        }
+    #endif
+}
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
