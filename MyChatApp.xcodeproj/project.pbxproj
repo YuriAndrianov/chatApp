@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E2561C7427CE62B600EBD365 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7327CE62B600EBD365 /* ChatViewController.swift */; };
-		E2561C7627CE8A8700EBD365 /* StyleSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7527CE8A8700EBD365 /* StyleSheet.swift */; };
 		FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6A27C61143000417F5 /* AppDelegate.swift */; };
 		FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6E27C61143000417F5 /* ProfileViewController.swift */; };
 		FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAC70C7327C61149000417F5 /* Assets.xcassets */; };
@@ -18,7 +17,6 @@
 
 /* Begin PBXFileReference section */
 		E2561C7327CE62B600EBD365 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
-		E2561C7527CE8A8700EBD365 /* StyleSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleSheet.swift; sourceTree = "<group>"; };
 		FAC70C6727C61143000417F5 /* MyChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAC70C6A27C61143000417F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAC70C6E27C61143000417F5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -62,7 +60,6 @@
 				FAC70C6A27C61143000417F5 /* AppDelegate.swift */,
 				FAC70C6E27C61143000417F5 /* ProfileViewController.swift */,
 				E2561C7327CE62B600EBD365 /* ChatViewController.swift */,
-				E2561C7527CE8A8700EBD365 /* StyleSheet.swift */,
 				FAC70C7327C61149000417F5 /* Assets.xcassets */,
 				FAC70C7527C61149000417F5 /* LaunchScreen.storyboard */,
 				FAC70C7827C61149000417F5 /* Info.plist */,
@@ -142,7 +139,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */,
-				E2561C7627CE8A8700EBD365 /* StyleSheet.swift in Sources */,
 				E2561C7427CE62B600EBD365 /* ChatViewController.swift in Sources */,
 				FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */,
 			);

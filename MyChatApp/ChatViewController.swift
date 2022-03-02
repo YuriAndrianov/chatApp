@@ -32,13 +32,13 @@ class ChatViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = settingsButton
         self.navigationItem.rightBarButtonItem = myProfileButton
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationController?.navigationBar.backgroundColor = navBarBackgroundColor
-        self.navigationController?.navigationBar.tintColor = barButtonItemsColor
+        self.navigationController?.navigationBar.backgroundColor = UIColor(named: "navBarBackgroundColor")
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "barButtonColor")
         
         // set custom background color for status bar
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.backgroundColor = navBarBackgroundColor
+        navBarAppearance.backgroundColor = UIColor(named: "navBarBackgroundColor")
         self.navigationController?.navigationBar.standardAppearance = navBarAppearance
         self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
