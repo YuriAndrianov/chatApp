@@ -31,9 +31,13 @@ class ChatViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem = settingsButton
         self.navigationItem.rightBarButtonItem = myProfileButton
-        self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "navBarBackgroundColor")
         self.navigationController?.navigationBar.tintColor = UIColor(named: "barButtonColor")
+        
+        // check if current device is iPhone SE (1 gen)
+        if UIScreen.main.bounds.width > 375 {
+            self.navigationController?.navigationBar.prefersLargeTitles = true
+        }
         
         // set custom background color for status bar
         let navBarAppearance = UINavigationBarAppearance()

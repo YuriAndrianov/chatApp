@@ -4,7 +4,7 @@
 <dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Please allow the app to use camera to take your profile photo</string>
-	<key>NSAppleMusicUsageDescription</key>
+	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Please allow the app to get your profile photo from the gallery</string>
 </dict>
 </plist>
