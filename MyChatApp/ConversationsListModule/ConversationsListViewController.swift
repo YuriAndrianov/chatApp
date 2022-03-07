@@ -101,9 +101,9 @@ extension ConversationsListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let conversation = groupedConversations[indexPath.section][indexPath.row]
-        print(conversation.hasUnreadMessages)
         
         let conversationVC = ConversationViewController()
+        conversationVC.conversation = conversation
         navigationController?.pushViewController(conversationVC, animated: true)
     }
     
@@ -113,6 +113,10 @@ extension ConversationsListViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return groupedConversations.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

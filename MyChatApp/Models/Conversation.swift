@@ -10,6 +10,7 @@ import Foundation
 struct Conversation {
     
     var name: String?
+    
     var lastMessageText: String? {
         guard let messages = messages else { return nil }
         guard let lastMessage = messages.sorted(by: {
@@ -20,6 +21,7 @@ struct Conversation {
         }).first else { return nil }
         return lastMessage.text
     }
+    
     var date: Date? {
         guard let messages = messages else { return nil }
         guard let lastMessage = messages.sorted(by: {
@@ -30,10 +32,12 @@ struct Conversation {
         }).first else { return nil }
         return lastMessage.date
     }
+    
     var online: Bool
+    
     var hasUnreadMessages: Bool {
         guard let messages = messages else { return false }
-        let unreadMessages = messages.filter{$0.isIncoming && $0.unread}
+        let unreadMessages = messages.filter { $0.isIncoming && $0.unread }
         
         if unreadMessages.isEmpty {
             return false

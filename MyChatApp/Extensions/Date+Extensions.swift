@@ -10,11 +10,10 @@ import Foundation
 extension Date {
     
     func lastMessageDateFormat() -> String {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
-        let returningDate = calendar.date(from: components) ?? Date()
-        
+        let returningDate = self.yearMonthDayOfMessage()
         let formatter = DateFormatter()
+        let calendar = Calendar.current
+        
         var dateFormat = ""
         
         if calendar.isDateInToday(returningDate) {
@@ -24,6 +23,19 @@ extension Date {
         }
         
         formatter.dateFormat = dateFormat
+        
+        return formatter.string(from: self)
+    }
+    
+    func yearMonthDayOfMessage() -> Date {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: self)
+        return calendar.date(from: components) ?? Date()
+    }
+    
+    func timeOfMessage() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
         
         return formatter.string(from: self)
     }

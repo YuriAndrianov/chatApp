@@ -32,7 +32,7 @@ struct Mock {
         Conversation(name: "Jesse Pinkman", online: false, messages: nil),
         Conversation(name: "Saul Goodman", online: true, messages: mockMessages13),
         Conversation(name: "Mike Ehrmantraut", online: false, messages: nil),
-        Conversation(name: "Hank Schrader", online: true, messages: nil)
+        Conversation(name: "Hank Schrader", online: true, messages: mockMessages14)
     ]
     
     static let mockMessages1: [Message] = [
@@ -487,6 +487,23 @@ struct Mock {
                 text: "Tammy, thanks for choosing Carl’s Car Wash for your express polish. We would love to hear your thoughts on the service. Feel free to text back with any feedback. Safe driving!",
                 isIncoming: true,
                 unread: true)
+    ]
+    
+    static let mockMessages14: [Message] = [
+        Message(date: Date().addingTimeInterval(TimeInterval(Double.random(in: -1000000 ... -1))),
+                text: "😀",
+                isIncoming: true,
+                unread: false),
+        
+        Message(date: Date().addingTimeInterval(TimeInterval(Double.random(in: -1000000 ... -1))),
+                text: "🐹",
+                isIncoming: false,
+                unread: false),
+        
+        Message(date: Date().addingTimeInterval(TimeInterval(Double.random(in: -1000000 ... -1))),
+                text: "👍",
+                isIncoming: true,
+                unread: false)
     ]
     
 }

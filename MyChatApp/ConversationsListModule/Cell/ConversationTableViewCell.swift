@@ -16,6 +16,11 @@ class ConversationTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0))
+    }
+
     func configurate(with conversation: Conversation) {
         self.name = conversation.name
         self.date = conversation.date
@@ -85,8 +90,5 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
             }
         }
     }
-    
-    
-    
     
 }
