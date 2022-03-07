@@ -35,6 +35,7 @@ final class ProfileViewController: UIViewController {
         let textView = UITextView()
         textView.textAlignment = .center
         textView.font = .systemFont(ofSize: 16)
+        textView.textColor = .label
         textView.textContainer.maximumNumberOfLines = 3
         textView.layer.cornerRadius = 6
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -154,7 +155,7 @@ final class ProfileViewController: UIViewController {
         if let text =  UserDefaults.standard.string(forKey: "userInfoText"),
            text != "Enter short info about you..." {
             userInfoTextView.text = text
-            userInfoTextView.textColor = UIColor.black
+            userInfoTextView.textColor = .label
         } else {
             userInfoTextView.text = "Enter short info about you..."
             userInfoTextView.textColor = UIColor.lightGray
@@ -361,7 +362,7 @@ extension ProfileViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
-            textView.textColor = UIColor.black
+            textView.textColor = .label
         }
     }
     

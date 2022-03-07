@@ -15,8 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        let chatVC = ChatViewController()
-        let navigationController = UINavigationController(rootViewController: chatVC)
+        let conversationsVC = ConversationsListViewController()
+        let navigationController = UINavigationController(rootViewController: conversationsVC)
         
         self.window?.rootViewController = navigationController
         self.window?.makeKeyAndVisible()
