@@ -233,6 +233,7 @@ final class ProfileViewController: UIViewController {
     @objc private func cancelButtonTapped() {
         fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
         userInfoTextView.text = UserDefaults.standard.string(forKey: "userInfoText")
+        setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
     
