@@ -93,6 +93,21 @@ final class ConversationsListViewController: UIViewController {
         present(navigationController, animated: true, completion: nil)
     }
     
+    private func showNoMessagesAlert(conversation: Conversation) {
+        var message = ""
+        
+        if let name = conversation.name {
+            message = "No messages with \(name) yet"
+        } else {
+            message = "No messages yet"
+        }
+        
+        let alertVC = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alertVC, animated: true, completion: nil)
+        
+    }
+    
 }
 
 extension ConversationsListViewController: UITableViewDelegate {
@@ -102,9 +117,13 @@ extension ConversationsListViewController: UITableViewDelegate {
         
         let conversation = groupedConversations[indexPath.section][indexPath.row]
         
-        let conversationVC = ConversationViewController()
-        conversationVC.conversation = conversation
-        navigationController?.pushViewController(conversationVC, animated: true)
+        if conversation.messages == nil {
+            showNoMessagesAlert(conversation: conversation)
+        } else {
+            let conversationVC = ConversationViewController()
+            conversationVC.conversation = conversation
+            navigationController?.pushViewController(conversationVC, animated: true)
+        }
     }
     
 }
