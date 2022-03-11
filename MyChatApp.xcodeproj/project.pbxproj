@@ -20,6 +20,7 @@
 		E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */; };
 		E25D36B627D67B3900E6A746 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */; };
 		E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D371127DB7C3400E6A746 /* Array+Subscript.swift */; };
+		E25D371527DBBCDB00E6A746 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D371427DBBCDB00E6A746 /* SettingsViewController.swift */; };
 		FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6A27C61143000417F5 /* AppDelegate.swift */; };
 		FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6E27C61143000417F5 /* ProfileViewController.swift */; };
 		FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAC70C7327C61149000417F5 /* Assets.xcassets */; };
@@ -41,6 +42,7 @@
 		E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		E25D371127DB7C3400E6A746 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
+		E25D371427DBBCDB00E6A746 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		FAC70C6727C61143000417F5 /* MyChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAC70C6A27C61143000417F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAC70C6E27C61143000417F5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -126,6 +128,14 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		E25D371327DBBCA500E6A746 /* SettingsModule */ = {
+			isa = PBXGroup;
+			children = (
+				E25D371427DBBCDB00E6A746 /* SettingsViewController.swift */,
+			);
+			path = SettingsModule;
+			sourceTree = "<group>";
+		};
 		FAC70C5E27C61143000417F5 = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +160,7 @@
 				E2561C8327D60CDC00EBD365 /* ConversationsListModule */,
 				E2561C8C27D63D1100EBD365 /* ConversationModule */,
 				E2561C8427D60CEE00EBD365 /* ProfileModule */,
+				E25D371327DBBCA500E6A746 /* SettingsModule */,
 				E2561C8727D60D6200EBD365 /* Models */,
 				E2561C8627D60D0A00EBD365 /* Extensions */,
 				FAC70C7327C61149000417F5 /* Assets.xcassets */,
@@ -241,6 +252,7 @@
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
 				E25D36AE27D644D900E6A746 /* Message.swift in Sources */,
 				E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */,
+				E25D371527DBBCDB00E6A746 /* SettingsViewController.swift in Sources */,
 				E2561C7E27D5EA8F00EBD365 /* ConversationCellConfiguration.swift in Sources */,
 				E2561C8927D60DA700EBD365 /* Conversation.swift in Sources */,
 				FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */,

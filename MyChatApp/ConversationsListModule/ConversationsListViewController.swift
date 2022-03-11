@@ -98,7 +98,8 @@ final class ConversationsListViewController: UIViewController {
     }
     
     @objc private func settingsTapped() {
-        print("Settings button tapped")
+        let settingsVC = SettingsViewController()
+        navigationController?.pushViewController(settingsVC, animated: true)
     }
     
     @objc private func myProfileTapped() {

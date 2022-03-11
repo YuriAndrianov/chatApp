@@ -23,31 +23,29 @@ final class MessageTableViewCell: UITableViewCell {
         self.messageTextLabel?.text = message.text
         self.dateLabel?.text = message.date?.timeOfMessage()
     }
+    
+    private func setupViewIfIncoming(isTrue: Bool) {
+        if isTrue {
+            leadingConstraint?.constant = 20
+            trailingConstraint?.constant = contentView.frame.width / 4
+            bubbleView?.backgroundColor = .systemGray5
+        } else {
+            leadingConstraint?.constant = contentView.frame.width / 4
+            trailingConstraint?.constant = 20
+            bubbleView?.backgroundColor = UIColor(named: "onlineColor")
+        }
+    }
 }
 
 extension MessageTableViewCell: MessageCellConfiguration {
     
     var isIncoming: Bool {
-        get {
-            return false
-        }
-        set {
-            if newValue {
-                leadingConstraint?.constant = 20
-                trailingConstraint?.constant = contentView.frame.width / 4
-                bubbleView?.backgroundColor = .systemGray5
-            } else {
-                leadingConstraint?.constant = contentView.frame.width / 4
-                trailingConstraint?.constant = 20
-                bubbleView?.backgroundColor = UIColor(named: "onlineColor")
-            }
-        }
+        get { return false }
+        set { setupViewIfIncoming(isTrue: newValue) }
     }
     
     var messageText: String? {
-        get {
-            return nil
-        }
+        get { return nil }
         set {
             if let newValue = newValue {
                 messageTextLabel?.text = newValue
