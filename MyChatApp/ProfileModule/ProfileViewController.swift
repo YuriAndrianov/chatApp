@@ -9,6 +9,11 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    private var isLargeScreenDevice: Bool {
+        // check if current device is not iPhone SE (1 gen)
+        return UIScreen.main.bounds.width > 375
+    }
+    
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle")
@@ -35,6 +40,7 @@ final class ProfileViewController: UIViewController {
         let textView = UITextView()
         textView.textAlignment = .center
         textView.font = .systemFont(ofSize: 16)
+        textView.textColor = .label
         textView.textContainer.maximumNumberOfLines = 3
         textView.layer.cornerRadius = 6
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -154,7 +160,7 @@ final class ProfileViewController: UIViewController {
         if let text =  UserDefaults.standard.string(forKey: "userInfoText"),
            text != "Enter short info about you..." {
             userInfoTextView.text = text
-            userInfoTextView.textColor = UIColor.black
+            userInfoTextView.textColor = .label
         } else {
             userInfoTextView.text = "Enter short info about you..."
             userInfoTextView.textColor = UIColor.lightGray
@@ -192,20 +198,13 @@ final class ProfileViewController: UIViewController {
         title = "My Profile"
         view.backgroundColor = .systemBackground
         
-        // check if current device is iPhone SE (1 gen)
-        if UIScreen.main.bounds.width > 375 {
-            self.navigationController?.navigationBar.prefersLargeTitles = true
-        }
-        
+        self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "navBarBackgroundColor")
         
-        let closeButton = UIBarButtonItem(title: "Close",
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
                                           style: .plain,
                                           target: self,
                                           action: #selector(closeButtonTapped))
-        
-        self.navigationItem.rightBarButtonItem = closeButton
-        
     }
     
     private func setupViews() {
@@ -361,7 +360,7 @@ extension ProfileViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
-            textView.textColor = UIColor.black
+            textView.textColor = .label
         }
     }
     
