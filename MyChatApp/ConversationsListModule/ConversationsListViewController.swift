@@ -14,10 +14,15 @@ final class ConversationsListViewController: UIViewController {
     
     private let chatTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
-        table.register(UINib(nibName: "ConversationTableViewCell", bundle: .main),
+        table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
     }()
+    
+    private var isLargeScreenDevice: Bool {
+        // check if current device is not iPhone SE (1 gen)
+        return UIScreen.main.bounds.width > 375
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,11 +54,8 @@ final class ConversationsListViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = myProfileButton
         self.navigationController?.navigationBar.backgroundColor = UIColor(named: "navBarBackgroundColor")
         self.navigationController?.navigationBar.tintColor = UIColor(named: "barButtonColor")
-        
-        // check if current device is iPhone SE (1 gen)
-        if UIScreen.main.bounds.width > 375 {
-            self.navigationController?.navigationBar.prefersLargeTitles = true
-        }
+        self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
+       
         
         // set custom background color for status bar
         let navBarAppearance = UINavigationBarAppearance()
@@ -73,10 +75,22 @@ final class ConversationsListViewController: UIViewController {
         let onlineUserChats = conversations.filter { $0.online }
         let offlineUserChats = conversations.filter { !$0.online }
         
-        let onlineUsersWithMessages = onlineUserChats.filter { $0.date != nil }.sorted { $0.date! > $1.date! }
+        let onlineUsersWithMessages = onlineUserChats.filter { $0.date != nil }.sorted {
+            if let lastDate = $0.date,
+               let firstDate = $1.date {
+                return lastDate > firstDate
+            } else { return false }
+        }
+        
         let onlineUsersWithoutMessages = onlineUserChats.filter { $0.date == nil }
         
-        let offlineUserWithMessages = offlineUserChats.filter { $0.date != nil }.sorted { $0.date! > $1.date! }
+        let offlineUserWithMessages = offlineUserChats.filter { $0.date != nil }.sorted {
+            if let lastDate = $0.date,
+               let firstDate = $1.date {
+                return lastDate > firstDate
+            } else { return false }
+        }
+        
         let offlineUserWithoutMessages = offlineUserChats.filter { $0.date == nil }
         
         groupedConversations = [onlineUsersWithMessages + onlineUsersWithoutMessages, offlineUserWithMessages + offlineUserWithoutMessages]
@@ -92,22 +106,7 @@ final class ConversationsListViewController: UIViewController {
         let navigationController = UINavigationController(rootViewController: profileVC)
         present(navigationController, animated: true, completion: nil)
     }
-    
-    private func showNoMessagesAlert(conversation: Conversation) {
-        var message = ""
-        
-        if let name = conversation.name {
-            message = "No messages with \(name) yet"
-        } else {
-            message = "No messages yet"
-        }
-        
-        let alertVC = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        present(alertVC, animated: true, completion: nil)
-        
-    }
-    
+
 }
 
 extension ConversationsListViewController: UITableViewDelegate {
@@ -117,13 +116,9 @@ extension ConversationsListViewController: UITableViewDelegate {
         
         let conversation = groupedConversations[indexPath.section][indexPath.row]
         
-        if conversation.messages == nil {
-            showNoMessagesAlert(conversation: conversation)
-        } else {
-            let conversationVC = ConversationViewController()
-            conversationVC.conversation = conversation
-            navigationController?.pushViewController(conversationVC, animated: true)
-        }
+        let conversationVC = ConversationViewController()
+        conversationVC.conversation = conversation
+        navigationController?.pushViewController(conversationVC, animated: true)
     }
     
 }
@@ -142,7 +137,7 @@ extension ConversationsListViewController: UITableViewDataSource {
         switch section {
         case 0: return "Online"
         case 1: return "History"
-        default: return ""
+        default: return nil
         }
     }
     

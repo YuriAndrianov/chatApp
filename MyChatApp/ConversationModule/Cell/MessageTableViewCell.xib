@@ -53,6 +53,7 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
+                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 <constraints>
                     <constraint firstItem="emh-gE-QKI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="E5h-c4-1Gx"/>
                     <constraint firstAttribute="trailing" secondItem="emh-gE-QKI" secondAttribute="trailing" constant="20" id="IVR-Cz-trd"/>

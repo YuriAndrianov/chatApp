@@ -10,11 +10,12 @@ import UIKit
 class ConversationTableViewCell: UITableViewCell {
     
     static let identifier = "chatCell"
+    static let nib = UINib(nibName: "ConversationTableViewCell", bundle: .main)
     
-    @IBOutlet weak var friendPhotoImageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var friendPhotoImageView: UIImageView?
+    @IBOutlet weak var nameLabel: UILabel?
+    @IBOutlet weak var dateLabel: UILabel?
+    @IBOutlet weak var messageLabel: UILabel?
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -37,7 +38,7 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
             return nil
         }
         set {
-            nameLabel.text = newValue
+            nameLabel?.text = newValue
         }
     }
     
@@ -47,11 +48,11 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
         }
         set {
             if newValue == nil {
-                messageLabel.text = "No messages yet"
-                messageLabel.textColor = .secondaryLabel
+                messageLabel?.text = "No messages yet"
+                messageLabel?.textColor = .secondaryLabel
             } else {
-                messageLabel.text = newValue
-                messageLabel.textColor = .label
+                messageLabel?.text = newValue
+                messageLabel?.textColor = .label
             }
         }
     }
@@ -61,7 +62,7 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
             return nil
         }
         set {
-            dateLabel.text = newValue?.lastMessageDateFormat()
+            dateLabel?.text = newValue?.lastMessageDateFormat()
         }
     }
     
@@ -84,9 +85,9 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
         }
         set {
             if newValue {
-                messageLabel.font = .boldSystemFont(ofSize: 15)
+                messageLabel?.font = .boldSystemFont(ofSize: 15)
             } else {
-                messageLabel.font = .systemFont(ofSize: 13)
+                messageLabel?.font = .systemFont(ofSize: 13)
             }
         }
     }

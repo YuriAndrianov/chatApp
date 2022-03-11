@@ -10,22 +10,18 @@ import UIKit
 final class MessageTableViewCell: UITableViewCell {
     
     static let identifier = "messageCell"
+    static let nib = UINib(nibName: "MessageTableViewCell", bundle: .main)
 
-    @IBOutlet weak var leadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var trailingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var messageTextLabel: UILabel!
-    @IBOutlet weak var bubbleView: UIView!
-    @IBOutlet weak var dateLabel: UILabel!
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        bubbleView.backgroundColor = .systemBackground
-    }
-    
+    @IBOutlet weak var leadingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var trailingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var messageTextLabel: UILabel?
+    @IBOutlet weak var bubbleView: UIView?
+    @IBOutlet weak var dateLabel: UILabel?
+
     func configure(with message: Message) {
         self.isIncoming = message.isIncoming
-        self.messageTextLabel.text = message.text
-        self.dateLabel.text = message.date?.timeOfMessage()
+        self.messageTextLabel?.text = message.text
+        self.dateLabel?.text = message.date?.timeOfMessage()
     }
 }
 
@@ -37,13 +33,13 @@ extension MessageTableViewCell: MessageCellConfiguration {
         }
         set {
             if newValue {
-                leadingConstraint.constant = 20
-                trailingConstraint.constant = contentView.frame.width / 4
-                bubbleView.backgroundColor = .systemGray5
+                leadingConstraint?.constant = 20
+                trailingConstraint?.constant = contentView.frame.width / 4
+                bubbleView?.backgroundColor = .systemGray5
             } else {
-                leadingConstraint.constant = contentView.frame.width / 4
-                trailingConstraint.constant = 20
-                bubbleView.backgroundColor = UIColor(named: "onlineColor")
+                leadingConstraint?.constant = contentView.frame.width / 4
+                trailingConstraint?.constant = 20
+                bubbleView?.backgroundColor = UIColor(named: "onlineColor")
             }
         }
     }
@@ -54,7 +50,7 @@ extension MessageTableViewCell: MessageCellConfiguration {
         }
         set {
             if let newValue = newValue {
-                messageTextLabel.text = newValue
+                messageTextLabel?.text = newValue
             }
         }
     }
