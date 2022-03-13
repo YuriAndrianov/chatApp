@@ -13,7 +13,8 @@ final class ConversationsListViewController: UIViewController {
     private var groupedConversations = [[Conversation]]()
     
     private let chatTableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .plain)
+        let table = UITableView(frame: .zero, style: .grouped)
+        table.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
@@ -31,6 +32,12 @@ final class ConversationsListViewController: UIViewController {
         groupConversations()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        chatTableView.reloadData()
+        chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         chatTableView.frame = view.bounds
@@ -38,7 +45,7 @@ final class ConversationsListViewController: UIViewController {
     
     private func setupNavBar() {
         title = "Tinkoff Chat"
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "gear"),
                                              style: .plain,
@@ -52,20 +59,11 @@ final class ConversationsListViewController: UIViewController {
         
         self.navigationItem.leftBarButtonItem = settingsButton
         self.navigationItem.rightBarButtonItem = myProfileButton
-        self.navigationController?.navigationBar.backgroundColor = UIColor(named: "navBarBackgroundColor")
-        self.navigationController?.navigationBar.tintColor = UIColor(named: "barButtonColor")
         self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
-       
-        
-        // set custom background color for status bar
-        let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.backgroundColor = UIColor(named: "navBarBackgroundColor")
-        self.navigationController?.navigationBar.standardAppearance = navBarAppearance
-        self.navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
     
     private func setupTableView() {
+        chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         view.addSubview(chatTableView)
         chatTableView.delegate = self
         chatTableView.dataSource = self
@@ -99,6 +97,7 @@ final class ConversationsListViewController: UIViewController {
     
     @objc private func settingsTapped() {
         let settingsVC = SettingsViewController()
+        settingsVC.delegate = ThemePicker.shared
         navigationController?.pushViewController(settingsVC, animated: true)
     }
     
@@ -120,6 +119,17 @@ extension ConversationsListViewController: UITableViewDelegate {
         let conversationVC = ConversationViewController()
         conversationVC.conversation = conversation
         navigationController?.pushViewController(conversationVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        
+        if #available(iOS 14.0, *) {
+            header.backgroundConfiguration?.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        } else {
+            header.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        }
     }
     
 }
@@ -152,7 +162,6 @@ extension ConversationsListViewController: UITableViewDataSource {
         
         let conversation = groupedConversations[indexPath.section][indexPath.row]
         cell.configurate(with: conversation)
-        
         return cell
     }
     

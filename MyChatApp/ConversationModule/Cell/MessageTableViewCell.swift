@@ -17,6 +17,13 @@ final class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var messageTextLabel: UILabel?
     @IBOutlet weak var bubbleView: UIView?
     @IBOutlet weak var dateLabel: UILabel?
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        messageTextLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        dateLabel?.textColor = ThemePicker.currentTheme?.fontColor
+    }
 
     func configure(with message: Message) {
         self.isIncoming = message.isIncoming
@@ -28,11 +35,11 @@ final class MessageTableViewCell: UITableViewCell {
         if isTrue {
             leadingConstraint?.constant = 20
             trailingConstraint?.constant = contentView.frame.width / 4
-            bubbleView?.backgroundColor = .systemGray5
+            bubbleView?.backgroundColor = ThemePicker.currentTheme?.incomingMessageColor
         } else {
             leadingConstraint?.constant = contentView.frame.width / 4
             trailingConstraint?.constant = 20
-            bubbleView?.backgroundColor = UIColor(named: "onlineColor")
+            bubbleView?.backgroundColor = ThemePicker.currentTheme?.outcomingMessageColor
         }
     }
 }

@@ -20,7 +20,12 @@ final class ConversationTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0))
+        nameLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        dateLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        friendPhotoImageView?.tintColor = ThemePicker.currentTheme?.barButtonColor
+        backgroundColor = ThemePicker.currentTheme?.backGroundColor
     }
+   
 
     func configurate(with conversation: Conversation) {
         self.name = conversation.name
@@ -33,10 +38,10 @@ final class ConversationTableViewCell: UITableViewCell {
     private func setupViewWithMessage(_ message: String?) {
         if message == nil {
             messageLabel?.text = "No messages yet"
-            messageLabel?.textColor = .secondaryLabel
+            messageLabel?.textColor = ThemePicker.currentTheme?.barButtonColor
         } else {
             messageLabel?.text = message
-            messageLabel?.textColor = .label
+            messageLabel?.textColor = ThemePicker.currentTheme?.fontColor
         }
     }
     
@@ -60,7 +65,7 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
     
     var online: Bool {
         get { return false }
-        set { contentView.backgroundColor = newValue ? UIColor(named: "onlineColor") : .systemBackground }
+        set { contentView.backgroundColor = newValue ? ThemePicker.currentTheme?.outcomingMessageColor : ThemePicker.currentTheme?.backGroundColor }
     }
     
     var hasUnreadMessages: Bool {

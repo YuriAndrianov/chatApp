@@ -16,7 +16,7 @@ final class ConversationViewController: UIViewController {
         table.register(MessageTableViewCell.nib,
                        forCellReuseIdentifier: MessageTableViewCell.identifier)
         table.separatorStyle = .none
-        table.backgroundColor = .systemBackground
+        table.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         table.transform = CGAffineTransform(rotationAngle: -.pi)
         return table
     }()
@@ -109,13 +109,14 @@ extension ConversationViewController: UITableViewDataSource {
 extension ConversationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        if let footer = view as? UITableViewHeaderFooterView {
-            footer.transform = CGAffineTransform(rotationAngle: -.pi)
-            if #available(iOS 14.0, *) {
-                footer.backgroundConfiguration?.backgroundColor = .systemBackground
-            } else {
-                footer.backgroundColor = .systemBackground
-            }
+        guard let footer = view as? UITableViewHeaderFooterView else { return }
+        footer.transform = CGAffineTransform(rotationAngle: -.pi)
+        footer.textLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        
+        if #available(iOS 14.0, *) {
+            footer.backgroundConfiguration?.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        } else {
+            footer.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         }
     }
     

@@ -21,6 +21,15 @@
 		E25D36B627D67B3900E6A746 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */; };
 		E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D371127DB7C3400E6A746 /* Array+Subscript.swift */; };
 		E25D371527DBBCDB00E6A746 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D371427DBBCDB00E6A746 /* SettingsViewController.swift */; };
+		E25D371727DCBF0700E6A746 /* CustomThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D371627DCBF0700E6A746 /* CustomThemeView.swift */; };
+		E25D371927DCBF5F00E6A746 /* CustomThemeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D371827DCBF5E00E6A746 /* CustomThemeView.xib */; };
+		E25D371C27DCC00500E6A746 /* Themes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E25D371B27DCC00500E6A746 /* Themes.xcassets */; };
+		E25D372427DCD50E00E6A746 /* ThemeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372327DCD50E00E6A746 /* ThemeProtocol.swift */; };
+		E25D372627DCD70300E6A746 /* ClassicTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372527DCD70300E6A746 /* ClassicTheme.swift */; };
+		E25D372827DCD71000E6A746 /* DayTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372727DCD71000E6A746 /* DayTheme.swift */; };
+		E25D372A27DCD71C00E6A746 /* NightTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372927DCD71C00E6A746 /* NightTheme.swift */; };
+		E25D372C27DCDE0500E6A746 /* ThemePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372B27DCDE0400E6A746 /* ThemePicker.swift */; };
+		E25D373127DE2BA700E6A746 /* UIWindow+reload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D373027DE2BA700E6A746 /* UIWindow+reload.swift */; };
 		FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6A27C61143000417F5 /* AppDelegate.swift */; };
 		FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6E27C61143000417F5 /* ProfileViewController.swift */; };
 		FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAC70C7327C61149000417F5 /* Assets.xcassets */; };
@@ -43,6 +52,15 @@
 		E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		E25D371127DB7C3400E6A746 /* Array+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Subscript.swift"; sourceTree = "<group>"; };
 		E25D371427DBBCDB00E6A746 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		E25D371627DCBF0700E6A746 /* CustomThemeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThemeView.swift; sourceTree = "<group>"; };
+		E25D371827DCBF5E00E6A746 /* CustomThemeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomThemeView.xib; sourceTree = "<group>"; };
+		E25D371B27DCC00500E6A746 /* Themes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Themes.xcassets; sourceTree = "<group>"; };
+		E25D372327DCD50E00E6A746 /* ThemeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeProtocol.swift; sourceTree = "<group>"; };
+		E25D372527DCD70300E6A746 /* ClassicTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicTheme.swift; sourceTree = "<group>"; };
+		E25D372727DCD71000E6A746 /* DayTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTheme.swift; sourceTree = "<group>"; };
+		E25D372927DCD71C00E6A746 /* NightTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightTheme.swift; sourceTree = "<group>"; };
+		E25D372B27DCDE0400E6A746 /* ThemePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePicker.swift; sourceTree = "<group>"; };
+		E25D373027DE2BA700E6A746 /* UIWindow+reload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+reload.swift"; sourceTree = "<group>"; };
 		FAC70C6727C61143000417F5 /* MyChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAC70C6A27C61143000417F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAC70C6E27C61143000417F5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -93,6 +111,7 @@
 		E2561C8627D60D0A00EBD365 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				E25D372F27DE2B8E00E6A746 /* UIKit */,
 				E2561C7F27D5FE8600EBD365 /* Date+Extensions.swift */,
 				E25D371127DB7C3400E6A746 /* Array+Subscript.swift */,
 			);
@@ -132,8 +151,32 @@
 			isa = PBXGroup;
 			children = (
 				E25D371427DBBCDB00E6A746 /* SettingsViewController.swift */,
+				E25D371627DCBF0700E6A746 /* CustomThemeView.swift */,
+				E25D371827DCBF5E00E6A746 /* CustomThemeView.xib */,
 			);
 			path = SettingsModule;
+			sourceTree = "<group>";
+		};
+		E25D371A27DCBFE200E6A746 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FAC70C7327C61149000417F5 /* Assets.xcassets */,
+				E25D371B27DCC00500E6A746 /* Themes.xcassets */,
+				E25D372B27DCDE0400E6A746 /* ThemePicker.swift */,
+				E25D372327DCD50E00E6A746 /* ThemeProtocol.swift */,
+				E25D372527DCD70300E6A746 /* ClassicTheme.swift */,
+				E25D372727DCD71000E6A746 /* DayTheme.swift */,
+				E25D372927DCD71C00E6A746 /* NightTheme.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E25D372F27DE2B8E00E6A746 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				E25D373027DE2BA700E6A746 /* UIWindow+reload.swift */,
+			);
+			path = UIKit;
 			sourceTree = "<group>";
 		};
 		FAC70C5E27C61143000417F5 = {
@@ -157,13 +200,13 @@
 			isa = PBXGroup;
 			children = (
 				FAC70C6A27C61143000417F5 /* AppDelegate.swift */,
+				E25D371A27DCBFE200E6A746 /* Resources */,
 				E2561C8327D60CDC00EBD365 /* ConversationsListModule */,
 				E2561C8C27D63D1100EBD365 /* ConversationModule */,
 				E2561C8427D60CEE00EBD365 /* ProfileModule */,
 				E25D371327DBBCA500E6A746 /* SettingsModule */,
 				E2561C8727D60D6200EBD365 /* Models */,
 				E2561C8627D60D0A00EBD365 /* Extensions */,
-				FAC70C7327C61149000417F5 /* Assets.xcassets */,
 				FAC70C7527C61149000417F5 /* LaunchScreen.storyboard */,
 				FAC70C7827C61149000417F5 /* Info.plist */,
 			);
@@ -229,9 +272,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				E2561C7C27D5EA6000EBD365 /* ConversationTableViewCell.xib in Resources */,
+				E25D371927DCBF5F00E6A746 /* CustomThemeView.xib in Resources */,
 				FAC70C7F27C63E4C000417F5 /* .gitignore in Resources */,
 				E25D36B627D67B3900E6A746 /* MessageTableViewCell.xib in Resources */,
 				FAC70C7727C61149000417F5 /* LaunchScreen.storyboard in Resources */,
+				E25D371C27DCC00500E6A746 /* Themes.xcassets in Resources */,
 				FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -243,18 +288,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E25D372A27DCD71C00E6A746 /* NightTheme.swift in Sources */,
 				E2561C7B27D5EA5F00EBD365 /* ConversationTableViewCell.swift in Sources */,
 				E25D36B027D66E0C00E6A746 /* Mock.swift in Sources */,
+				E25D371727DCBF0700E6A746 /* CustomThemeView.swift in Sources */,
+				E25D372427DCD50E00E6A746 /* ThemeProtocol.swift in Sources */,
+				E25D372827DCD71000E6A746 /* DayTheme.swift in Sources */,
 				FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */,
 				E2561C8B27D63D0D00EBD365 /* ConversationViewController.swift in Sources */,
 				E25D36B227D67A4200E6A746 /* MessageCellConfiguration.swift in Sources */,
 				E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */,
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
+				E25D373127DE2BA700E6A746 /* UIWindow+reload.swift in Sources */,
 				E25D36AE27D644D900E6A746 /* Message.swift in Sources */,
 				E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */,
+				E25D372627DCD70300E6A746 /* ClassicTheme.swift in Sources */,
 				E25D371527DBBCDB00E6A746 /* SettingsViewController.swift in Sources */,
 				E2561C7E27D5EA8F00EBD365 /* ConversationCellConfiguration.swift in Sources */,
 				E2561C8927D60DA700EBD365 /* Conversation.swift in Sources */,
+				E25D372C27DCDE0500E6A746 /* ThemePicker.swift in Sources */,
 				FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */,
 				E2561C8027D5FE8600EBD365 /* Date+Extensions.swift in Sources */,
 			);
@@ -325,7 +377,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -380,7 +432,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -400,11 +452,14 @@
 				DEVELOPMENT_TEAM = H2N6P9225K;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MyChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow the app to use camera to take your profile photo";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Please allow the app to get your profile photo from the gallery";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -429,11 +484,14 @@
 				DEVELOPMENT_TEAM = H2N6P9225K;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MyChatApp/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow the app to use camera to take your profile photo";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "Please allow the app to get your profile photo from the gallery";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
