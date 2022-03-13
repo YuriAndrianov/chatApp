@@ -13,7 +13,7 @@ protocol ThemePickerProtocol: AnyObject {
     
 }
 
-class ThemePicker: ThemePickerProtocol {
+final class ThemePicker: ThemePickerProtocol {
     
     static let shared = ThemePicker()
     
@@ -30,9 +30,15 @@ class ThemePicker: ThemePickerProtocol {
     func apply(_ theme: ThemePicker.ThemeType) {
         
         switch theme {
-        case .classic: ThemePicker.currentTheme = ClassicTheme()
-        case .day: ThemePicker.currentTheme = DayTheme()
-        case .night: ThemePicker.currentTheme = NightTheme()
+        case .classic:
+            ThemePicker.currentTheme = ClassicTheme()
+            UserDefaults.standard.set("classic", forKey: "currentTheme")
+        case .day:
+            ThemePicker.currentTheme = DayTheme()
+            UserDefaults.standard.set("day", forKey: "currentTheme")
+        case .night:
+            ThemePicker.currentTheme = NightTheme()
+            UserDefaults.standard.set("night", forKey: "currentTheme")
         }
         
         let navBarAppearance = UINavigationBarAppearance()
@@ -48,6 +54,18 @@ class ThemePicker: ThemePickerProtocol {
         UIApplication.shared.statusBarStyle = ThemePicker.currentTheme is NightTheme ? .lightContent : .darkContent
         UIApplication.shared.keyWindow?.reload()
     }
+    
+    func applySavedTheme() {
+        if let savedTheme = UserDefaults.standard.value(forKey: "currentTheme") as? String {
+            switch savedTheme {
+            case "classic": apply(.classic)
+            case "day": apply(.day)
+            case "night": apply(.night)
+            default: apply(.classic)
+            }
+        } else { apply(.classic) }
+    }
+
 }
 
 

@@ -80,7 +80,6 @@ final class SettingsViewController: UIViewController {
         
         delegate?.apply(.classic)
         updateUI()
-        
     }
     
     @objc private func dayTapped() {

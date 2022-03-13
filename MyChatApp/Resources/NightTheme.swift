@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NightTheme: ThemeProtocol {
+final class NightTheme: ThemeProtocol {
     
     var backGroundColor: UIColor = UIColor(named: "nightThemeBackGroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "nightFontColor") ?? .label
