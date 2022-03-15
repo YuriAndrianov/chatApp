@@ -36,6 +36,7 @@ final class ConversationsListViewController: UIViewController {
         super.viewWillAppear(animated)
         chatTableView.reloadData()
         chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        setNeedsStatusBarAppearanceUpdate()
     }
     
     override func viewDidLayoutSubviews() {
@@ -92,18 +93,16 @@ final class ConversationsListViewController: UIViewController {
         let offlineUserWithoutMessages = offlineUserChats.filter { $0.date == nil }
         
         groupedConversations = [onlineUsersWithMessages + onlineUsersWithoutMessages, offlineUserWithMessages + offlineUserWithoutMessages]
-        
     }
     
     @objc private func settingsTapped() {
-        let settingsVC = SettingsViewController()
-        settingsVC.delegate = ThemePicker.shared
-        navigationController?.pushViewController(settingsVC, animated: true)
+        let themesVC = ThemesViewController()
+        navigationController?.pushViewController(themesVC, animated: true)
     }
     
     @objc private func myProfileTapped() {
         let profileVC = ProfileViewController()
-        let navigationController = UINavigationController(rootViewController: profileVC)
+        let navigationController = CustomNavigationController(rootViewController: profileVC)
         present(navigationController, animated: true, completion: nil)
     }
 

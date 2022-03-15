@@ -9,15 +9,17 @@ import UIKit
 
 protocol ThemePickerProtocol: AnyObject {
     
-    func apply(_ theme: ThemePicker.ThemeType)
+    func updateUI(with theme: ThemeProtocol?)
     
 }
 
-final class ThemePicker: ThemePickerProtocol {
+final class ThemePicker {
     
     static let shared = ThemePicker()
     
     static var currentTheme: ThemeProtocol?
+    
+    weak var delegate: ThemePickerProtocol?
     
     private init() {}
     
@@ -27,8 +29,18 @@ final class ThemePicker: ThemePickerProtocol {
         case night
     }
     
-    func apply(_ theme: ThemePicker.ThemeType) {
-        
+    func applySavedTheme() {
+        if let savedTheme = UserDefaults.standard.value(forKey: "currentTheme") as? String {
+            switch savedTheme {
+            case "classic": apply(.classic, completion: nil)
+            case "day": apply(.day, completion: nil)
+            case "night": apply(.night, completion: nil)
+            default: apply(.classic, completion: nil)
+            }
+        } else { apply(.classic, completion: nil) }
+    }
+
+    func apply(_ theme: ThemePicker.ThemeType, completion: ((ThemeProtocol) -> Void)?) {
         switch theme {
         case .classic:
             ThemePicker.currentTheme = ClassicTheme()
@@ -51,21 +63,15 @@ final class ThemePicker: ThemePickerProtocol {
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
         UINavigationBar.appearance().tintColor = ThemePicker.currentTheme?.barButtonColor
         
-        UIApplication.shared.statusBarStyle = ThemePicker.currentTheme is NightTheme ? .lightContent : .darkContent
-        UIApplication.shared.keyWindow?.reload()
+        UIApplication.shared.windows.first { $0.isKeyWindow }?.reload()
+        
+        // при использовании делегата
+        delegate?.updateUI(with: ThemePicker.currentTheme)
+        
+        // при использовании completion
+        completion?(ThemePicker.currentTheme ?? ClassicTheme())
     }
     
-    func applySavedTheme() {
-        if let savedTheme = UserDefaults.standard.value(forKey: "currentTheme") as? String {
-            switch savedTheme {
-            case "classic": apply(.classic)
-            case "day": apply(.day)
-            case "night": apply(.night)
-            default: apply(.classic)
-            }
-        } else { apply(.classic) }
-    }
-
 }
 
 

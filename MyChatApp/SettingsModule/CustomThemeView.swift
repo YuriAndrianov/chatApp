@@ -41,8 +41,8 @@ final class CustomThemeView: UIView {
     
     private func setUp() {
         Bundle.main.loadNibNamed("CustomThemeView", owner: self, options: nil)
+        
         guard let contentView = contentView else { return }
-
         addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]

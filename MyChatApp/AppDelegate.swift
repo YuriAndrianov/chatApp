@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         let conversationsVC = ConversationsListViewController()
-        let navigationController = UINavigationController(rootViewController: conversationsVC)
+        let navigationController = CustomNavigationController(rootViewController: conversationsVC)
        
         ThemePicker.shared.applySavedTheme()
         

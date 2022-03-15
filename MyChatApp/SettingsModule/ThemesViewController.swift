@@ -1,5 +1,5 @@
 //
-//  SettingsViewController.swift
+//  ThemesViewController.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 11.03.2022.
@@ -7,9 +7,7 @@
 
 import UIKit
 
-final class SettingsViewController: UIViewController {
-    
-    weak var delegate: ThemePickerProtocol?
+final class ThemesViewController: UIViewController, ThemePickerProtocol {
     
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -43,18 +41,19 @@ final class SettingsViewController: UIViewController {
         view.button?.addTarget(self, action: #selector(nightTapped), for: .touchUpInside)
         return view
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         title = "Settings"
         
+        // highlight button depending on current theme
         switch ThemePicker.currentTheme {
         case is ClassicTheme: classicThemeView.isButtonHighlited = true
         case is DayTheme: dayThemeView.isButtonHighlited = true
         case is NightTheme: nightThemeView.isButtonHighlited = true
-        default: break
+        default: classicThemeView.isButtonHighlited = true
         }
         
         [classicThemeView, dayThemeView, nightThemeView].forEach { stackView.addArrangedSubview($0) }
@@ -78,8 +77,16 @@ final class SettingsViewController: UIViewController {
         dayThemeView.isButtonHighlited = false
         nightThemeView.isButtonHighlited = false
         
-        delegate?.apply(.classic)
-        updateUI()
+        let themePicker = ThemePicker.shared
+        
+        // использование делегата, если делегат не weak, то возможен retain cycle
+//        themePicker.delegate = self
+//        themePicker.apply(.classic, completion: nil)
+        
+        // использование completion, без слабого захвата self возможен retain cycle
+        themePicker.apply(.classic) { [weak self] theme in
+            self?.updateUI(with: theme)
+        }
     }
     
     @objc private func dayTapped() {
@@ -87,8 +94,16 @@ final class SettingsViewController: UIViewController {
         dayThemeView.isButtonHighlited = true
         nightThemeView.isButtonHighlited = false
         
-        delegate?.apply(.day)
-        updateUI()
+        let themePicker = ThemePicker.shared
+        
+        // использование делегата, если делегат не weak, то возможен retain cycle
+//        themePicker.delegate = self
+//        themePicker.apply(.day, completion: nil)
+        
+        // использование completion, без слабого захвата self возможен retain cycle
+        themePicker.apply(.day) { [weak self] theme in
+            self?.updateUI(with: theme)
+        }
     }
     
     @objc private func nightTapped() {
@@ -96,17 +111,28 @@ final class SettingsViewController: UIViewController {
         dayThemeView.isButtonHighlited = false
         nightThemeView.isButtonHighlited = true
         
-        delegate?.apply(.night)
-        updateUI()
-    }
-    
-    private func updateUI() {
-        UIView.animate(withDuration: 0.05) {
-            self.view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-            self.classicThemeView.label?.textColor = ThemePicker.currentTheme?.fontColor
-            self.dayThemeView.label?.textColor = ThemePicker.currentTheme?.fontColor
-            self.nightThemeView.label?.textColor = ThemePicker.currentTheme?.fontColor
+        let themePicker = ThemePicker.shared
+        
+        // использование делегата, если делегат не weak, то возможен retain cycle
+//        themePicker.delegate = self
+//        themePicker.apply(.night, completion: nil)
+        
+        // использование completion, без слабого захвата self возможен retain cycle
+        themePicker.apply(.night) { [weak self] theme in
+            self?.updateUI(with: theme)
         }
     }
-
+    
+    func updateUI(with theme: ThemeProtocol?) {
+        guard let theme = theme else { return }
+        
+        UIView.animate(withDuration: 0.05) {
+            self.view.backgroundColor = theme.backGroundColor
+            self.classicThemeView.label?.textColor = theme.fontColor
+            self.dayThemeView.label?.textColor = theme.fontColor
+            self.nightThemeView.label?.textColor = theme.fontColor
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
+    }
+    
 }

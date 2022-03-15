@@ -28,9 +28,12 @@ final class ProfileViewController: UIViewController {
     private let fullNameTextField: UITextField = {
         let field = UITextField()
         field.textAlignment = .center
-        field.placeholder = "Enter your name..."
         field.font = .boldSystemFont(ofSize: 24)
         field.textColor = ThemePicker.currentTheme?.fontColor
+        field.attributedPlaceholder = NSAttributedString(
+            string: "Enter your name...",
+            attributes: [.foregroundColor : UIColor.lightGray]
+        )
         field.isEnabled = false
         field.layer.cornerRadius = 6
         field.translatesAutoresizingMaskIntoConstraints = false
@@ -362,7 +365,7 @@ extension ProfileViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
-            textView.textColor = .label
+            textView.textColor = ThemePicker.currentTheme?.fontColor
         }
     }
     

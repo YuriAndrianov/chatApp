@@ -60,7 +60,6 @@
                         </userDefinedRuntimeAttributes>
                     </imageView>
                 </subviews>
-                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="NUI-vW-EY7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="4Lh-C2-EDo"/>
                     <constraint firstItem="NUI-vW-EY7" firstAttribute="leading" secondItem="xgj-Zs-1eA" secondAttribute="trailing" constant="5" id="A6g-uD-YrU"/>
