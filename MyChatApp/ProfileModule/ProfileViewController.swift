@@ -16,10 +16,8 @@ final class ProfileViewController: UIViewController {
     
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.circle")
         imageView.contentMode = .scaleAspectFill
         imageView.tintColor = ThemePicker.currentTheme?.barButtonColor
-        imageView.layer.cornerRadius = 110
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -28,7 +26,7 @@ final class ProfileViewController: UIViewController {
     private let fullNameTextField: UITextField = {
         let field = UITextField()
         field.textAlignment = .center
-        field.font = .boldSystemFont(ofSize: 24)
+        field.font = .boldSystemFont(ofSize: 20)
         field.textColor = ThemePicker.currentTheme?.fontColor
         field.attributedPlaceholder = NSAttributedString(
             string: "Enter your name...",
@@ -36,31 +34,90 @@ final class ProfileViewController: UIViewController {
         )
         field.isEnabled = false
         field.layer.cornerRadius = 6
+        field.layer.borderColor = UIColor.systemGray.cgColor
         field.translatesAutoresizingMaskIntoConstraints = false
         field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
         return field
     }()
     
-    private let userInfoTextView: UITextView = {
-        let textView = UITextView()
-        textView.textAlignment = .center
-        textView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-        textView.font = .systemFont(ofSize: 16)
-        textView.textColor = ThemePicker.currentTheme?.fontColor
-        textView.textContainer.maximumNumberOfLines = 3
-        textView.layer.cornerRadius = 6
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
-        return textView
+    private let occupationTextField: UITextField = {
+        let field = UITextField()
+        field.textAlignment = .center
+        field.font = .boldSystemFont(ofSize: 15)
+        field.textColor = ThemePicker.currentTheme?.fontColor
+        field.attributedPlaceholder = NSAttributedString(
+            string: "Enter your occupation...",
+            attributes: [.foregroundColor : UIColor.lightGray]
+        )
+        field.isEnabled = false
+        field.layer.cornerRadius = 6
+        field.layer.borderColor = UIColor.systemGray.cgColor
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+        return field
+    }()
+    
+    private let locationTextField: UITextField = {
+        let field = UITextField()
+        field.textAlignment = .center
+        field.font = .boldSystemFont(ofSize: 15)
+        field.textColor = ThemePicker.currentTheme?.fontColor
+        field.attributedPlaceholder = NSAttributedString(
+            string: "Enter your location...",
+            attributes: [.foregroundColor : UIColor.lightGray]
+        )
+        field.isEnabled = false
+        field.layer.cornerRadius = 6
+        field.layer.borderColor = UIColor.systemGray.cgColor
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+        return field
     }()
     
     private let editButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.link, for: .normal)
         button.setTitle("Edit", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private let cancelButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+        button.setTitle("Cancel", for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
+        button.layer.cornerRadius = 8
+        button.alpha = 0
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private let saveGCDButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+        button.setTitle("Save GCD", for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.setTitleColor(.systemGray, for: .disabled)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private let saveOperationsButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+        button.setTitle("Save Operations", for: .normal)
+        button.setTitleColor(.link, for: .normal)
+        button.setTitleColor(.systemGray, for: .disabled)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
+        button.layer.cornerRadius = 8
+        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -85,17 +142,15 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
-    private let saveButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-        button.setTitle("Save", for: .normal)
-        button.setTitleColor(.link, for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 19)
-        button.layer.cornerRadius = 12
-        button.alpha = 0
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-        return button
+    private let saveButtonsStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .fill
+        stack.distribution = .fillEqually
+        stack.spacing = 10
+        stack.alpha = 0
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
     }()
     
     private let scrollView = UIScrollView()
@@ -106,8 +161,7 @@ final class ProfileViewController: UIViewController {
         setupViews()
         setConstraints()
         setDelegates()
-        createToolBar()
-        setupTextInfo()
+        restoreUserData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,66 +191,51 @@ final class ProfileViewController: UIViewController {
     
     private func setDelegates() {
         fullNameTextField.delegate = self
-        userInfoTextView.delegate = self
+        occupationTextField.delegate = self
+        locationTextField.delegate = self
     }
     
-    private func createToolBar() {
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
-        toolbar.sizeToFit()
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace,
-                                        target: nil,
-                                        action: nil)
-        let cancelButton = UIBarButtonItem(title: "Cancel",
-                                           style: UIBarButtonItem.Style.plain,
-                                           target: self,
-                                           action: #selector(cancelButtonTapped))
-        let doneButton = UIBarButtonItem(title: "Done",
-                                         style: .done,
-                                         target: self,
-                                         action: #selector(doneButtonTapped))
-        toolbar.items = [cancelButton, flexSpace, doneButton]
-        
-        fullNameTextField.inputAccessoryView = toolbar
-        userInfoTextView.inputAccessoryView = toolbar
-    }
-    
-    private func setupTextInfo() {
+    private func restoreUserData() {
         fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
-        
-        // creating "placeholder" of textview
-        if let text =  UserDefaults.standard.string(forKey: "userInfoText"),
-           text != "Enter short info about you..." {
-            userInfoTextView.text = text
-            userInfoTextView.textColor = ThemePicker.currentTheme?.fontColor
+        occupationTextField.text = UserDefaults.standard.string(forKey: "occupationText")
+        locationTextField.text = UserDefaults.standard.string(forKey: "locationText")
+
+        if let userImage = ImageManager.shared.loadImageFromDiskWith(fileName: "User") {
+            profileImageView.image = userImage
         } else {
-            userInfoTextView.text = "Enter short info about you..."
-            userInfoTextView.textColor = UIColor.lightGray
+            profileImageView.image = UIImage(systemName: "person.circle")
         }
+        
+        somethingIsChanged(false)
     }
     
     private func setupUIIfEditingAllowedIs(_ bool: Bool) {
         if bool {
             fullNameTextField.isEnabled = true
+            occupationTextField.isEnabled = true
+            locationTextField.isEnabled = true
             fullNameTextField.becomeFirstResponder()
-            userInfoTextView.isEditable = true
-            userInfoTextView.isUserInteractionEnabled = true
             UIView.animate(withDuration: 0.2) {
                 self.editButton.alpha = 0
+                self.cancelButton.alpha = 1
                 self.editPhotoButton.alpha = 1
-                self.saveButton.alpha = 1
-                self.fullNameTextField.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-                self.userInfoTextView.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+                self.saveButtonsStack.alpha = 1
+                self.fullNameTextField.layer.borderWidth = 1
+                self.occupationTextField.layer.borderWidth = 1
+                self.locationTextField.layer.borderWidth = 1
             }
         } else {
             fullNameTextField.isEnabled = false
-            userInfoTextView.isEditable = false
-            userInfoTextView.isUserInteractionEnabled = false
+            occupationTextField.isEnabled = false
+            locationTextField.isEnabled = false
             UIView.animate(withDuration: 0.2) {
                 self.editButton.alpha = 1
+                self.cancelButton.alpha = 0
                 self.editPhotoButton.alpha = 0
-                self.saveButton.alpha = 0
-                self.fullNameTextField.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-                self.userInfoTextView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+                self.saveButtonsStack.alpha = 0
+                self.fullNameTextField.layer.borderWidth = 0
+                self.occupationTextField.layer.borderWidth = 0
+                self.locationTextField.layer.borderWidth = 0
             }
         }
     }
@@ -213,9 +252,18 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupViews() {
-        [profileImageView, fullNameTextField, userInfoTextView, editButton].forEach { stackView.addArrangedSubview($0) }
+        [saveGCDButton, saveOperationsButton].forEach { saveButtonsStack.addArrangedSubview($0) }
+        
+        [profileImageView,
+         fullNameTextField,
+         occupationTextField,
+         locationTextField,
+         cancelButton,
+         saveButtonsStack,
+         editButton].forEach { stackView.addArrangedSubview($0) }
+        
         view.addSubview(scrollView)
-        [stackView, saveButton, editPhotoButton].forEach { scrollView.addSubview($0) }
+        [stackView, editPhotoButton].forEach { scrollView.addSubview($0) }
     }
     
     @objc private func closeButtonTapped() {
@@ -236,24 +284,43 @@ final class ProfileViewController: UIViewController {
     
     @objc private func cancelButtonTapped() {
         fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
-        userInfoTextView.text = UserDefaults.standard.string(forKey: "userInfoText")
+        occupationTextField.text = UserDefaults.standard.string(forKey: "occupationText")
+        locationTextField.text = UserDefaults.standard.string(forKey: "locationText")
+        
+        if let userImage = ImageManager.shared.loadImageFromDiskWith(fileName: "User") {
+            profileImageView.image = userImage
+        } else {
+            profileImageView.image = UIImage(systemName: "person.circle")
+        }
+        
         setupUIIfEditingAllowedIs(false)
+        somethingIsChanged(false)
         view.endEditing(true)
     }
     
     @objc private func saveButtonTapped() {
         UserDefaults.standard.set(fullNameTextField.text, forKey: "fullnameText")
-        UserDefaults.standard.set(userInfoTextView.text, forKey: "userInfoText")
+        UserDefaults.standard.set(occupationTextField.text, forKey: "occupationText")
+        UserDefaults.standard.set(locationTextField.text, forKey: "locationText")
+        
+        if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
+            ImageManager.shared.saveImage(imageName: "User",
+                                          image: image)
+        } else {
+            ImageManager.shared.deleteImage(imageName: "User")
+        }
+        
         setupUIIfEditingAllowedIs(false)
+        somethingIsChanged(false)
     }
     
     @objc private func keyboardWillShow(_ notification:Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
             
-            let activeView: UIView? = [fullNameTextField, userInfoTextView].first { $0.isFirstResponder }
+            let activeView: UIView? = [fullNameTextField, occupationTextField, locationTextField].first { $0.isFirstResponder }
             if let activeView = activeView {
-                let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 30)
+                let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 130)
                 scrollView.setContentOffset(scrollPoint, animated: true)
             }
         }
@@ -261,6 +328,16 @@ final class ProfileViewController: UIViewController {
     
     @objc private func keyboardWillHide(_ notification:Notification) {
         scrollView.contentInset = .zero
+    }
+    
+    private func somethingIsChanged(_ bool: Bool) {
+        if bool {
+            saveGCDButton.isEnabled = true
+            saveOperationsButton.isEnabled = true
+        } else {
+            saveGCDButton.isEnabled = false
+            saveOperationsButton.isEnabled = false
+        }
     }
     
     private func showAddPhotoAlertVC() {
@@ -279,6 +356,13 @@ final class ProfileViewController: UIViewController {
         }
         alertVC.addAction(libraryButton)
         
+        let deleteButton = UIAlertAction(title: "Delete photo", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            self.profileImageView.image = UIImage(systemName: "person.circle")
+            self.somethingIsChanged(true)
+        }
+        alertVC.addAction(deleteButton)
+        
         let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertVC.addAction(cancelButton)
         
@@ -290,33 +374,46 @@ final class ProfileViewController: UIViewController {
 extension ProfileViewController {
     
     private func setConstraints() {
+        var profileImageWidth: CGFloat = 220
+        var editPhotoButtonWidth: CGFloat = 50
+    
+        if !isLargeScreenDevice {
+            profileImageWidth = 150
+            editPhotoButtonWidth = 30
+        }
+        
+        profileImageView.layer.cornerRadius = profileImageWidth / 2
+        
+        
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -60),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
             
-            profileImageView.widthAnchor.constraint(equalToConstant: 220),
-            profileImageView.heightAnchor.constraint(equalToConstant: 220),
+            profileImageView.widthAnchor.constraint(equalToConstant: profileImageWidth),
+            profileImageView.heightAnchor.constraint(equalToConstant: profileImageWidth),
             
             fullNameTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            fullNameTextField.heightAnchor.constraint(equalToConstant: 30),
+            fullNameTextField.heightAnchor.constraint(equalToConstant: 24),
             
-            userInfoTextView.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            userInfoTextView.heightAnchor.constraint(equalToConstant: 70),
+            occupationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            occupationTextField.heightAnchor.constraint(equalToConstant: 24),
             
+            locationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            locationTextField.heightAnchor.constraint(equalToConstant: 24),
+
             editButton.widthAnchor.constraint(equalToConstant: 40),
             editButton.heightAnchor.constraint(equalToConstant: 40),
             
-            editPhotoButton.widthAnchor.constraint(equalToConstant: 50),
-            editPhotoButton.heightAnchor.constraint(equalToConstant: 50),
-            editPhotoButton.trailingAnchor.constraint(equalTo: profileImageView.trailingAnchor),
-            editPhotoButton.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor),
+            saveButtonsStack.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
             
-            saveButton.widthAnchor.constraint(equalToConstant: 260),
-            saveButton.heightAnchor.constraint(equalToConstant: 40),
-            saveButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
-            saveButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            saveButton.topAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 20)
+            cancelButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            
+            editPhotoButton.widthAnchor.constraint(equalToConstant: editPhotoButtonWidth),
+            editPhotoButton.heightAnchor.constraint(equalToConstant: editPhotoButtonWidth),
+            editPhotoButton.trailingAnchor.constraint(equalTo: profileImageView.trailingAnchor),
+            editPhotoButton.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor)
         ])
     }
     
@@ -337,6 +434,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.editedImage] as? UIImage {
             profileImageView.image = selectedImage
+            somethingIsChanged(true)
         }
         picker.dismiss(animated: true)
     }
@@ -345,30 +443,26 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension ProfileViewController: UITextFieldDelegate {
     
-        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            textField.resignFirstResponder()
-            return true
-        }
-    
-}
-
-extension ProfileViewController: UITextViewDelegate {
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Enter short info about you..."
-            textView.textColor = UIColor.lightGray
-            UserDefaults.standard.set(nil, forKey: "userInfoText")
-        }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = ThemePicker.currentTheme?.fontColor
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        somethingIsChanged(true)
+        let text = (textField.text ?? "") + string
+
+        let result: String
+        if range.length == 1 {
+            let end = text.index(text.startIndex, offsetBy: text.count - 1)
+            result = String(text[text.startIndex..<end])
+        } else {
+            result = text
         }
+
+        textField.text = result
+        
+        return false
     }
-    
+ 
 }
-
-

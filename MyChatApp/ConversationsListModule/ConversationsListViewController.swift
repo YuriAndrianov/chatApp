@@ -52,7 +52,6 @@ final class ConversationsListViewController: UIViewController {
                                              style: .plain,
                                              target: self,
                                              action: #selector(settingsTapped))
-        
         let myProfileButton = UIBarButtonItem(image: UIImage(systemName: "person.circle"),
                                               style: .plain,
                                               target: self,
