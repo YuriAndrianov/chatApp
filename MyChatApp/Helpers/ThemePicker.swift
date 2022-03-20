@@ -30,20 +30,6 @@ final class ThemePicker {
     }
     
     func applySavedTheme() {
-//        guard let user = DataManagerGCD.shared.readFromFile() else {
-//            apply(.classic, completion: nil)
-//            return
-//        }
-//
-//        if let savedTheme = user.preferedTheme {
-//            switch savedTheme {
-//            case "classic": apply(.classic, completion: nil)
-//            case "day": apply(.day, completion: nil)
-//            case "night": apply(.night, completion: nil)
-//            default: apply(.classic, completion: nil)
-//            }
-//        } else { apply(.classic, completion: nil) }
-        
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
             guard let user = user else {
@@ -64,14 +50,6 @@ final class ThemePicker {
     }
 
     func apply(_ theme: ThemePicker.ThemeType, completion: ((ThemeProtocol) -> Void)?) {
-        
-//        if let user = DataManagerGCD.shared.readFromFile() {
-//            savePreffered(theme: theme, for: user)
-//        } else {
-//            let user = User()
-//            savePreffered(theme: theme, for: user)
-//        }
-        
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
             
