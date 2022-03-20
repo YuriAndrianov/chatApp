@@ -88,8 +88,10 @@ final class ProfileViewController: UIViewController {
         setupViews()
         setConstraints()
         setDelegates()
-        restoreUserDataGCD() // restore user info using GCD
-//        restoreUserDataOperation() // restore user info using Operation
+
+        // Choose what type of manager to use * Extra task
+        restoreUserDataUsing(manager: DataManagerGCD.shared)
+//        restoreUserDataUsing(manager: FileManagerOperation.shared)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -123,43 +125,14 @@ final class ProfileViewController: UIViewController {
         locationTextField.delegate = self
     }
     
-    private func restoreUserDataGCD() {
-        DataManagerGCD.shared.readFromFile { [weak self] user in
+    private func restoreUserDataUsing(manager: DataManagerProtocol) {
+        manager.readFromFile { [weak self] user in
             guard let self = self else { return }
             if let user = user {
                 self.user = user
                 self.fullNameTextField.text = user.fullname
                 self.occupationTextField.text = user.occupation
                 self.locationTextField.text = user.location
-            }
-        }
-        
-        ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
-            if let image = image {
-                self?.profileImageView.image = image
-            } else {
-                self?.profileImageView.image = UIImage(systemName: "person.circle")
-            }
-        }
-        
-        somethingIsChanged(false)
-    }
-    
-    private func restoreUserDataOperation() {
-        let queue = OperationQueue()
-        let readUserOperation = DataManagerOperation(inputUser: nil)
-        
-        queue.addOperation(readUserOperation)
-        
-        readUserOperation.loadUserFromFileCompletion = { [weak self] user in
-            guard let self = self else { return }
-            OperationQueue.main.addOperation {
-                if let user = user {
-                    self.user = user
-                    self.fullNameTextField.text = user.fullname
-                    self.occupationTextField.text = user.occupation
-                    self.locationTextField.text = user.location
-                }
             }
         }
         
@@ -279,8 +252,8 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        restoreUserDataGCD()
-//        restoreUserDataOperation()
+        restoreUserDataUsing(manager: DataManagerGCD.shared)
+//        restoreUserDataUsing(manager: DataManagerOperation.shared)
         setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
@@ -298,8 +271,8 @@ final class ProfileViewController: UIViewController {
         user.fullname = fullNameTextField.text
         user.occupation = occupationTextField.text
         user.location = locationTextField.text
-        
-        tryToSaveDataGCD()
+
+        tryToSaveDataUsing(manager: DataManagerGCD.shared)
     }
     
     @objc private func saveOperationButtonTapped() {
@@ -315,11 +288,11 @@ final class ProfileViewController: UIViewController {
         user.fullname = fullNameTextField.text
         user.occupation = occupationTextField.text
         user.location = locationTextField.text
-        
-        tryToSafeDataOperation()
+
+        tryToSaveDataUsing(manager: DataManagerOperation.shared)
     }
     
-    private func tryToSaveDataGCD() {
+    private func tryToSaveDataUsing(manager: DataManagerProtocol) {
         // make activity indicator
         let spinner = styleSheet.createSpinner()
         spinner.center = view.center
@@ -331,7 +304,7 @@ final class ProfileViewController: UIViewController {
         cancelButton.isEnabled = false
         
         // saving to file (1 sec)
-        DataManagerGCD.shared.writeToFile(user) { [weak self] success in
+        manager.writeToFile(user) { [weak self] success in
             // remove activity indicator
             spinner.stopAnimating()
             self?.view.endEditing(true)
@@ -344,41 +317,6 @@ final class ProfileViewController: UIViewController {
                 self?.showSaveErrorAlert()
             }
         }
-    }
-    
-    private func tryToSafeDataOperation() {
-        // make activity indicator
-        let spinner = styleSheet.createSpinner()
-        spinner.center = view.center
-        view.addSubview(spinner)
-        spinner.startAnimating()
-        
-        // block buttons
-        somethingIsChanged(false)
-        cancelButton.isEnabled = false
-        
-        // creating operation queue and operation to save user
-        let queue = OperationQueue()
-        let writeUserOperation = DataManagerOperation(inputUser: user)
-        
-        // after complete returning to main and updating UI
-        writeUserOperation.saveToFileSuccessCompletion = { [weak self] success in
-            OperationQueue.main.addOperation {
-                // remove activity indicator
-                spinner.stopAnimating()
-                self?.view.endEditing(true)
-                
-                if success {
-                    // show success alert
-                    self?.showSaveSuccessAlert()
-                } else {
-                    // show error alert
-                    self?.showSaveErrorAlert()
-                }
-            }
-        }
-        // saving user for 1 sec
-        queue.addOperation(writeUserOperation)
     }
     
     // MARK: - Methods showing alert VC's
@@ -397,7 +335,7 @@ final class ProfileViewController: UIViewController {
         let alertVC = UIAlertController(title: "Error", message: "Failed to save data" , preferredStyle: .alert)
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
-            self?.restoreUserDataGCD()
+            self?.restoreUserDataUsing(manager: DataManagerGCD.shared)
             self?.setupUIIfEditingAllowedIs(false)
             self?.cancelButton.isEnabled = true
         }))
@@ -406,8 +344,8 @@ final class ProfileViewController: UIViewController {
             guard let self = self else { return }
             if let tappedButton = self.tappedButton {
                 switch tappedButton {
-                case self.saveGCDButton:  self.tryToSaveDataGCD()
-                case self.saveOperationsButton: self.tryToSafeDataOperation()
+                case self.saveGCDButton:  self.tryToSaveDataUsing(manager: DataManagerGCD.shared)
+                case self.saveOperationsButton: self.tryToSaveDataUsing(manager: DataManagerOperation.shared)
                 default: break
                 }
             }
@@ -439,7 +377,7 @@ final class ProfileViewController: UIViewController {
             self.somethingIsChanged(true)
         }
         
-        // if there is profile photo then add delete button
+        // if there is a profile photo then add a delete button
         if profileImageView.image != UIImage(systemName: "person.circle") {
             alertVC.addAction(deleteButton)
         }

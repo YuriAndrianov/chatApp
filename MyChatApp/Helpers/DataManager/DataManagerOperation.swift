@@ -1,72 +1,42 @@
 //
-//  DataManagerOperation.swift
+//  FileManagerOperation.swift
 //  MyChatApp
 //
-//  Created by Юрий Андрианов on 19.03.2022.
+//  Created by Юрий Андрианов on 20.03.2022.
 //
 
 import Foundation
 
-final class DataManagerOperation: Operation, DataManagerProtocol {
+final class DataManagerOperation: DataManagerProtocol {
     
-    var inputUser: User?
-    var saveToFileSuccessCompletion: ((Bool) -> Void)?
-    var loadUserFromFileCompletion: ((User?) -> Void)?
+    static let shared = DataManagerOperation()
     
-    init(inputUser: User?) {
-        self.inputUser = inputUser
-        super.init()
-    }
+    private let queue = OperationQueue()
     
-    override func main() {
-        if let inputUser = inputUser {
-            writeToFile(inputUser) { [weak self] success in
-                self?.saveToFileSuccessCompletion?(success)
-            }
-        } else {
-            readFromFile { [weak self] user in
-                self?.loadUserFromFileCompletion?(user)
-            }
-        }
-    }
+    private init() {}
     
     func writeToFile(_ user: User, completion: @escaping ((Bool) -> Void)) {
+        let writeToFileOperation = WriteToFileOperation(user: user)
         
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
-        
-        if !FileManager.default.fileExists(atPath: userFileURL.path) {
-            FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)
+        writeToFileOperation.completion = { success in
+            OperationQueue.main.addOperation {
+                completion(success)
+            }
         }
         
-        print("Path to file: ", userFileURL.path)
-        
-        do {
-            try JSONEncoder().encode(user).write(to: userFileURL)
-            sleep(1)
-            completion(true)
-        }
-        catch {
-            print(error)
-            sleep(1)
-            completion(false)
-        }
+        queue.addOperation(writeToFileOperation)
     }
     
     func readFromFile(completion: @escaping ((User?) -> Void)) {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-            completion(nil)
-            return
+        let readFromFileOperation = ReadFromFileOperation()
+        
+        readFromFileOperation.completion = { user in
+            OperationQueue.main.addOperation {
+                completion(user)
+            }
         }
-        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
-        do {
-            let user = try JSONDecoder().decode(User.self, from: Data(contentsOf: userFileURL))
-            completion(user)
-        }
-        catch {
-            completion(nil)
-            print(error)
-        }
+        
+        queue.addOperation(readFromFileOperation)
     }
-    
+
 }
