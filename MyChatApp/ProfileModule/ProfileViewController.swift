@@ -9,148 +9,70 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    private let styleSheet = ProfileVCStyleSheet()
+    
     private var isLargeScreenDevice: Bool {
         // check if current device is not iPhone SE (1 gen)
         return UIScreen.main.bounds.width > 375
     }
     
-    private let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.tintColor = ThemePicker.currentTheme?.barButtonColor
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var profileImageView: UIImageView = {
+        let imageView = styleSheet.createProfileImageView()
         return imageView
     }()
     
-    private let fullNameTextField: UITextField = {
-        let field = UITextField()
-        field.textAlignment = .center
-        field.font = .boldSystemFont(ofSize: 20)
-        field.textColor = ThemePicker.currentTheme?.fontColor
-        field.attributedPlaceholder = NSAttributedString(
-            string: "Enter your name...",
-            attributes: [.foregroundColor : UIColor.lightGray]
-        )
-        field.isEnabled = false
-        field.layer.cornerRadius = 6
-        field.layer.borderColor = UIColor.systemGray.cgColor
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+    private lazy var fullNameTextField: UITextField = {
+        let field = styleSheet.createFullNameTextField()
         return field
     }()
     
-    private let occupationTextField: UITextField = {
-        let field = UITextField()
-        field.textAlignment = .center
-        field.font = .boldSystemFont(ofSize: 15)
-        field.textColor = ThemePicker.currentTheme?.fontColor
-        field.attributedPlaceholder = NSAttributedString(
-            string: "Enter your occupation...",
-            attributes: [.foregroundColor : UIColor.lightGray]
-        )
-        field.isEnabled = false
-        field.layer.cornerRadius = 6
-        field.layer.borderColor = UIColor.systemGray.cgColor
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+    private lazy var occupationTextField: UITextField = {
+        let field = styleSheet.createSecondaryTextField("Enter your occupation...")
         return field
     }()
     
-    private let locationTextField: UITextField = {
-        let field = UITextField()
-        field.textAlignment = .center
-        field.font = .boldSystemFont(ofSize: 15)
-        field.textColor = ThemePicker.currentTheme?.fontColor
-        field.attributedPlaceholder = NSAttributedString(
-            string: "Enter your location...",
-            attributes: [.foregroundColor : UIColor.lightGray]
-        )
-        field.isEnabled = false
-        field.layer.cornerRadius = 6
-        field.layer.borderColor = UIColor.systemGray.cgColor
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+    private lazy var locationTextField: UITextField = {
+        let field = styleSheet.createSecondaryTextField("Enter your location...")
         return field
     }()
     
-    private let editButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.link, for: .normal)
-        button.setTitle("Edit", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var editButton: UIButton = {
+        let button = styleSheet.createEditButton()
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let cancelButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-        button.setTitle("Cancel", for: .normal)
-        button.setTitleColor(.link, for: .normal)
-        button.setTitleColor(.systemGray, for: .disabled)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
-        button.layer.cornerRadius = 8
-        button.alpha = 0
-        button.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var cancelButton: UIButton = {
+        let button = styleSheet.createCancelButton()
         button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let saveGCDButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-        button.setTitle("Save GCD", for: .normal)
-        button.setTitleColor(.link, for: .normal)
-        button.setTitleColor(.systemGray, for: .disabled)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
-        button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+    private lazy var saveGCDButton: UIButton = {
+        let button = styleSheet.createSaveButton(withTitle: "Save GCD")
+        button.addTarget(self, action: #selector(saveGCDButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let saveOperationsButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-        button.setTitle("Save Operations", for: .normal)
-        button.setTitleColor(.link, for: .normal)
-        button.setTitleColor(.systemGray, for: .disabled)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 15)
-        button.layer.cornerRadius = 8
-        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+    private lazy var saveOperationsButton: UIButton = {
+        let button = styleSheet.createSaveButton(withTitle: "Save Operations")
+        button.addTarget(self, action: #selector(saveOperationButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let editPhotoButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .link
-        button.setBackgroundImage(UIImage(systemName: "camera.circle.fill"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.alpha = 0
+    private lazy var editPhotoButton: UIButton = {
+        let button = styleSheet.createEditPhotoButton()
         button.addTarget(self, action: #selector(editPhotoButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .fill
-        stackView.spacing = 10
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var stackView: UIStackView = {
+        let stackView = styleSheet.createMainStackView()
         return stackView
     }()
     
-    private let saveButtonsStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        stack.spacing = 10
-        stack.alpha = 0
-        stack.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var saveButtonsStack: UIStackView = {
+        let stack = styleSheet.createSaveButtonsStackView()
         return stack
     }()
     
@@ -158,13 +80,16 @@ final class ProfileViewController: UIViewController {
     
     private var user = User()
     
+    private var tappedButton: UIButton?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
         setupViews()
         setConstraints()
         setDelegates()
-        restoreUserData()
+        restoreUserDataGCD() // restore user info using GCD
+//        restoreUserDataOperation() // restore user info using Operation
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -198,7 +123,7 @@ final class ProfileViewController: UIViewController {
         locationTextField.delegate = self
     }
     
-    private func restoreUserData() {
+    private func restoreUserDataGCD() {
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
             if let user = user {
@@ -208,7 +133,36 @@ final class ProfileViewController: UIViewController {
                 self.locationTextField.text = user.location
             }
         }
-
+        
+        ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
+            if let image = image {
+                self?.profileImageView.image = image
+            } else {
+                self?.profileImageView.image = UIImage(systemName: "person.circle")
+            }
+        }
+        
+        somethingIsChanged(false)
+    }
+    
+    private func restoreUserDataOperation() {
+        let queue = OperationQueue()
+        let readUserOperation = DataManagerOperation(inputUser: nil)
+        
+        queue.addOperation(readUserOperation)
+        
+        readUserOperation.loadUserFromFileCompletion = { [weak self] user in
+            guard let self = self else { return }
+            OperationQueue.main.addOperation {
+                if let user = user {
+                    self.user = user
+                    self.fullNameTextField.text = user.fullname
+                    self.occupationTextField.text = user.occupation
+                    self.locationTextField.text = user.location
+                }
+            }
+        }
+        
         ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
             if let image = image {
                 self?.profileImageView.image = image
@@ -221,6 +175,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupUIIfEditingAllowedIs(_ bool: Bool) {
+        // Turns true when edit button tapped and false when save button tapped
         if bool {
             fullNameTextField.isEnabled = true
             occupationTextField.isEnabled = true
@@ -254,29 +209,59 @@ final class ProfileViewController: UIViewController {
     private func setupNavBar() {
         title = "My Profile"
         view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-
+        
         self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(closeButtonTapped))
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(closeButtonTapped))
     }
     
     private func setupViews() {
         [saveGCDButton, saveOperationsButton].forEach { saveButtonsStack.addArrangedSubview($0) }
         
-        [profileImageView,
-         fullNameTextField,
-         occupationTextField,
-         locationTextField,
-         cancelButton,
-         saveButtonsStack,
-         editButton].forEach { stackView.addArrangedSubview($0) }
+        [
+            profileImageView,
+            fullNameTextField,
+            occupationTextField,
+            locationTextField,
+            cancelButton,
+            saveButtonsStack,
+            editButton
+        ].forEach { stackView.addArrangedSubview($0) }
         
         view.addSubview(scrollView)
         [stackView, editPhotoButton].forEach { scrollView.addSubview($0) }
     }
     
+    private func somethingIsChanged(_ bool: Bool) {
+        // Turns true if user typed or deleted any character or changed photo
+        if bool {
+            saveGCDButton.isEnabled = true
+            saveOperationsButton.isEnabled = true
+        } else {
+            saveGCDButton.isEnabled = false
+            saveOperationsButton.isEnabled = false
+        }
+    }
+    
+    @objc private func keyboardWillShow(_ notification:Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            
+            let activeView: UIView? = [fullNameTextField, occupationTextField, locationTextField].first { $0.isFirstResponder }
+            if let activeView = activeView {
+                let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 130)
+                scrollView.setContentOffset(scrollPoint, animated: true)
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(_ notification:Notification) {
+        scrollView.contentInset = .zero
+    }
+    
+    // MARK: - Button's methods
     @objc private func closeButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -294,32 +279,49 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        restoreUserData()
+        restoreUserDataGCD()
+//        restoreUserDataOperation()
         setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
     
-    @objc private func saveButtonTapped() {
+    @objc private func saveGCDButtonTapped() {
+        tappedButton = saveGCDButton
+        // saving image
         if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
             ImageManager.shared.saveImage(imageName: "User", image: image)
         } else {
             ImageManager.shared.deleteImage(imageName: "User")
         }
         
+        // adding properties to self.user from textfields
         user.fullname = fullNameTextField.text
         user.occupation = occupationTextField.text
         user.location = locationTextField.text
-
-        tryToSaveData()
         
+        tryToSaveDataGCD()
     }
     
-    private func tryToSaveData() {
+    @objc private func saveOperationButtonTapped() {
+        tappedButton = saveOperationsButton
+        // saving image
+        if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
+            ImageManager.shared.saveImage(imageName: "User", image: image)
+        } else {
+            ImageManager.shared.deleteImage(imageName: "User")
+        }
+        
+        // adding properties to self.user from textfields
+        user.fullname = fullNameTextField.text
+        user.occupation = occupationTextField.text
+        user.location = locationTextField.text
+        
+        tryToSafeDataOperation()
+    }
+    
+    private func tryToSaveDataGCD() {
         // make activity indicator
-        let spinner = UIActivityIndicatorView()
-        spinner.style = .large
-        spinner.color = .link
-        spinner.hidesWhenStopped = true
+        let spinner = styleSheet.createSpinner()
         spinner.center = view.center
         view.addSubview(spinner)
         spinner.startAnimating()
@@ -344,6 +346,42 @@ final class ProfileViewController: UIViewController {
         }
     }
     
+    private func tryToSafeDataOperation() {
+        // make activity indicator
+        let spinner = styleSheet.createSpinner()
+        spinner.center = view.center
+        view.addSubview(spinner)
+        spinner.startAnimating()
+        
+        // block buttons
+        somethingIsChanged(false)
+        cancelButton.isEnabled = false
+        
+        // creating operation queue and operation to save user
+        let queue = OperationQueue()
+        let writeUserOperation = DataManagerOperation(inputUser: user)
+        
+        // after complete returning to main and updating UI
+        writeUserOperation.saveToFileSuccessCompletion = { [weak self] success in
+            OperationQueue.main.addOperation {
+                // remove activity indicator
+                spinner.stopAnimating()
+                self?.view.endEditing(true)
+                
+                if success {
+                    // show success alert
+                    self?.showSaveSuccessAlert()
+                } else {
+                    // show error alert
+                    self?.showSaveErrorAlert()
+                }
+            }
+        }
+        // saving user for 1 sec
+        queue.addOperation(writeUserOperation)
+    }
+    
+    // MARK: - Methods showing alert VC's
     private func showSaveSuccessAlert() {
         let alertVC = UIAlertController(title: nil, message: "Successfully saved", preferredStyle: .alert)
         
@@ -359,42 +397,24 @@ final class ProfileViewController: UIViewController {
         let alertVC = UIAlertController(title: "Error", message: "Failed to save data" , preferredStyle: .alert)
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
-            self?.restoreUserData()
+            self?.restoreUserDataGCD()
             self?.setupUIIfEditingAllowedIs(false)
             self?.cancelButton.isEnabled = true
         }))
         
         alertVC.addAction(UIAlertAction(title: "Repeat", style: .default, handler: { [weak self] _ in
-            self?.tryToSaveData()
+            guard let self = self else { return }
+            if let tappedButton = self.tappedButton {
+                switch tappedButton {
+                case self.saveGCDButton:  self.tryToSaveDataGCD()
+                case self.saveOperationsButton: self.tryToSafeDataOperation()
+                default: break
+                }
+            }
+           
         }))
         
         present(alertVC, animated: true, completion: nil)
-    }
-    
-    @objc private func keyboardWillShow(_ notification:Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-            
-            let activeView: UIView? = [fullNameTextField, occupationTextField, locationTextField].first { $0.isFirstResponder }
-            if let activeView = activeView {
-                let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 130)
-                scrollView.setContentOffset(scrollPoint, animated: true)
-            }
-        }
-    }
-    
-    @objc private func keyboardWillHide(_ notification:Notification) {
-        scrollView.contentInset = .zero
-    }
-    
-    private func somethingIsChanged(_ bool: Bool) {
-        if bool {
-            saveGCDButton.isEnabled = true
-            saveOperationsButton.isEnabled = true
-        } else {
-            saveGCDButton.isEnabled = false
-            saveOperationsButton.isEnabled = false
-        }
     }
     
     private func showAddPhotoAlertVC() {
@@ -437,7 +457,7 @@ extension ProfileViewController {
     private func setConstraints() {
         var profileImageWidth: CGFloat = 220
         var editPhotoButtonWidth: CGFloat = 50
-    
+        
         if !isLargeScreenDevice {
             profileImageWidth = 150
             editPhotoButtonWidth = 30
@@ -462,7 +482,7 @@ extension ProfileViewController {
             
             locationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
             locationTextField.heightAnchor.constraint(equalToConstant: 24),
-
+            
             editButton.widthAnchor.constraint(equalToConstant: 40),
             editButton.heightAnchor.constraint(equalToConstant: 40),
             
@@ -511,18 +531,17 @@ extension ProfileViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         somethingIsChanged(true)
         let text = (textField.text ?? "") + string
-
+        
         let result: String
         if range.length == 1 {
             let end = text.index(text.startIndex, offsetBy: text.count - 1)
             result = String(text[text.startIndex..<end])
-        } else {
-            result = text
-        }
-
-        textField.text = result
+        } else { result = text }
         
+        textField.text = result
         return false
     }
- 
+    
 }
+
+

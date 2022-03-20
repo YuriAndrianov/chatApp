@@ -7,7 +7,7 @@
 
 import Foundation
 
-class DataManagerGCD: DataManagerProtocol {
+final class DataManagerGCD: DataManagerProtocol {
     
     static let shared = DataManagerGCD()
     
@@ -17,7 +17,13 @@ class DataManagerGCD: DataManagerProtocol {
         DispatchQueue.global(qos: .background).async {
             guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
             let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
+            
+            if !FileManager.default.fileExists(atPath: userFileURL.path) {
+                FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)
+            }
+            
             print("Path to file: ", userFileURL.path)
+            
             do {
                 try JSONEncoder().encode(user).write(to: userFileURL)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {

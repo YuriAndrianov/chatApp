@@ -36,6 +36,7 @@
 		E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38327E642AB009D9300 /* DataManagerGCD.swift */; };
 		E28DE38627E642B9009D9300 /* DataManagerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38527E642B9009D9300 /* DataManagerOperation.swift */; };
 		E28DE38827E644E3009D9300 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38727E644E3009D9300 /* User.swift */; };
+		E28DE38B27E76CB3009D9300 /* ProfileVCStyleSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38A27E76CB3009D9300 /* ProfileVCStyleSheet.swift */; };
 		FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6A27C61143000417F5 /* AppDelegate.swift */; };
 		FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6E27C61143000417F5 /* ProfileViewController.swift */; };
 		FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAC70C7327C61149000417F5 /* Assets.xcassets */; };
@@ -73,6 +74,7 @@
 		E28DE38327E642AB009D9300 /* DataManagerGCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerGCD.swift; sourceTree = "<group>"; };
 		E28DE38527E642B9009D9300 /* DataManagerOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerOperation.swift; sourceTree = "<group>"; };
 		E28DE38727E644E3009D9300 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		E28DE38A27E76CB3009D9300 /* ProfileVCStyleSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVCStyleSheet.swift; sourceTree = "<group>"; };
 		FAC70C6727C61143000417F5 /* MyChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAC70C6A27C61143000417F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAC70C6E27C61143000417F5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				FAC70C6E27C61143000417F5 /* ProfileViewController.swift */,
+				E28DE38A27E76CB3009D9300 /* ProfileVCStyleSheet.swift */,
 			);
 			path = ProfileModule;
 			sourceTree = "<group>";
@@ -335,6 +338,7 @@
 				E25D36B227D67A4200E6A746 /* MessageCellConfiguration.swift in Sources */,
 				E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */,
 				E28DE38227E64236009D9300 /* DataManagerProtocol.swift in Sources */,
+				E28DE38B27E76CB3009D9300 /* ProfileVCStyleSheet.swift in Sources */,
 				E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */,
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
 				E25D373327DF585C00E6A746 /* CustomNavigationController.swift in Sources */,
