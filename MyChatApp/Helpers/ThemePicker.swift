@@ -30,27 +30,57 @@ final class ThemePicker {
     }
     
     func applySavedTheme() {
-        if let savedTheme = UserDefaults.standard.value(forKey: "currentTheme") as? String {
-            switch savedTheme {
-            case "classic": apply(.classic, completion: nil)
-            case "day": apply(.day, completion: nil)
-            case "night": apply(.night, completion: nil)
-            default: apply(.classic, completion: nil)
+//        guard let user = DataManagerGCD.shared.readFromFile() else {
+//            apply(.classic, completion: nil)
+//            return
+//        }
+//
+//        if let savedTheme = user.preferedTheme {
+//            switch savedTheme {
+//            case "classic": apply(.classic, completion: nil)
+//            case "day": apply(.day, completion: nil)
+//            case "night": apply(.night, completion: nil)
+//            default: apply(.classic, completion: nil)
+//            }
+//        } else { apply(.classic, completion: nil) }
+        
+        DataManagerGCD.shared.readFromFile { [weak self] user in
+            guard let self = self else { return }
+            guard let user = user else {
+                self.apply(.classic, completion: nil)
+                return
             }
-        } else { apply(.classic, completion: nil) }
+            
+            if let savedTheme = user.preferedTheme {
+                switch savedTheme {
+                case "classic": self.apply(.classic, completion: nil)
+                case "day": self.apply(.day, completion: nil)
+                case "night": self.apply(.night, completion: nil)
+                default: self.apply(.classic, completion: nil)
+                }
+            } else { self.apply(.classic, completion: nil) }
+            
+        }
     }
 
     func apply(_ theme: ThemePicker.ThemeType, completion: ((ThemeProtocol) -> Void)?) {
-        switch theme {
-        case .classic:
-            ThemePicker.currentTheme = ClassicTheme()
-            UserDefaults.standard.set("classic", forKey: "currentTheme")
-        case .day:
-            ThemePicker.currentTheme = DayTheme()
-            UserDefaults.standard.set("day", forKey: "currentTheme")
-        case .night:
-            ThemePicker.currentTheme = NightTheme()
-            UserDefaults.standard.set("night", forKey: "currentTheme")
+        
+//        if let user = DataManagerGCD.shared.readFromFile() {
+//            savePreffered(theme: theme, for: user)
+//        } else {
+//            let user = User()
+//            savePreffered(theme: theme, for: user)
+//        }
+        
+        DataManagerGCD.shared.readFromFile { [weak self] user in
+            guard let self = self else { return }
+            
+            if let user = user {
+                self.savePreffered(theme: theme, for: user)
+            } else {
+                let user = User()
+                self.savePreffered(theme: theme, for: user)
+            }
         }
         
         let navBarAppearance = UINavigationBarAppearance()
@@ -70,6 +100,22 @@ final class ThemePicker {
         
         // при использовании completion
         completion?(ThemePicker.currentTheme ?? ClassicTheme())
+    }
+    
+    private func savePreffered(theme: ThemeType, for user: User) {
+        switch theme {
+        case .classic:
+            ThemePicker.currentTheme = ClassicTheme()
+            user.preferedTheme = "classic"
+        case .day:
+            ThemePicker.currentTheme = DayTheme()
+            user.preferedTheme = "day"
+        case .night:
+            ThemePicker.currentTheme = NightTheme()
+            user.preferedTheme = "night"
+        }
+        
+        DataManagerGCD.shared.writeToFile(user) { _ in }
     }
     
 }

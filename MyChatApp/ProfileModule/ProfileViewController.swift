@@ -89,6 +89,7 @@ final class ProfileViewController: UIViewController {
         button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
         button.setTitle("Cancel", for: .normal)
         button.setTitleColor(.link, for: .normal)
+        button.setTitleColor(.systemGray, for: .disabled)
         button.titleLabel?.font = .boldSystemFont(ofSize: 15)
         button.layer.cornerRadius = 8
         button.alpha = 0
@@ -155,6 +156,8 @@ final class ProfileViewController: UIViewController {
     
     private let scrollView = UIScrollView()
     
+    private var user = User()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
@@ -196,14 +199,22 @@ final class ProfileViewController: UIViewController {
     }
     
     private func restoreUserData() {
-        fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
-        occupationTextField.text = UserDefaults.standard.string(forKey: "occupationText")
-        locationTextField.text = UserDefaults.standard.string(forKey: "locationText")
+        DataManagerGCD.shared.readFromFile { [weak self] user in
+            guard let self = self else { return }
+            if let user = user {
+                self.user = user
+                self.fullNameTextField.text = user.fullname
+                self.occupationTextField.text = user.occupation
+                self.locationTextField.text = user.location
+            }
+        }
 
-        if let userImage = ImageManager.shared.loadImageFromDiskWith(fileName: "User") {
-            profileImageView.image = userImage
-        } else {
-            profileImageView.image = UIImage(systemName: "person.circle")
+        ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
+            if let image = image {
+                self?.profileImageView.image = image
+            } else {
+                self?.profileImageView.image = UIImage(systemName: "person.circle")
+            }
         }
         
         somethingIsChanged(false)
@@ -283,35 +294,81 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
-        occupationTextField.text = UserDefaults.standard.string(forKey: "occupationText")
-        locationTextField.text = UserDefaults.standard.string(forKey: "locationText")
-        
-        if let userImage = ImageManager.shared.loadImageFromDiskWith(fileName: "User") {
-            profileImageView.image = userImage
-        } else {
-            profileImageView.image = UIImage(systemName: "person.circle")
-        }
-        
+        restoreUserData()
         setupUIIfEditingAllowedIs(false)
-        somethingIsChanged(false)
         view.endEditing(true)
     }
     
     @objc private func saveButtonTapped() {
-        UserDefaults.standard.set(fullNameTextField.text, forKey: "fullnameText")
-        UserDefaults.standard.set(occupationTextField.text, forKey: "occupationText")
-        UserDefaults.standard.set(locationTextField.text, forKey: "locationText")
-        
         if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
-            ImageManager.shared.saveImage(imageName: "User",
-                                          image: image)
+            ImageManager.shared.saveImage(imageName: "User", image: image)
         } else {
             ImageManager.shared.deleteImage(imageName: "User")
         }
         
-        setupUIIfEditingAllowedIs(false)
+        user.fullname = fullNameTextField.text
+        user.occupation = occupationTextField.text
+        user.location = locationTextField.text
+
+        tryToSaveData()
+        
+    }
+    
+    private func tryToSaveData() {
+        // make activity indicator
+        let spinner = UIActivityIndicatorView()
+        spinner.style = .large
+        spinner.color = .link
+        spinner.hidesWhenStopped = true
+        spinner.center = view.center
+        view.addSubview(spinner)
+        spinner.startAnimating()
+        
+        // block buttons
         somethingIsChanged(false)
+        cancelButton.isEnabled = false
+        
+        // saving to file (1 sec)
+        DataManagerGCD.shared.writeToFile(user) { [weak self] success in
+            // remove activity indicator
+            spinner.stopAnimating()
+            self?.view.endEditing(true)
+            
+            if success {
+                // show success alert
+                self?.showSaveSuccessAlert()
+            } else {
+                // show error alert
+                self?.showSaveErrorAlert()
+            }
+        }
+    }
+    
+    private func showSaveSuccessAlert() {
+        let alertVC = UIAlertController(title: nil, message: "Successfully saved", preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
+            self?.setupUIIfEditingAllowedIs(false)
+            self?.cancelButton.isEnabled = true
+        }))
+        
+        present(alertVC, animated: true, completion: nil)
+    }
+    
+    private func showSaveErrorAlert() {
+        let alertVC = UIAlertController(title: "Error", message: "Failed to save data" , preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
+            self?.restoreUserData()
+            self?.setupUIIfEditingAllowedIs(false)
+            self?.cancelButton.isEnabled = true
+        }))
+        
+        alertVC.addAction(UIAlertAction(title: "Repeat", style: .default, handler: { [weak self] _ in
+            self?.tryToSaveData()
+        }))
+        
+        present(alertVC, animated: true, completion: nil)
     }
     
     @objc private func keyboardWillShow(_ notification:Notification) {
@@ -361,7 +418,11 @@ final class ProfileViewController: UIViewController {
             self.profileImageView.image = UIImage(systemName: "person.circle")
             self.somethingIsChanged(true)
         }
-        alertVC.addAction(deleteButton)
+        
+        // if there is profile photo then add delete button
+        if profileImageView.image != UIImage(systemName: "person.circle") {
+            alertVC.addAction(deleteButton)
+        }
         
         let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertVC.addAction(cancelButton)
@@ -383,7 +444,6 @@ extension ProfileViewController {
         }
         
         profileImageView.layer.cornerRadius = profileImageWidth / 2
-        
         
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
