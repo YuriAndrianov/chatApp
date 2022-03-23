@@ -39,6 +39,9 @@
 		E28DE38F27E793FD009D9300 /* WriteToFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38E27E793FD009D9300 /* WriteToFileOperation.swift */; };
 		E28DE39127E795F1009D9300 /* ReadFromFileOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE39027E795F1009D9300 /* ReadFromFileOperation.swift */; };
 		E28DE39327E79665009D9300 /* DataManagerOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE39227E79665009D9300 /* DataManagerOperation.swift */; };
+		E2E7568527EB8C9F0041279A /* ThemeButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2E7568427EB8C9F0041279A /* ThemeButton.xib */; };
+		E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E7568627EB8D610041279A /* ThemeButton.swift */; };
+		E2E7568927EBA7930041279A /* UIColor+asset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E7568827EBA7930041279A /* UIColor+asset.swift */; };
 		FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6A27C61143000417F5 /* AppDelegate.swift */; };
 		FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC70C6E27C61143000417F5 /* ProfileViewController.swift */; };
 		FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAC70C7327C61149000417F5 /* Assets.xcassets */; };
@@ -79,6 +82,9 @@
 		E28DE38E27E793FD009D9300 /* WriteToFileOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteToFileOperation.swift; sourceTree = "<group>"; };
 		E28DE39027E795F1009D9300 /* ReadFromFileOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadFromFileOperation.swift; sourceTree = "<group>"; };
 		E28DE39227E79665009D9300 /* DataManagerOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerOperation.swift; sourceTree = "<group>"; };
+		E2E7568427EB8C9F0041279A /* ThemeButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeButton.xib; sourceTree = "<group>"; };
+		E2E7568627EB8D610041279A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
+		E2E7568827EBA7930041279A /* UIColor+asset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+asset.swift"; sourceTree = "<group>"; };
 		FAC70C6727C61143000417F5 /* MyChatApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyChatApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAC70C6A27C61143000417F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAC70C6E27C61143000417F5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -173,6 +179,8 @@
 				E25D371427DBBCDB00E6A746 /* ThemesViewController.swift */,
 				E25D371627DCBF0700E6A746 /* CustomThemeView.swift */,
 				E25D371827DCBF5E00E6A746 /* CustomThemeView.xib */,
+				E2E7568427EB8C9F0041279A /* ThemeButton.xib */,
+				E2E7568627EB8D610041279A /* ThemeButton.swift */,
 			);
 			path = SettingsModule;
 			sourceTree = "<group>";
@@ -193,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				E25D373027DE2BA700E6A746 /* UIWindow+reload.swift */,
+				E2E7568827EBA7930041279A /* UIColor+asset.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -321,6 +330,7 @@
 				FAC70C7727C61149000417F5 /* LaunchScreen.storyboard in Resources */,
 				E25D371C27DCC00500E6A746 /* Themes.xcassets in Resources */,
 				FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */,
+				E2E7568527EB8C9F0041279A /* ThemeButton.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,6 +362,8 @@
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
 				E25D373327DF585C00E6A746 /* CustomNavigationController.swift in Sources */,
 				E25D373127DE2BA700E6A746 /* UIWindow+reload.swift in Sources */,
+				E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */,
+				E2E7568927EBA7930041279A /* UIColor+asset.swift in Sources */,
 				E25D36AE27D644D900E6A746 /* Message.swift in Sources */,
 				E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */,
 				E25D372627DCD70300E6A746 /* ClassicTheme.swift in Sources */,

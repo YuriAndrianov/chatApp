@@ -10,11 +10,11 @@ import UIKit
 final class CustomThemeView: UIView {
 
     @IBOutlet weak var contentView: UIView?
-    @IBOutlet weak var button: UIButton?
+    @IBOutlet weak var button: ThemeButton?
     @IBOutlet weak var label: UILabel?
     
     let tapGesture = UITapGestureRecognizer()
-    
+
     var isButtonHighlited: Bool = false {
         didSet {
             if isButtonHighlited {
@@ -49,12 +49,27 @@ final class CustomThemeView: UIView {
         
         label?.isUserInteractionEnabled = true
         label?.addGestureRecognizer(tapGesture)
-        label?.textColor = ThemePicker.currentTheme?.fontColor
-        
-        button?.clipsToBounds = true
-        button?.layer.cornerRadius = 20
-        button?.layer.borderWidth = 3
-        button?.layer.borderColor = UIColor.systemGray5.cgColor
+        label?.textColor = ThemePicker.shared.currentTheme?.fontColor
+    }
+    
+    func configurate(with theme: ThemePicker.ThemeType) {
+        switch theme {
+        case .classic:
+            button?.incomingMessageView?.backgroundColor = ClassicTheme().incomingMessageColor
+            button?.outcomingMessageView?.backgroundColor = ClassicTheme().outcomingMessageColor
+            button?.contentView?.backgroundColor = ClassicTheme().backGroundColor
+            label?.text = "Classic"
+        case .day:
+            button?.incomingMessageView?.backgroundColor = DayTheme().incomingMessageColor
+            button?.outcomingMessageView?.backgroundColor = DayTheme().outcomingMessageColor
+            button?.contentView?.backgroundColor = DayTheme().backGroundColor
+            label?.text = "Day"
+        case .night:
+            button?.incomingMessageView?.backgroundColor = NightTheme().incomingMessageColor
+            button?.outcomingMessageView?.backgroundColor = NightTheme().outcomingMessageColor
+            button?.contentView?.backgroundColor = NightTheme().backGroundColor
+            label?.text = "Night"
+        }
     }
     
 }

@@ -16,7 +16,7 @@ final class ConversationViewController: UIViewController {
         table.register(MessageTableViewCell.nib,
                        forCellReuseIdentifier: MessageTableViewCell.identifier)
         table.separatorStyle = .none
-        table.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        table.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         table.transform = CGAffineTransform(rotationAngle: -.pi)
         return table
     }()
@@ -33,7 +33,7 @@ final class ConversationViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+        tableView.frame = CGRect(x: 0, y: 70, width: view.frame.width, height: view.frame.height - 70)
     }
 
     private func setupUI() {
@@ -111,12 +111,12 @@ extension ConversationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         guard let footer = view as? UITableViewHeaderFooterView else { return }
         footer.transform = CGAffineTransform(rotationAngle: -.pi)
-        footer.textLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        footer.textLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
         
         if #available(iOS 14.0, *) {
-            footer.backgroundConfiguration?.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+            footer.backgroundConfiguration?.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         } else {
-            footer.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+            footer.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         }
     }
     

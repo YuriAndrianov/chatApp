@@ -9,7 +9,7 @@ import UIKit
 
 final class DayTheme: ThemeProtocol {
     
-    var backGroundColor: UIColor = UIColor(named: "dayThemeBackGroundColor") ?? .systemBackground
+    var backGroundColor: UIColor = UIColor(named: "dayThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "dayFontColor") ?? .label
     var incomingMessageColor: UIColor = UIColor(named: "dayIncoming") ?? .systemGray5
     var outcomingMessageColor: UIColor = UIColor(named: "dayOutcoming") ?? .systemBlue

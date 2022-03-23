@@ -18,45 +18,43 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         return stack
     }()
     
-    private let classicThemeView: CustomThemeView = {
-        let view = CustomThemeView()
-        view.button?.setImage(UIImage(named: "classicThemeButtonImage"), for: .normal)
-        view.label?.text = "Classic"
-        view.button?.addTarget(self, action: #selector(classicTapped), for: .touchUpInside)
-        return view
-    }()
-    
-    private let dayThemeView: CustomThemeView = {
-        let view = CustomThemeView()
-        view.button?.setImage(UIImage(named: "dayThemeButtonImage"), for: .normal)
-        view.label?.text = "Day"
-        view.button?.addTarget(self, action: #selector(dayTapped), for: .touchUpInside)
-        return view
-    }()
-    
-    private let nightThemeView: CustomThemeView = {
-        let view = CustomThemeView()
-        view.button?.setImage(UIImage(named: "nightThemeButtonImage"), for: .normal)
-        view.label?.text = "Night"
-        view.button?.addTarget(self, action: #selector(nightTapped), for: .touchUpInside)
-        return view
-    }()
+    private let classicThemeView = CustomThemeView()
+    private let dayThemeView = CustomThemeView()
+    private let nightThemeView = CustomThemeView ()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        setupUI()
+        highlightButton()
+        setupStackView()
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         title = "Settings"
-        
+    }
+    
+    private func highlightButton() {
         // highlight button depending on current theme
-        switch ThemePicker.currentTheme {
+        switch ThemePicker.shared.currentTheme {
         case is ClassicTheme: classicThemeView.isButtonHighlited = true
         case is DayTheme: dayThemeView.isButtonHighlited = true
         case is NightTheme: nightThemeView.isButtonHighlited = true
         default: classicThemeView.isButtonHighlited = true
         }
-        
+    }
+    
+    private func setupStackView() {
         [classicThemeView, dayThemeView, nightThemeView].forEach { stackView.addArrangedSubview($0) }
+        
+        classicThemeView.configurate(with: .classic)
+        dayThemeView.configurate(with: .day)
+        nightThemeView.configurate(with: .night)
+        
+        classicThemeView.button?.addTarget(self, action: #selector(classicTapped), for: .touchUpInside)
+        dayThemeView.button?.addTarget(self, action: #selector(dayTapped), for: .touchUpInside)
+        nightThemeView.button?.addTarget(self, action: #selector(nightTapped), for: .touchUpInside)
         
         classicThemeView.tapGesture.addTarget(self, action: #selector(classicTapped))
         dayThemeView.tapGesture.addTarget(self, action: #selector(dayTapped))

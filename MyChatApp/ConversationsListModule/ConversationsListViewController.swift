@@ -14,7 +14,7 @@ final class ConversationsListViewController: UIViewController {
     
     private let chatTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
-        table.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        table.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
@@ -35,8 +35,7 @@ final class ConversationsListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         chatTableView.reloadData()
-        chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-        setNeedsStatusBarAppearanceUpdate()
+        chatTableView.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
     }
     
     override func viewDidLayoutSubviews() {
@@ -46,7 +45,7 @@ final class ConversationsListViewController: UIViewController {
     
     private func setupNavBar() {
         title = "Tinkoff Chat"
-        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "gear"),
                                              style: .plain,
@@ -63,7 +62,7 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func setupTableView() {
-        chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        chatTableView.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         view.addSubview(chatTableView)
         chatTableView.delegate = self
         chatTableView.dataSource = self
@@ -121,12 +120,12 @@ extension ConversationsListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        header.textLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
         
         if #available(iOS 14.0, *) {
-            header.backgroundConfiguration?.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+            header.backgroundConfiguration?.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         } else {
-            header.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+            header.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         }
     }
     

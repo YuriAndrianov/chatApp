@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ThemeButton" customModule="MyChatApp" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="bIt-xS-OyP" id="2ad-oB-mbM"/>
+                <outlet property="incomingMessageView" destination="fs3-Er-NhS" id="SMk-wA-pLD"/>
+                <outlet property="outcomingMessageView" destination="ozW-sb-gCe" id="B7U-6r-5T0"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" id="bIt-xS-OyP">
+            <rect key="frame" x="0.0" y="0.0" width="325" height="90"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fs3-Er-NhS">
+                    <rect key="frame" x="20" y="10" width="120" height="30"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="LJW-bD-LQV"/>
+                        <constraint firstAttribute="width" constant="120" id="r5R-fz-SPv"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ozW-sb-gCe">
+                    <rect key="frame" x="185" y="50" width="120" height="30"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="KAs-Ab-km8"/>
+                        <constraint firstAttribute="width" constant="120" id="mFM-6h-VEW"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="10"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Lr4-38-l4W"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="fs3-Er-NhS" firstAttribute="top" secondItem="bIt-xS-OyP" secondAttribute="top" constant="10" id="9p0-eO-iPb"/>
+                <constraint firstItem="Lr4-38-l4W" firstAttribute="trailing" secondItem="ozW-sb-gCe" secondAttribute="trailing" constant="20" id="ly8-aV-RvB"/>
+                <constraint firstAttribute="bottom" secondItem="ozW-sb-gCe" secondAttribute="bottom" constant="10" id="nkr-N1-dqk"/>
+                <constraint firstItem="fs3-Er-NhS" firstAttribute="leading" secondItem="Lr4-38-l4W" secondAttribute="leading" constant="20" id="ppb-fk-Rtq"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="327.536231884058" y="-24.441964285714285"/>
+        </view>
+    </objects>
+</document>

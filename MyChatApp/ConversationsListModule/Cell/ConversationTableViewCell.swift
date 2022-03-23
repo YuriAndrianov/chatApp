@@ -20,10 +20,10 @@ final class ConversationTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0))
-        nameLabel?.textColor = ThemePicker.currentTheme?.fontColor
-        dateLabel?.textColor = ThemePicker.currentTheme?.fontColor
-        friendPhotoImageView?.tintColor = ThemePicker.currentTheme?.barButtonColor
-        backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        nameLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
+        dateLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
+        friendPhotoImageView?.tintColor = ThemePicker.shared.currentTheme?.barButtonColor
+        backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
     }
    
 
@@ -38,10 +38,10 @@ final class ConversationTableViewCell: UITableViewCell {
     private func setupViewWithMessage(_ message: String?) {
         if message == nil {
             messageLabel?.text = "No messages yet"
-            messageLabel?.textColor = ThemePicker.currentTheme?.barButtonColor
+            messageLabel?.textColor = ThemePicker.shared.currentTheme?.barButtonColor
         } else {
             messageLabel?.text = message
-            messageLabel?.textColor = ThemePicker.currentTheme?.fontColor
+            messageLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
         }
     }
     
@@ -65,7 +65,7 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
     
     var online: Bool {
         get { return false }
-        set { contentView.backgroundColor = newValue ? ThemePicker.currentTheme?.outcomingMessageColor : ThemePicker.currentTheme?.backGroundColor }
+        set { contentView.backgroundColor = newValue ? ThemePicker.shared.currentTheme?.outcomingMessageColor : ThemePicker.shared.currentTheme?.backGroundColor }
     }
     
     var hasUnreadMessages: Bool {

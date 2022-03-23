@@ -20,9 +20,9 @@ final class MessageTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        backgroundColor = ThemePicker.currentTheme?.backGroundColor
-        messageTextLabel?.textColor = ThemePicker.currentTheme?.fontColor
-        dateLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        messageTextLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
+        dateLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
     }
 
     func configure(with message: Message) {
@@ -35,11 +35,11 @@ final class MessageTableViewCell: UITableViewCell {
         if isTrue {
             leadingConstraint?.constant = 20
             trailingConstraint?.constant = contentView.frame.width / 4
-            bubbleView?.backgroundColor = ThemePicker.currentTheme?.incomingMessageColor
+            bubbleView?.backgroundColor = ThemePicker.shared.currentTheme?.incomingMessageColor
         } else {
             leadingConstraint?.constant = contentView.frame.width / 4
             trailingConstraint?.constant = 20
-            bubbleView?.backgroundColor = ThemePicker.currentTheme?.outcomingMessageColor
+            bubbleView?.backgroundColor = ThemePicker.shared.currentTheme?.outcomingMessageColor
         }
     }
 }

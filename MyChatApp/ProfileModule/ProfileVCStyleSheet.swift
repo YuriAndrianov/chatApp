@@ -12,7 +12,7 @@ final class ProfileVCStyleSheet {
     func createProfileImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.tintColor = ThemePicker.currentTheme?.barButtonColor
+        imageView.tintColor = ThemePicker.shared.currentTheme?.barButtonColor
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -22,7 +22,7 @@ final class ProfileVCStyleSheet {
         let field = UITextField()
         field.textAlignment = .center
         field.font = .boldSystemFont(ofSize: 20)
-        field.textColor = ThemePicker.currentTheme?.fontColor
+        field.textColor = ThemePicker.shared.currentTheme?.fontColor
         field.attributedPlaceholder = NSAttributedString(
             string: "Enter your name...",
             attributes: [.foregroundColor : UIColor.lightGray]
@@ -31,7 +31,7 @@ final class ProfileVCStyleSheet {
         field.layer.cornerRadius = 6
         field.layer.borderColor = UIColor.systemGray.cgColor
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+        field.keyboardAppearance = ThemePicker.shared.currentTheme is NightTheme ? .dark : .default
         return field
     }
     
@@ -39,7 +39,7 @@ final class ProfileVCStyleSheet {
         let field = UITextField()
         field.textAlignment = .center
         field.font = .boldSystemFont(ofSize: 15)
-        field.textColor = ThemePicker.currentTheme?.fontColor
+        field.textColor = ThemePicker.shared.currentTheme?.fontColor
         field.attributedPlaceholder = NSAttributedString(
             string: text,
             attributes: [.foregroundColor : UIColor.lightGray]
@@ -48,7 +48,7 @@ final class ProfileVCStyleSheet {
         field.layer.cornerRadius = 6
         field.layer.borderColor = UIColor.systemGray.cgColor
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+        field.keyboardAppearance = ThemePicker.shared.currentTheme is NightTheme ? .dark : .default
         return field
     }
     
@@ -63,7 +63,7 @@ final class ProfileVCStyleSheet {
     
     func createCancelButton() -> UIButton {
         let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+        button.backgroundColor = ThemePicker.shared.currentTheme?.saveButtonColor
         button.setTitle("Cancel", for: .normal)
         button.setTitleColor(.link, for: .normal)
         button.setTitleColor(.systemGray, for: .disabled)
@@ -76,7 +76,7 @@ final class ProfileVCStyleSheet {
     
     func createSaveButton(withTitle: String) -> UIButton {
         let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+        button.backgroundColor = ThemePicker.shared.currentTheme?.saveButtonColor
         button.setTitle(withTitle, for: .normal)
         button.setTitleColor(.link, for: .normal)
         button.setTitleColor(.systemGray, for: .disabled)
