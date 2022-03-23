@@ -18,7 +18,7 @@ final class ProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle")
         imageView.contentMode = .scaleAspectFill
-        imageView.tintColor = .systemGray
+        imageView.tintColor = ThemePicker.currentTheme?.barButtonColor
         imageView.layer.cornerRadius = 110
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -28,22 +28,29 @@ final class ProfileViewController: UIViewController {
     private let fullNameTextField: UITextField = {
         let field = UITextField()
         field.textAlignment = .center
-        field.placeholder = "Enter your name..."
         field.font = .boldSystemFont(ofSize: 24)
+        field.textColor = ThemePicker.currentTheme?.fontColor
+        field.attributedPlaceholder = NSAttributedString(
+            string: "Enter your name...",
+            attributes: [.foregroundColor : UIColor.lightGray]
+        )
         field.isEnabled = false
         field.layer.cornerRadius = 6
         field.translatesAutoresizingMaskIntoConstraints = false
+        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
         return field
     }()
     
     private let userInfoTextView: UITextView = {
         let textView = UITextView()
         textView.textAlignment = .center
+        textView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
         textView.font = .systemFont(ofSize: 16)
-        textView.textColor = .label
+        textView.textColor = ThemePicker.currentTheme?.fontColor
         textView.textContainer.maximumNumberOfLines = 3
         textView.layer.cornerRadius = 6
         textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
         return textView
     }()
     
@@ -80,7 +87,7 @@ final class ProfileViewController: UIViewController {
     
     private let saveButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(named: "saveButtonColor")
+        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
         button.setTitle("Save", for: .normal)
         button.setTitleColor(.link, for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 19)
@@ -160,7 +167,7 @@ final class ProfileViewController: UIViewController {
         if let text =  UserDefaults.standard.string(forKey: "userInfoText"),
            text != "Enter short info about you..." {
             userInfoTextView.text = text
-            userInfoTextView.textColor = .label
+            userInfoTextView.textColor = ThemePicker.currentTheme?.fontColor
         } else {
             userInfoTextView.text = "Enter short info about you..."
             userInfoTextView.textColor = UIColor.lightGray
@@ -177,8 +184,8 @@ final class ProfileViewController: UIViewController {
                 self.editButton.alpha = 0
                 self.editPhotoButton.alpha = 1
                 self.saveButton.alpha = 1
-                self.fullNameTextField.backgroundColor = .secondarySystemBackground
-                self.userInfoTextView.backgroundColor = .secondarySystemBackground
+                self.fullNameTextField.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+                self.userInfoTextView.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
             }
         } else {
             fullNameTextField.isEnabled = false
@@ -188,19 +195,17 @@ final class ProfileViewController: UIViewController {
                 self.editButton.alpha = 1
                 self.editPhotoButton.alpha = 0
                 self.saveButton.alpha = 0
-                self.fullNameTextField.backgroundColor = .systemBackground
-                self.userInfoTextView.backgroundColor = .systemBackground
+                self.fullNameTextField.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+                self.userInfoTextView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
             }
         }
     }
     
     private func setupNavBar() {
         title = "My Profile"
-        view.backgroundColor = .systemBackground
-        
+        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+
         self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
-        self.navigationController?.navigationBar.backgroundColor = UIColor(named: "navBarBackgroundColor")
-        
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
                                           style: .plain,
                                           target: self,
@@ -360,7 +365,7 @@ extension ProfileViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
-            textView.textColor = .label
+            textView.textColor = ThemePicker.currentTheme?.fontColor
         }
     }
     

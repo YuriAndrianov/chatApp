@@ -5,7 +5,6 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -37,7 +36,6 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="VbS-Sy-M8i" firstAttribute="top" secondItem="4a4-rv-yNA" secondAttribute="bottom" constant="5" id="417-ch-elH"/>
                             <constraint firstAttribute="bottom" secondItem="4a4-rv-yNA" secondAttribute="bottom" constant="25" id="5OT-7g-zCg"/>
@@ -53,7 +51,6 @@
                         </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
-                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 <constraints>
                     <constraint firstItem="emh-gE-QKI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="E5h-c4-1Gx"/>
                     <constraint firstAttribute="trailing" secondItem="emh-gE-QKI" secondAttribute="trailing" constant="20" id="IVR-Cz-trd"/>
@@ -72,9 +69,4 @@
             <point key="canvasLocation" x="-39.130434782608695" y="-12.723214285714285"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>
