@@ -218,7 +218,7 @@ final class ProfileViewController: UIViewController {
         }
     }
     
-    @objc private func keyboardWillShow(_ notification:Notification) {
+    @objc private func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
             
@@ -230,7 +230,7 @@ final class ProfileViewController: UIViewController {
         }
     }
     
-    @objc private func keyboardWillHide(_ notification:Notification) {
+    @objc private func keyboardWillHide(_ notification: Notification) {
         scrollView.contentInset = .zero
     }
     
@@ -318,8 +318,8 @@ final class ProfileViewController: UIViewController {
             }
         }
     }
-    
     // MARK: - Methods showing alert VC's
+    
     private func showSaveSuccessAlert() {
         let alertVC = UIAlertController(title: nil, message: "Successfully saved", preferredStyle: .alert)
         
@@ -332,7 +332,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func showSaveErrorAlert() {
-        let alertVC = UIAlertController(title: "Error", message: "Failed to save data" , preferredStyle: .alert)
+        let alertVC = UIAlertController(title: "Error", message: "Failed to save data", preferredStyle: .alert)
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
             self?.restoreUserDataUsing(manager: DataManagerGCD.shared)
@@ -388,8 +388,8 @@ final class ProfileViewController: UIViewController {
         present(alertVC, animated: true, completion: nil)
     }
 }
-
 // MARK: - Constraints
+
 extension ProfileViewController {
     
     private func setConstraints() {
@@ -436,8 +436,8 @@ extension ProfileViewController {
     }
     
 }
-
 // MARK: - Delegates
+
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func showImagePicker(selectedSource: UIImagePickerController.SourceType) {
@@ -449,7 +449,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.present(imagePickerController, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.editedImage] as? UIImage {
             profileImageView.image = selectedImage
             somethingIsChanged(true)

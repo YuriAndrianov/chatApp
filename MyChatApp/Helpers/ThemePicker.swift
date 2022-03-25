@@ -64,8 +64,8 @@ final class ThemePicker {
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
         navBarAppearance.backgroundColor = ThemePicker.shared.currentTheme?.navBarColor
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor : ThemePicker.shared.currentTheme?.fontColor as Any]
-        navBarAppearance.titleTextAttributes = [.foregroundColor : ThemePicker.shared.currentTheme?.fontColor as Any]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: ThemePicker.shared.currentTheme?.fontColor as Any]
+        navBarAppearance.titleTextAttributes = [.foregroundColor: ThemePicker.shared.currentTheme?.fontColor as Any]
         
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
@@ -97,5 +97,3 @@ final class ThemePicker {
     }
     
 }
-
-

@@ -25,7 +25,7 @@ final class ProfileVCStyleSheet {
         field.textColor = ThemePicker.shared.currentTheme?.fontColor
         field.attributedPlaceholder = NSAttributedString(
             string: "Enter your name...",
-            attributes: [.foregroundColor : UIColor.lightGray]
+            attributes: [.foregroundColor: UIColor.lightGray]
         )
         field.isEnabled = false
         field.layer.cornerRadius = 6
@@ -42,7 +42,7 @@ final class ProfileVCStyleSheet {
         field.textColor = ThemePicker.shared.currentTheme?.fontColor
         field.attributedPlaceholder = NSAttributedString(
             string: text,
-            attributes: [.foregroundColor : UIColor.lightGray]
+            attributes: [.foregroundColor: UIColor.lightGray]
         )
         field.isEnabled = false
         field.layer.cornerRadius = 6

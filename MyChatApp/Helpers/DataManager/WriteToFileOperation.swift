@@ -32,8 +32,7 @@ final class WriteToFileOperation: Operation {
             try JSONEncoder().encode(user).write(to: userFileURL)
             sleep(1)
             completion?(true)
-        }
-        catch {
+        } catch {
             print(error)
             sleep(1)
             completion?(false)

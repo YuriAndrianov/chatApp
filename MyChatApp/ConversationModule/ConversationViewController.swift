@@ -96,7 +96,7 @@ extension ConversationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
-                                                       for: indexPath) as? MessageTableViewCell else { return UITableViewCell()}
+                                                       for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
         let message = messages[indexPath.section][indexPath.row]
         cell.configure(with: message)
         cell.selectionStyle = .none

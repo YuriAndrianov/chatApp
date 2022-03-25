@@ -29,8 +29,7 @@ final class DataManagerGCD: DataManagerProtocol {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                     completion(true)
                 })
-            }
-            catch {
+            } catch {
                 print(error)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                     completion(false)
@@ -48,8 +47,7 @@ final class DataManagerGCD: DataManagerProtocol {
         do {
             let user = try JSONDecoder().decode(User.self, from: Data(contentsOf: userFileURL))
             completion(user)
-        }
-        catch {
+        } catch {
             completion(nil)
             print(error)
         }

@@ -26,7 +26,6 @@ final class ConversationTableViewCell: UITableViewCell {
         backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
     }
    
-
     func configurate(with conversation: Conversation) {
         self.name = conversation.name
         self.date = conversation.date
@@ -65,7 +64,8 @@ extension ConversationTableViewCell: ConversationCellConfiguration {
     
     var online: Bool {
         get { return false }
-        set { contentView.backgroundColor = newValue ? ThemePicker.shared.currentTheme?.outcomingMessageColor : ThemePicker.shared.currentTheme?.backGroundColor }
+        set { contentView.backgroundColor = newValue ?
+            ThemePicker.shared.currentTheme?.outcomingMessageColor : ThemePicker.shared.currentTheme?.backGroundColor }
     }
     
     var hasUnreadMessages: Bool {

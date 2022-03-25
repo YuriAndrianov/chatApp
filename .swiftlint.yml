@@ -93,5 +93,5 @@ custom_rules:
     included: ".*\\.swift"
     regex: '[а-яА-Я][a-zA-Z]'
     name: "Wrong russian or english letter"
-    message: "Replace latter to correct"
+    message: "Replace letter to correct"
     severity: warning
