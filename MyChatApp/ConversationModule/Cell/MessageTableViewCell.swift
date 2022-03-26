@@ -11,53 +11,37 @@ final class MessageTableViewCell: UITableViewCell {
     
     static let identifier = "messageCell"
     static let nib = UINib(nibName: "MessageTableViewCell", bundle: .main)
+    
+    private var currentTheme: ThemeProtocol? {
+        return ThemePicker.shared.currentTheme
+    }
 
     @IBOutlet weak var leadingConstraint: NSLayoutConstraint?
     @IBOutlet weak var trailingConstraint: NSLayoutConstraint?
     @IBOutlet weak var messageTextLabel: UILabel?
     @IBOutlet weak var bubbleView: UIView?
     @IBOutlet weak var dateLabel: UILabel?
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
-        messageTextLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
-        dateLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
-    }
 
-    func configure(with message: Message) {
-        self.isIncoming = message.isIncoming
-        self.messageTextLabel?.text = message.text
-        self.dateLabel?.text = message.date?.timeOfMessage()
+    func configurate(with message: Message) {
+        setupViewIfIncoming(isTrue: message.isIncoming)
+        messageTextLabel?.text = message.text
+        dateLabel?.text = message.date?.timeOfMessage()
     }
     
     private func setupViewIfIncoming(isTrue: Bool) {
         if isTrue {
             leadingConstraint?.constant = 20
             trailingConstraint?.constant = contentView.frame.width / 4
-            bubbleView?.backgroundColor = ThemePicker.shared.currentTheme?.incomingMessageColor
+            bubbleView?.backgroundColor = currentTheme?.incomingMessageColor
         } else {
             leadingConstraint?.constant = contentView.frame.width / 4
             trailingConstraint?.constant = 20
-            bubbleView?.backgroundColor = ThemePicker.shared.currentTheme?.outcomingMessageColor
+            bubbleView?.backgroundColor = currentTheme?.outcomingMessageColor
         }
-    }
-}
-
-extension MessageTableViewCell: MessageCellConfiguration {
-    
-    var isIncoming: Bool {
-        get { return false }
-        set { setupViewIfIncoming(isTrue: newValue) }
-    }
-    
-    var messageText: String? {
-        get { return nil }
-        set {
-            if let newValue = newValue {
-                messageTextLabel?.text = newValue
-            }
-        }
+        
+        backgroundColor = currentTheme?.backGroundColor
+        messageTextLabel?.textColor = currentTheme?.fontColor
+        dateLabel?.textColor = currentTheme?.fontColor
     }
     
 }

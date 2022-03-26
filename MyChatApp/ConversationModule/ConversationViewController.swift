@@ -11,13 +11,18 @@ final class ConversationViewController: UIViewController {
     
     var conversation: Conversation?
     
-    private let tableView: UITableView = {
+    private var currentTheme: ThemeProtocol? {
+        return ThemePicker.shared.currentTheme
+    }
+    
+    private lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.register(MessageTableViewCell.nib,
                        forCellReuseIdentifier: MessageTableViewCell.identifier)
         table.separatorStyle = .none
-        table.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        table.backgroundColor = currentTheme?.backGroundColor
         table.transform = CGAffineTransform(rotationAngle: -.pi)
+        table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
     
@@ -26,26 +31,22 @@ final class ConversationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        title = conversation?.name ?? ""
         groupMessagesByDate()
-        setupUI()
         setupTableView()
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = CGRect(x: 0, y: 70, width: view.frame.width, height: view.frame.height - 70)
-    }
 
-    private func setupUI() {
-        if let conversation = conversation {
-            title = conversation.name
-        }
-    }
-    
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
+        
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, constant: -70)
+        ])
     }
     
     private func groupMessagesByDate() {
@@ -98,7 +99,7 @@ extension ConversationViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
                                                        for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
         let message = messages[indexPath.section][indexPath.row]
-        cell.configure(with: message)
+        cell.configurate(with: message)
         cell.selectionStyle = .none
         cell.transform = CGAffineTransform(rotationAngle: -.pi)
         return cell
@@ -111,12 +112,12 @@ extension ConversationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         guard let footer = view as? UITableViewHeaderFooterView else { return }
         footer.transform = CGAffineTransform(rotationAngle: -.pi)
-        footer.textLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
+        footer.textLabel?.textColor = currentTheme?.fontColor
         
         if #available(iOS 14.0, *) {
-            footer.backgroundConfiguration?.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+            footer.backgroundConfiguration?.backgroundColor = currentTheme?.backGroundColor
         } else {
-            footer.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+            footer.backgroundColor = currentTheme?.backGroundColor
         }
     }
     

@@ -11,10 +11,13 @@ final class ConversationsListViewController: UIViewController {
     
     private let conversations = Mock.conversations
     private var groupedConversations = [[Conversation]]()
+    private var currentTheme: ThemeProtocol? {
+        return ThemePicker.shared.currentTheme
+    }
     
-    private let chatTableView: UITableView = {
+    private lazy var chatTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
-        table.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        table.backgroundColor = currentTheme?.backGroundColor
         table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
@@ -35,7 +38,7 @@ final class ConversationsListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         chatTableView.reloadData()
-        chatTableView.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        chatTableView.backgroundColor = currentTheme?.backGroundColor
     }
     
     override func viewDidLayoutSubviews() {
@@ -62,7 +65,7 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func setupTableView() {
-        chatTableView.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        chatTableView.backgroundColor = currentTheme?.backGroundColor
         view.addSubview(chatTableView)
         chatTableView.delegate = self
         chatTableView.dataSource = self
@@ -120,12 +123,12 @@ extension ConversationsListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
+        header.textLabel?.textColor = currentTheme?.fontColor
         
         if #available(iOS 14.0, *) {
-            header.backgroundConfiguration?.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+            header.backgroundConfiguration?.backgroundColor = currentTheme?.backGroundColor
         } else {
-            header.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+            header.backgroundColor = currentTheme?.backGroundColor
         }
     }
     

@@ -12,65 +12,41 @@ final class ConversationTableViewCell: UITableViewCell {
     static let identifier = "chatCell"
     static let nib = UINib(nibName: "ConversationTableViewCell", bundle: .main)
     
+    private var currentTheme: ThemeProtocol? {
+        return ThemePicker.shared.currentTheme
+    }
+    
     @IBOutlet weak var friendPhotoImageView: UIImageView?
     @IBOutlet weak var nameLabel: UILabel?
     @IBOutlet weak var dateLabel: UILabel?
     @IBOutlet weak var messageLabel: UILabel?
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0))
-        nameLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
-        dateLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
-        friendPhotoImageView?.tintColor = ThemePicker.shared.currentTheme?.barButtonColor
-        backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
-    }
    
     func configurate(with conversation: Conversation) {
-        self.name = conversation.name
-        self.date = conversation.date
-        self.message = conversation.lastMessageText
-        self.online = conversation.online
-        self.hasUnreadMessages = conversation.hasUnreadMessages
+        nameLabel?.text = conversation.name
+        dateLabel?.text = conversation.date?.lastMessageDateFormat()
+        setupViewWithMessage(conversation.lastMessageText)
+        
+        contentView.backgroundColor = conversation.online ?
+            currentTheme?.outcomingMessageColor : currentTheme?.backGroundColor
+        
+        messageLabel?.font = conversation.hasUnreadMessages ?
+            .boldSystemFont(ofSize: 15) : .systemFont(ofSize: 13)
     }
     
     private func setupViewWithMessage(_ message: String?) {
         if message == nil {
             messageLabel?.text = "No messages yet"
-            messageLabel?.textColor = ThemePicker.shared.currentTheme?.barButtonColor
+            messageLabel?.textColor = currentTheme?.barButtonColor
         } else {
             messageLabel?.text = message
-            messageLabel?.textColor = ThemePicker.shared.currentTheme?.fontColor
+            messageLabel?.textColor = currentTheme?.fontColor
         }
-    }
-    
-}
-
-extension ConversationTableViewCell: ConversationCellConfiguration {
-    var name: String? {
-        get { return nil }
-        set { nameLabel?.text = newValue }
-    }
-    
-    var message: String? {
-        get { return nil }
-        set { setupViewWithMessage(newValue) }
-    }
-    
-    var date: Date? {
-        get { return nil }
-        set { dateLabel?.text = newValue?.lastMessageDateFormat() }
-    }
-    
-    var online: Bool {
-        get { return false }
-        set { contentView.backgroundColor = newValue ?
-            ThemePicker.shared.currentTheme?.outcomingMessageColor : ThemePicker.shared.currentTheme?.backGroundColor }
-    }
-    
-    var hasUnreadMessages: Bool {
-        get { return false }
-        set { messageLabel?.font = newValue ? .boldSystemFont(ofSize: 15) : .systemFont(ofSize: 13) }
+        
+        contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 1, left: 0, bottom: 1, right: 0))
+        nameLabel?.textColor = currentTheme?.fontColor
+        dateLabel?.textColor = currentTheme?.fontColor
+        friendPhotoImageView?.tintColor = currentTheme?.barButtonColor
+        backgroundColor = currentTheme?.backGroundColor
     }
     
 }
