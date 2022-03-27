@@ -10,7 +10,7 @@ import UIKit
 final class CustomNavigationController: UINavigationController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        let style: UIStatusBarStyle = ThemePicker.currentTheme is NightTheme ? .lightContent : .darkContent
+        let style: UIStatusBarStyle = ThemePicker.shared.currentTheme is NightTheme ? .lightContent : .darkContent
         return style
     }
 

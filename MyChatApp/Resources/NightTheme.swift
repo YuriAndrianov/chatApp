@@ -9,7 +9,7 @@ import UIKit
 
 final class NightTheme: ThemeProtocol {
     
-    var backGroundColor: UIColor = UIColor(named: "nightThemeBackGroundColor") ?? .systemBackground
+    var backGroundColor: UIColor = UIColor(named: "nightThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "nightFontColor") ?? .label
     var incomingMessageColor: UIColor = UIColor(named: "nightIncoming") ?? .systemGray5
     var outcomingMessageColor: UIColor = UIColor(named: "nightOutcoming") ?? .systemBlue

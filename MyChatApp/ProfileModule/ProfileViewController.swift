@@ -9,96 +9,78 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    private let styleSheet = ProfileVCStyleSheet()
+    
     private var isLargeScreenDevice: Bool {
         // check if current device is not iPhone SE (1 gen)
         return UIScreen.main.bounds.width > 375
     }
     
-    private let profileImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.circle")
-        imageView.contentMode = .scaleAspectFill
-        imageView.tintColor = ThemePicker.currentTheme?.barButtonColor
-        imageView.layer.cornerRadius = 110
-        imageView.clipsToBounds = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var profileImageView: UIImageView = {
+        let imageView = styleSheet.createProfileImageView()
         return imageView
     }()
     
-    private let fullNameTextField: UITextField = {
-        let field = UITextField()
-        field.textAlignment = .center
-        field.font = .boldSystemFont(ofSize: 24)
-        field.textColor = ThemePicker.currentTheme?.fontColor
-        field.attributedPlaceholder = NSAttributedString(
-            string: "Enter your name...",
-            attributes: [.foregroundColor : UIColor.lightGray]
-        )
-        field.isEnabled = false
-        field.layer.cornerRadius = 6
-        field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
+    private lazy var fullNameTextField: UITextField = {
+        let field = styleSheet.createFullNameTextField()
         return field
     }()
     
-    private let userInfoTextView: UITextView = {
-        let textView = UITextView()
-        textView.textAlignment = .center
-        textView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-        textView.font = .systemFont(ofSize: 16)
-        textView.textColor = ThemePicker.currentTheme?.fontColor
-        textView.textContainer.maximumNumberOfLines = 3
-        textView.layer.cornerRadius = 6
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        textView.keyboardAppearance = ThemePicker.currentTheme is NightTheme ? .dark : .default
-        return textView
+    private lazy var occupationTextField: UITextField = {
+        let field = styleSheet.createSecondaryTextField("Enter your occupation...")
+        return field
     }()
     
-    private let editButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.link, for: .normal)
-        button.setTitle("Edit", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 16)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var locationTextField: UITextField = {
+        let field = styleSheet.createSecondaryTextField("Enter your location...")
+        return field
+    }()
+    
+    private lazy var editButton: UIButton = {
+        let button = styleSheet.createEditButton()
         button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let editPhotoButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .link
-        button.setBackgroundImage(UIImage(systemName: "camera.circle.fill"), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFill
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.alpha = 0
+    private lazy var cancelButton: UIButton = {
+        let button = styleSheet.createCancelButton()
+        button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var saveGCDButton: UIButton = {
+        let button = styleSheet.createSaveButton(withTitle: "Save GCD")
+        button.addTarget(self, action: #selector(saveGCDButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var saveOperationsButton: UIButton = {
+        let button = styleSheet.createSaveButton(withTitle: "Save Operations")
+        button.addTarget(self, action: #selector(saveOperationButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var editPhotoButton: UIButton = {
+        let button = styleSheet.createEditPhotoButton()
         button.addTarget(self, action: #selector(editPhotoButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    private let stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.distribution = .fill
-        stackView.spacing = 10
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+    private lazy var stackView: UIStackView = {
+        let stackView = styleSheet.createMainStackView()
         return stackView
     }()
     
-    private let saveButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-        button.setTitle("Save", for: .normal)
-        button.setTitleColor(.link, for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 19)
-        button.layer.cornerRadius = 12
-        button.alpha = 0
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
-        return button
+    private lazy var saveButtonsStack: UIStackView = {
+        let stack = styleSheet.createSaveButtonsStackView()
+        return stack
     }()
     
     private let scrollView = UIScrollView()
+    
+    private var user = User()
+    
+    private var tappedButton: UIButton?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,8 +88,10 @@ final class ProfileViewController: UIViewController {
         setupViews()
         setConstraints()
         setDelegates()
-        createToolBar()
-        setupTextInfo()
+
+        // Choose what type of manager to use * Extra task
+        restoreUserDataUsing(manager: DataManagerGCD.shared)
+//        restoreUserDataUsing(manager: FileManagerOperation.shared)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,87 +121,120 @@ final class ProfileViewController: UIViewController {
     
     private func setDelegates() {
         fullNameTextField.delegate = self
-        userInfoTextView.delegate = self
+        occupationTextField.delegate = self
+        locationTextField.delegate = self
     }
     
-    private func createToolBar() {
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 50))
-        toolbar.sizeToFit()
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace,
-                                        target: nil,
-                                        action: nil)
-        let cancelButton = UIBarButtonItem(title: "Cancel",
-                                           style: UIBarButtonItem.Style.plain,
-                                           target: self,
-                                           action: #selector(cancelButtonTapped))
-        let doneButton = UIBarButtonItem(title: "Done",
-                                         style: .done,
-                                         target: self,
-                                         action: #selector(doneButtonTapped))
-        toolbar.items = [cancelButton, flexSpace, doneButton]
-        
-        fullNameTextField.inputAccessoryView = toolbar
-        userInfoTextView.inputAccessoryView = toolbar
-    }
-    
-    private func setupTextInfo() {
-        fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
-        
-        // creating "placeholder" of textview
-        if let text =  UserDefaults.standard.string(forKey: "userInfoText"),
-           text != "Enter short info about you..." {
-            userInfoTextView.text = text
-            userInfoTextView.textColor = ThemePicker.currentTheme?.fontColor
-        } else {
-            userInfoTextView.text = "Enter short info about you..."
-            userInfoTextView.textColor = UIColor.lightGray
+    private func restoreUserDataUsing(manager: DataManagerProtocol) {
+        manager.readFromFile { [weak self] user in
+            guard let self = self else { return }
+            if let user = user {
+                self.user = user
+                self.fullNameTextField.text = user.fullname
+                self.occupationTextField.text = user.occupation
+                self.locationTextField.text = user.location
+            }
         }
+        
+        ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
+            if let image = image {
+                self?.profileImageView.image = image
+            } else {
+                self?.profileImageView.image = UIImage(systemName: "person.circle")
+            }
+        }
+        
+        somethingIsChanged(false)
     }
     
     private func setupUIIfEditingAllowedIs(_ bool: Bool) {
+        // Turns true when edit button tapped and false when save button tapped
         if bool {
             fullNameTextField.isEnabled = true
+            occupationTextField.isEnabled = true
+            locationTextField.isEnabled = true
             fullNameTextField.becomeFirstResponder()
-            userInfoTextView.isEditable = true
-            userInfoTextView.isUserInteractionEnabled = true
             UIView.animate(withDuration: 0.2) {
                 self.editButton.alpha = 0
+                self.cancelButton.alpha = 1
                 self.editPhotoButton.alpha = 1
-                self.saveButton.alpha = 1
-                self.fullNameTextField.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
-                self.userInfoTextView.backgroundColor = ThemePicker.currentTheme?.saveButtonColor
+                self.saveButtonsStack.alpha = 1
+                self.fullNameTextField.layer.borderWidth = 1
+                self.occupationTextField.layer.borderWidth = 1
+                self.locationTextField.layer.borderWidth = 1
             }
         } else {
             fullNameTextField.isEnabled = false
-            userInfoTextView.isEditable = false
-            userInfoTextView.isUserInteractionEnabled = false
+            occupationTextField.isEnabled = false
+            locationTextField.isEnabled = false
             UIView.animate(withDuration: 0.2) {
                 self.editButton.alpha = 1
+                self.cancelButton.alpha = 0
                 self.editPhotoButton.alpha = 0
-                self.saveButton.alpha = 0
-                self.fullNameTextField.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-                self.userInfoTextView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+                self.saveButtonsStack.alpha = 0
+                self.fullNameTextField.layer.borderWidth = 0
+                self.occupationTextField.layer.borderWidth = 0
+                self.locationTextField.layer.borderWidth = 0
             }
         }
     }
     
     private func setupNavBar() {
         title = "My Profile"
-        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        
         self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
-                                          style: .plain,
-                                          target: self,
-                                          action: #selector(closeButtonTapped))
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(closeButtonTapped))
     }
     
     private func setupViews() {
-        [profileImageView, fullNameTextField, userInfoTextView, editButton].forEach { stackView.addArrangedSubview($0) }
+        [saveGCDButton, saveOperationsButton].forEach { saveButtonsStack.addArrangedSubview($0) }
+        
+        [
+            profileImageView,
+            fullNameTextField,
+            occupationTextField,
+            locationTextField,
+            cancelButton,
+            saveButtonsStack,
+            editButton
+        ].forEach { stackView.addArrangedSubview($0) }
+        
         view.addSubview(scrollView)
-        [stackView, saveButton, editPhotoButton].forEach { scrollView.addSubview($0) }
+        [stackView, editPhotoButton].forEach { scrollView.addSubview($0) }
     }
     
+    private func somethingIsChanged(_ bool: Bool) {
+        // Turns true if user typed or deleted any character or changed photo
+        if bool {
+            saveGCDButton.isEnabled = true
+            saveOperationsButton.isEnabled = true
+        } else {
+            saveGCDButton.isEnabled = false
+            saveOperationsButton.isEnabled = false
+        }
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            
+            let activeView: UIView? = [fullNameTextField, occupationTextField, locationTextField].first { $0.isFirstResponder }
+            if let activeView = activeView {
+                let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 130)
+                scrollView.setContentOffset(scrollPoint, animated: true)
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        scrollView.contentInset = .zero
+    }
+    
+    // MARK: - Button's methods
     @objc private func closeButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -235,32 +252,107 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        fullNameTextField.text = UserDefaults.standard.string(forKey: "fullnameText")
-        userInfoTextView.text = UserDefaults.standard.string(forKey: "userInfoText")
+        restoreUserDataUsing(manager: DataManagerGCD.shared)
+//        restoreUserDataUsing(manager: DataManagerOperation.shared)
         setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
     
-    @objc private func saveButtonTapped() {
-        UserDefaults.standard.set(fullNameTextField.text, forKey: "fullnameText")
-        UserDefaults.standard.set(userInfoTextView.text, forKey: "userInfoText")
-        setupUIIfEditingAllowedIs(false)
+    @objc private func saveGCDButtonTapped() {
+        tappedButton = saveGCDButton
+        // saving image
+        if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
+            ImageManager.shared.saveImage(imageName: "User", image: image)
+        } else {
+            ImageManager.shared.deleteImage(imageName: "User")
+        }
+        
+        // adding properties to self.user from textfields
+        user.fullname = fullNameTextField.text
+        user.occupation = occupationTextField.text
+        user.location = locationTextField.text
+
+        tryToSaveDataUsing(manager: DataManagerGCD.shared)
     }
     
-    @objc private func keyboardWillShow(_ notification:Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+    @objc private func saveOperationButtonTapped() {
+        tappedButton = saveOperationsButton
+        // saving image
+        if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
+            ImageManager.shared.saveImage(imageName: "User", image: image)
+        } else {
+            ImageManager.shared.deleteImage(imageName: "User")
+        }
+        
+        // adding properties to self.user from textfields
+        user.fullname = fullNameTextField.text
+        user.occupation = occupationTextField.text
+        user.location = locationTextField.text
+
+        tryToSaveDataUsing(manager: DataManagerOperation.shared)
+    }
+    
+    private func tryToSaveDataUsing(manager: DataManagerProtocol) {
+        // make activity indicator
+        let spinner = styleSheet.createSpinner()
+        spinner.center = view.center
+        view.addSubview(spinner)
+        spinner.startAnimating()
+        
+        // block buttons
+        somethingIsChanged(false)
+        cancelButton.isEnabled = false
+        
+        // saving to file (1 sec)
+        manager.writeToFile(user) { [weak self] success in
+            // remove activity indicator
+            spinner.stopAnimating()
+            self?.view.endEditing(true)
             
-            let activeView: UIView? = [fullNameTextField, userInfoTextView].first { $0.isFirstResponder }
-            if let activeView = activeView {
-                let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 30)
-                scrollView.setContentOffset(scrollPoint, animated: true)
+            if success {
+                // show success alert
+                self?.showSaveSuccessAlert()
+            } else {
+                // show error alert
+                self?.showSaveErrorAlert()
             }
         }
     }
+    // MARK: - Methods showing alert VC's
     
-    @objc private func keyboardWillHide(_ notification:Notification) {
-        scrollView.contentInset = .zero
+    private func showSaveSuccessAlert() {
+        let alertVC = UIAlertController(title: nil, message: "Successfully saved", preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
+            self?.setupUIIfEditingAllowedIs(false)
+            self?.cancelButton.isEnabled = true
+        }))
+        
+        present(alertVC, animated: true, completion: nil)
+    }
+    
+    private func showSaveErrorAlert() {
+        let alertVC = UIAlertController(title: "Error", message: "Failed to save data", preferredStyle: .alert)
+        
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
+            self?.restoreUserDataUsing(manager: DataManagerGCD.shared)
+            self?.setupUIIfEditingAllowedIs(false)
+            self?.cancelButton.isEnabled = true
+        }))
+        
+        alertVC.addAction(UIAlertAction(title: "Repeat", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            if let tappedButton = self.tappedButton {
+                switch tappedButton {
+                case self.saveGCDButton:  self.tryToSaveDataUsing(manager: DataManagerGCD.shared)
+                case self.saveOperationsButton: self.tryToSaveDataUsing(manager: DataManagerOperation.shared)
+                default: break
+                }
+            }
+           
+        }))
+        
+        present(alertVC, animated: true, completion: nil)
     }
     
     private func showAddPhotoAlertVC() {
@@ -279,50 +371,73 @@ final class ProfileViewController: UIViewController {
         }
         alertVC.addAction(libraryButton)
         
+        let deleteButton = UIAlertAction(title: "Delete photo", style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            self.profileImageView.image = UIImage(systemName: "person.circle")
+            self.somethingIsChanged(true)
+        }
+        
+        // if there is a profile photo then add a delete button
+        if profileImageView.image != UIImage(systemName: "person.circle") {
+            alertVC.addAction(deleteButton)
+        }
+        
         let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertVC.addAction(cancelButton)
         
         present(alertVC, animated: true, completion: nil)
     }
 }
-
 // MARK: - Constraints
+
 extension ProfileViewController {
     
     private func setConstraints() {
+        var profileImageWidth: CGFloat = 220
+        var editPhotoButtonWidth: CGFloat = 50
+        
+        if !isLargeScreenDevice {
+            profileImageWidth = 150
+            editPhotoButtonWidth = 30
+        }
+        
+        profileImageView.layer.cornerRadius = profileImageWidth / 2
+        
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
             stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -60),
             stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
             
-            profileImageView.widthAnchor.constraint(equalToConstant: 220),
-            profileImageView.heightAnchor.constraint(equalToConstant: 220),
+            profileImageView.widthAnchor.constraint(equalToConstant: profileImageWidth),
+            profileImageView.heightAnchor.constraint(equalToConstant: profileImageWidth),
             
             fullNameTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            fullNameTextField.heightAnchor.constraint(equalToConstant: 30),
+            fullNameTextField.heightAnchor.constraint(equalToConstant: 24),
             
-            userInfoTextView.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            userInfoTextView.heightAnchor.constraint(equalToConstant: 70),
+            occupationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            occupationTextField.heightAnchor.constraint(equalToConstant: 24),
+            
+            locationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            locationTextField.heightAnchor.constraint(equalToConstant: 24),
             
             editButton.widthAnchor.constraint(equalToConstant: 40),
             editButton.heightAnchor.constraint(equalToConstant: 40),
             
-            editPhotoButton.widthAnchor.constraint(equalToConstant: 50),
-            editPhotoButton.heightAnchor.constraint(equalToConstant: 50),
-            editPhotoButton.trailingAnchor.constraint(equalTo: profileImageView.trailingAnchor),
-            editPhotoButton.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor),
+            saveButtonsStack.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
             
-            saveButton.widthAnchor.constraint(equalToConstant: 260),
-            saveButton.heightAnchor.constraint(equalToConstant: 40),
-            saveButton.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
-            saveButton.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            saveButton.topAnchor.constraint(greaterThanOrEqualTo: stackView.bottomAnchor, constant: 20)
+            cancelButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            
+            editPhotoButton.widthAnchor.constraint(equalToConstant: editPhotoButtonWidth),
+            editPhotoButton.heightAnchor.constraint(equalToConstant: editPhotoButtonWidth),
+            editPhotoButton.trailingAnchor.constraint(equalTo: profileImageView.trailingAnchor),
+            editPhotoButton.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor)
         ])
     }
     
 }
-
 // MARK: - Delegates
+
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func showImagePicker(selectedSource: UIImagePickerController.SourceType) {
@@ -334,9 +449,10 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.present(imagePickerController, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.editedImage] as? UIImage {
             profileImageView.image = selectedImage
+            somethingIsChanged(true)
         }
         picker.dismiss(animated: true)
     }
@@ -345,30 +461,23 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension ProfileViewController: UITextFieldDelegate {
     
-        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-            textField.resignFirstResponder()
-            return true
-        }
-    
-}
-
-extension ProfileViewController: UITextViewDelegate {
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Enter short info about you..."
-            textView.textColor = UIColor.lightGray
-            UserDefaults.standard.set(nil, forKey: "userInfoText")
-        }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
     
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.textColor == UIColor.lightGray {
-            textView.text = nil
-            textView.textColor = ThemePicker.currentTheme?.fontColor
-        }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        somethingIsChanged(true)
+        let text = (textField.text ?? "") + string
+        
+        let result: String
+        if range.length == 1 {
+            let end = text.index(text.startIndex, offsetBy: text.count - 1)
+            result = String(text[text.startIndex..<end])
+        } else { result = text }
+        
+        textField.text = result
+        return false
     }
     
 }
-
-

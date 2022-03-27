@@ -18,50 +18,48 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         return stack
     }()
     
-    private let classicThemeView: CustomThemeView = {
-        let view = CustomThemeView()
-        view.button?.setImage(UIImage(named: "classicThemeButtonImage"), for: .normal)
-        view.label?.text = "Classic"
-        view.button?.addTarget(self, action: #selector(classicTapped), for: .touchUpInside)
-        return view
-    }()
-    
-    private let dayThemeView: CustomThemeView = {
-        let view = CustomThemeView()
-        view.button?.setImage(UIImage(named: "dayThemeButtonImage"), for: .normal)
-        view.label?.text = "Day"
-        view.button?.addTarget(self, action: #selector(dayTapped), for: .touchUpInside)
-        return view
-    }()
-    
-    private let nightThemeView: CustomThemeView = {
-        let view = CustomThemeView()
-        view.button?.setImage(UIImage(named: "nightThemeButtonImage"), for: .normal)
-        view.label?.text = "Night"
-        view.button?.addTarget(self, action: #selector(nightTapped), for: .touchUpInside)
-        return view
-    }()
+    private let classicThemeView = CustomThemeView()
+    private let dayThemeView = CustomThemeView()
+    private let nightThemeView = CustomThemeView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        setupUI()
+        highlightButton()
+        setupStackView()
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         title = "Settings"
-        
+    }
+    
+    private func highlightButton() {
         // highlight button depending on current theme
-        switch ThemePicker.currentTheme {
+        switch ThemePicker.shared.currentTheme {
         case is ClassicTheme: classicThemeView.isButtonHighlited = true
         case is DayTheme: dayThemeView.isButtonHighlited = true
         case is NightTheme: nightThemeView.isButtonHighlited = true
         default: classicThemeView.isButtonHighlited = true
         }
-        
+    }
+    
+    private func setupStackView() {
         [classicThemeView, dayThemeView, nightThemeView].forEach { stackView.addArrangedSubview($0) }
         
-        classicThemeView.tapGesture.addTarget(self, action: #selector(classicTapped))
-        dayThemeView.tapGesture.addTarget(self, action: #selector(dayTapped))
-        nightThemeView.tapGesture.addTarget(self, action: #selector(nightTapped))
+        classicThemeView.configurate(with: .classic)
+        dayThemeView.configurate(with: .day)
+        nightThemeView.configurate(with: .night)
         
+        [classicThemeView.button, dayThemeView.button, nightThemeView.button].forEach {
+            $0?.addTarget(self, action: #selector(themeChosen(_:)), for: .touchUpInside)
+        }
+        
+        [classicThemeView.tapGesture, dayThemeView.tapGesture, nightThemeView.tapGesture].forEach {
+            $0?.addTarget(self, action: #selector(themeChosen(_:)))
+        }
+
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -72,55 +70,42 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         ])
     }
     
-    @objc private func classicTapped() {
-        classicThemeView.isButtonHighlited = true
-        dayThemeView.isButtonHighlited = false
-        nightThemeView.isButtonHighlited = false
+    @objc private func themeChosen(_ sender: Any) {
+        var chosenTheme: ThemePicker.ThemeType
         
+        if sender is UIButton {
+            switch sender {
+            case classicThemeView.button as UIButton: chosenTheme = .classic
+            case dayThemeView.button as UIButton: chosenTheme = .day
+            case nightThemeView.button as UIButton: chosenTheme = .night
+            default: return
+            }
+        } else {
+            switch sender {
+            case classicThemeView.tapGesture as UITapGestureRecognizer: chosenTheme = .classic
+            case dayThemeView.tapGesture as UITapGestureRecognizer: chosenTheme = .day
+            case nightThemeView.tapGesture as UITapGestureRecognizer: chosenTheme = .night
+            default: return
+            }
+        }
+        
+        // highlight button according to the chosen theme
+        [classicThemeView, dayThemeView, nightThemeView].forEach {
+            $0.isButtonHighlited = ($0.theme == chosenTheme) ? true : false
+        }
+        
+        // applying the chosen theme via delegate or completion handler
         let themePicker = ThemePicker.shared
         
         // использование делегата, если делегат не weak, то возможен retain cycle
-//        themePicker.delegate = self
-//        themePicker.apply(.classic, completion: nil)
+        themePicker.delegate = self
+        themePicker.apply(chosenTheme, completion: nil)
         
         // использование completion, без слабого захвата self возможен retain cycle
-        themePicker.apply(.classic) { [weak self] theme in
-            self?.updateUI(with: theme)
-        }
-    }
-    
-    @objc private func dayTapped() {
-        classicThemeView.isButtonHighlited = false
-        dayThemeView.isButtonHighlited = true
-        nightThemeView.isButtonHighlited = false
+//        themePicker.apply(chosenTheme) { [weak self] theme in
+//            self?.updateUI(with: theme)
+//        }
         
-        let themePicker = ThemePicker.shared
-        
-        // использование делегата, если делегат не weak, то возможен retain cycle
-//        themePicker.delegate = self
-//        themePicker.apply(.day, completion: nil)
-        
-        // использование completion, без слабого захвата self возможен retain cycle
-        themePicker.apply(.day) { [weak self] theme in
-            self?.updateUI(with: theme)
-        }
-    }
-    
-    @objc private func nightTapped() {
-        classicThemeView.isButtonHighlited = false
-        dayThemeView.isButtonHighlited = false
-        nightThemeView.isButtonHighlited = true
-        
-        let themePicker = ThemePicker.shared
-        
-        // использование делегата, если делегат не weak, то возможен retain cycle
-//        themePicker.delegate = self
-//        themePicker.apply(.night, completion: nil)
-        
-        // использование completion, без слабого захвата self возможен retain cycle
-        themePicker.apply(.night) { [weak self] theme in
-            self?.updateUI(with: theme)
-        }
     }
     
     func updateUI(with theme: ThemeProtocol?) {

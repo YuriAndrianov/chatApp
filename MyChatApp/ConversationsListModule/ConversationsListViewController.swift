@@ -11,10 +11,13 @@ final class ConversationsListViewController: UIViewController {
     
     private let conversations = Mock.conversations
     private var groupedConversations = [[Conversation]]()
+    private var currentTheme: ThemeProtocol? {
+        return ThemePicker.shared.currentTheme
+    }
     
-    private let chatTableView: UITableView = {
+    private lazy var chatTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
-        table.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        table.backgroundColor = currentTheme?.backGroundColor
         table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
@@ -35,8 +38,8 @@ final class ConversationsListViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         chatTableView.reloadData()
-        chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
-        setNeedsStatusBarAppearanceUpdate()
+        chatTableView.backgroundColor = currentTheme?.backGroundColor
+        chatTableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
     }
     
     override func viewDidLayoutSubviews() {
@@ -46,13 +49,12 @@ final class ConversationsListViewController: UIViewController {
     
     private func setupNavBar() {
         title = "Tinkoff Chat"
-        view.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
         
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "gear"),
                                              style: .plain,
                                              target: self,
                                              action: #selector(settingsTapped))
-        
         let myProfileButton = UIBarButtonItem(image: UIImage(systemName: "person.circle"),
                                               style: .plain,
                                               target: self,
@@ -64,7 +66,7 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func setupTableView() {
-        chatTableView.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+        chatTableView.backgroundColor = currentTheme?.backGroundColor
         view.addSubview(chatTableView)
         chatTableView.delegate = self
         chatTableView.dataSource = self
@@ -122,12 +124,12 @@ extension ConversationsListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = ThemePicker.currentTheme?.fontColor
+        header.textLabel?.textColor = currentTheme?.fontColor
         
         if #available(iOS 14.0, *) {
-            header.backgroundConfiguration?.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+            header.backgroundConfiguration?.backgroundColor = currentTheme?.backGroundColor
         } else {
-            header.backgroundColor = ThemePicker.currentTheme?.backGroundColor
+            header.backgroundColor = currentTheme?.backGroundColor
         }
     }
     

@@ -10,11 +10,12 @@ import UIKit
 final class CustomThemeView: UIView {
 
     @IBOutlet weak var contentView: UIView?
-    @IBOutlet weak var button: UIButton?
+    @IBOutlet weak var button: ThemeButton?
     @IBOutlet weak var label: UILabel?
     
     let tapGesture = UITapGestureRecognizer()
-    
+    var theme: ThemePicker.ThemeType?
+
     var isButtonHighlited: Bool = false {
         didSet {
             if isButtonHighlited {
@@ -49,12 +50,32 @@ final class CustomThemeView: UIView {
         
         label?.isUserInteractionEnabled = true
         label?.addGestureRecognizer(tapGesture)
-        label?.textColor = ThemePicker.currentTheme?.fontColor
+        label?.textColor = ThemePicker.shared.currentTheme?.fontColor
+    }
+    
+    func configurate(with theme: ThemePicker.ThemeType) {
+        self.theme = theme
         
-        button?.clipsToBounds = true
-        button?.layer.cornerRadius = 20
-        button?.layer.borderWidth = 3
-        button?.layer.borderColor = UIColor.systemGray5.cgColor
+        switch theme {
+        case .classic:
+            let classicTheme = ClassicTheme()
+            button?.incomingMessageView?.backgroundColor = classicTheme.incomingMessageColor
+            button?.outcomingMessageView?.backgroundColor = classicTheme.outcomingMessageColor
+            button?.contentView?.backgroundColor = classicTheme.backGroundColor
+            label?.text = "Classic"
+        case .day:
+            let dayTheme = DayTheme()
+            button?.incomingMessageView?.backgroundColor = dayTheme.incomingMessageColor
+            button?.outcomingMessageView?.backgroundColor = dayTheme.outcomingMessageColor
+            button?.contentView?.backgroundColor = dayTheme.backGroundColor
+            label?.text = "Day"
+        case .night:
+            let nightTheme = NightTheme()
+            button?.incomingMessageView?.backgroundColor = nightTheme.incomingMessageColor
+            button?.outcomingMessageView?.backgroundColor = nightTheme.outcomingMessageColor
+            button?.contentView?.backgroundColor = nightTheme.backGroundColor
+            label?.text = "Night"
+        }
     }
     
 }

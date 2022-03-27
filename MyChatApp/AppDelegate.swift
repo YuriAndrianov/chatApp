@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = CustomNavigationController(rootViewController: conversationsVC)
        
         ThemePicker.shared.applySavedTheme()
+        FirebaseApp.configure()
         
         self.window?.rootViewController = navigationController
         self.window?.makeKeyAndVisible()
@@ -27,4 +29,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
 }
-

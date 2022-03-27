@@ -7,7 +7,7 @@
 
 import UIKit
 
-public extension UIWindow {
+extension UIWindow {
     
     func reload() {
         subviews.forEach {
