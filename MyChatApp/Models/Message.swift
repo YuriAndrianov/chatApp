@@ -9,9 +9,9 @@ import Foundation
 
 struct Message {
 
-    var date: Date?
-    var text: String?
-    var isIncoming: Bool
-    var unread: Bool
+    var content: String?
+    var created: Date?
+    var senderId: String?
+    var senderName: String?
 
 }

@@ -23,9 +23,9 @@ final class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel?
 
     func configurate(with message: Message) {
-        setupViewIfIncoming(isTrue: message.isIncoming)
-        messageTextLabel?.text = message.text
-        dateLabel?.text = message.date?.timeOfMessage()
+        setupViewIfIncoming(isTrue: Bool.random())
+        messageTextLabel?.text = message.content
+        dateLabel?.text = message.created?.timeOfMessage()
     }
     
     private func setupViewIfIncoming(isTrue: Bool) {
@@ -39,7 +39,7 @@ final class MessageTableViewCell: UITableViewCell {
             bubbleView?.backgroundColor = currentTheme?.outcomingMessageColor
         }
         
-        backgroundColor = currentTheme?.backGroundColor
+        backgroundColor = currentTheme?.backgroundColor
         messageTextLabel?.textColor = currentTheme?.fontColor
         dateLabel?.textColor = currentTheme?.fontColor
     }

@@ -61,19 +61,19 @@ final class CustomThemeView: UIView {
             let classicTheme = ClassicTheme()
             button?.incomingMessageView?.backgroundColor = classicTheme.incomingMessageColor
             button?.outcomingMessageView?.backgroundColor = classicTheme.outcomingMessageColor
-            button?.contentView?.backgroundColor = classicTheme.backGroundColor
+            button?.contentView?.backgroundColor = classicTheme.backgroundColor
             label?.text = "Classic"
         case .day:
             let dayTheme = DayTheme()
             button?.incomingMessageView?.backgroundColor = dayTheme.incomingMessageColor
             button?.outcomingMessageView?.backgroundColor = dayTheme.outcomingMessageColor
-            button?.contentView?.backgroundColor = dayTheme.backGroundColor
+            button?.contentView?.backgroundColor = dayTheme.backgroundColor
             label?.text = "Day"
         case .night:
             let nightTheme = NightTheme()
             button?.incomingMessageView?.backgroundColor = nightTheme.incomingMessageColor
             button?.outcomingMessageView?.backgroundColor = nightTheme.outcomingMessageColor
-            button?.contentView?.backgroundColor = nightTheme.backGroundColor
+            button?.contentView?.backgroundColor = nightTheme.backgroundColor
             label?.text = "Night"
         }
     }

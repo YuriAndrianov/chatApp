@@ -31,7 +31,7 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
     }
     
     private func setupUI() {
-        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
         title = "Settings"
     }
     
@@ -112,7 +112,7 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         guard let theme = theme else { return }
         
         UIView.animate(withDuration: 0.05) {
-            self.view.backgroundColor = theme.backGroundColor
+            self.view.backgroundColor = theme.backgroundColor
             self.classicThemeView.label?.textColor = theme.fontColor
             self.dayThemeView.label?.textColor = theme.fontColor
             self.nightThemeView.label?.textColor = theme.fontColor

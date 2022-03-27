@@ -22,7 +22,7 @@ final class DataManagerGCD: DataManagerProtocol {
                 FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)
             }
             
-            print("Path to file: ", userFileURL.path)
+//            print("Path to file: ", userFileURL.path)
             
             do {
                 try JSONEncoder().encode(user).write(to: userFileURL)

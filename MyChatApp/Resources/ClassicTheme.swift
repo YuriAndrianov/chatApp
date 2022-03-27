@@ -9,7 +9,7 @@ import UIKit
 
 final class ClassicTheme: ThemeProtocol {
     
-    var backGroundColor: UIColor = UIColor(named: "classicThemeBackgroundColor") ?? .systemBackground
+    var backgroundColor: UIColor = UIColor(named: "classicThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "classicFontColor") ?? .label
     var incomingMessageColor: UIColor = UIColor(named: "classicIncoming") ?? .systemGray5
     var outcomingMessageColor: UIColor = UIColor(named: "classicOutcoming") ?? .systemBlue

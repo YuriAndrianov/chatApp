@@ -6,40 +6,38 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 final class ConversationsListViewController: UIViewController {
-    
-    private let conversations = Mock.conversations
-    private var groupedConversations = [[Conversation]]()
+
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
     }
+
+    private lazy var db = Firestore.firestore()
+    private lazy var reference = db.collection("channels")
     
     private lazy var chatTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
-        table.backgroundColor = currentTheme?.backGroundColor
+        table.backgroundColor = currentTheme?.backgroundColor
         table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return table
     }()
     
-    private var isLargeScreenDevice: Bool {
-        // check if current device is not iPhone SE (1 gen)
-        return UIScreen.main.bounds.width > 375
-    }
+    private var channels = [Channel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
         setupTableView()
-        groupConversations()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        chatTableView.reloadData()
-        chatTableView.backgroundColor = currentTheme?.backGroundColor
+        chatTableView.backgroundColor = currentTheme?.backgroundColor
         chatTableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        updateChannels()
     }
     
     override func viewDidLayoutSubviews() {
@@ -49,7 +47,8 @@ final class ConversationsListViewController: UIViewController {
     
     private func setupNavBar() {
         title = "Tinkoff Chat"
-        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        view.backgroundColor = currentTheme?.backgroundColor
+        navigationController?.navigationBar.prefersLargeTitles = false
         
         let settingsButton = UIBarButtonItem(image: UIImage(systemName: "gear"),
                                              style: .plain,
@@ -59,42 +58,74 @@ final class ConversationsListViewController: UIViewController {
                                               style: .plain,
                                               target: self,
                                               action: #selector(myProfileTapped))
+        let addChannelButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
+                                               style: .done,
+                                               target: self,
+                                               action: #selector(addChannelTapped))
         
-        self.navigationItem.leftBarButtonItem = settingsButton
-        self.navigationItem.rightBarButtonItem = myProfileButton
-        self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
+        self.navigationItem.leftBarButtonItem = addChannelButton
+        self.navigationItem.rightBarButtonItems = [myProfileButton, settingsButton]
     }
     
     private func setupTableView() {
-        chatTableView.backgroundColor = currentTheme?.backGroundColor
-        view.addSubview(chatTableView)
         chatTableView.delegate = self
         chatTableView.dataSource = self
+        chatTableView.backgroundColor = currentTheme?.backgroundColor
+        view.addSubview(chatTableView)
     }
     
-    private func groupConversations() {
-        let onlineUserChats = conversations.filter { $0.online }
-        let offlineUserChats = conversations.filter { !$0.online }
-        
-        let onlineUsersWithMessages = onlineUserChats.filter { $0.date != nil }.sorted {
-            if let lastDate = $0.date,
-               let firstDate = $1.date {
+    private func groupChannels() {
+        channels = channels.sorted {
+            if let lastDate = $0.lastActivity,
+            let firstDate = $1.lastActivity {
                 return lastDate > firstDate
             } else { return false }
         }
+    }
+    
+    private func createNewChannel(with title: String) {
+        let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
         
-        let onlineUsersWithoutMessages = onlineUserChats.filter { $0.date == nil }
+        let channelData: [String: Any] = [
+            "identifier": channel.identifier as Any,
+            "name": channel.name as Any,
+            "lastMessage": channel.lastMessage as Any,
+            "lastActivity": Timestamp(date: channel.lastActivity ?? Date())
+        ]
         
-        let offlineUserWithMessages = offlineUserChats.filter { $0.date != nil }.sorted {
-            if let lastDate = $0.date,
-               let firstDate = $1.date {
-                return lastDate > firstDate
-            } else { return false }
+        reference.addDocument(data: channelData)
+        updateChannels()
+    }
+    
+    private func updateChannels() {
+        channels.removeAll()
+
+        reference.addSnapshotListener { [weak self] snapshot, error in
+            guard error == nil else {
+                print(error?.localizedDescription as Any)
+                return
+            }
+            
+            guard let self = self else { return }
+            
+            snapshot?.documents.forEach {
+                let data = $0.data()
+                
+                let identifier = $0.documentID
+                let name = data["name"] as? String
+                let lastMessage = data["lastMessage"] as? String
+                let lastActivity = data["lastActivity"] as? Timestamp
+
+                let channel = Channel(identifier: identifier,
+                                      name: name,
+                                      lastMessage: lastMessage,
+                                      lastActivity: lastActivity?.dateValue())
+                self.channels.append(channel)
+            }
+
+            self.groupChannels()
+            self.chatTableView.reloadData()
         }
-        
-        let offlineUserWithoutMessages = offlineUserChats.filter { $0.date == nil }
-        
-        groupedConversations = [onlineUsersWithMessages + onlineUsersWithoutMessages, offlineUserWithMessages + offlineUserWithoutMessages]
     }
     
     @objc private func settingsTapped() {
@@ -107,6 +138,37 @@ final class ConversationsListViewController: UIViewController {
         let navigationController = CustomNavigationController(rootViewController: profileVC)
         present(navigationController, animated: true, completion: nil)
     }
+    
+    @objc private func addChannelTapped() {
+        let addChannelAlertVC = UIAlertController(title: "New channel", message: nil, preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: "Confirm", style: .default) { [weak self] _ in
+            guard let textField = addChannelAlertVC.textFields?.first else { return }
+            guard let text = textField.text else { return }
+            self?.createNewChannel(with: text)
+        }
+        confirmAction.isEnabled = false
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        addChannelAlertVC.addAction(cancelAction)
+        addChannelAlertVC.addAction(confirmAction)
+        addChannelAlertVC.addTextField { [weak self] field in
+            field.placeholder = "Enter channel's name"
+            field.addTarget(self, action: #selector(self?.textChanged(_:)), for: .editingChanged)
+            field.keyboardAppearance = self?.currentTheme is NightTheme ? .dark : .default
+        }
+        
+        present(addChannelAlertVC, animated: true)
+    }
+    
+    @objc func textChanged(_ sender: UITextField) {
+        let field = sender
+        var responder: UIResponder? = field
+        while !(responder is UIAlertController) { responder = responder?.next }
+        let alertVC = responder as? UIAlertController
+        alertVC?.actions[1].isEnabled = (field.text != "")
+    }
 
 }
 
@@ -115,10 +177,9 @@ extension ConversationsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let conversation = groupedConversations[indexPath.section][indexPath.row]
-        
+        let channel = channels[indexPath.row]
         let conversationVC = ConversationViewController()
-        conversationVC.conversation = conversation
+        conversationVC.channel = channel
         navigationController?.pushViewController(conversationVC, animated: true)
     }
     
@@ -127,9 +188,9 @@ extension ConversationsListViewController: UITableViewDelegate {
         header.textLabel?.textColor = currentTheme?.fontColor
         
         if #available(iOS 14.0, *) {
-            header.backgroundConfiguration?.backgroundColor = currentTheme?.backGroundColor
+            header.backgroundConfiguration?.backgroundColor = currentTheme?.backgroundColor
         } else {
-            header.backgroundColor = currentTheme?.backGroundColor
+            header.backgroundColor = currentTheme?.backgroundColor
         }
     }
     
@@ -138,7 +199,7 @@ extension ConversationsListViewController: UITableViewDelegate {
 extension ConversationsListViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return groupedConversations.count
+        return 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -146,23 +207,19 @@ extension ConversationsListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0: return "Online"
-        case 1: return "History"
-        default: return nil
-        }
+        return "Channels"
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        groupedConversations[section].count
+        channels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = chatTableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
                                                            for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
         
-        let conversation = groupedConversations[indexPath.section][indexPath.row]
-        cell.configurate(with: conversation)
+        let channel = channels[indexPath.row]
+        cell.configurate(with: channel)
         return cell
     }
     
