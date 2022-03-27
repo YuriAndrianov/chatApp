@@ -39,6 +39,7 @@ final class ConversationsListViewController: UIViewController {
         super.viewWillAppear(animated)
         chatTableView.reloadData()
         chatTableView.backgroundColor = currentTheme?.backGroundColor
+        chatTableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
     }
     
     override func viewDidLayoutSubviews() {
