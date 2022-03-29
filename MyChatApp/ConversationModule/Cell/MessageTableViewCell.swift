@@ -54,6 +54,7 @@ final class MessageTableViewCell: UITableViewCell {
         
         backgroundColor = currentTheme?.backgroundColor
         messageTextLabel?.textColor = currentTheme?.fontColor
+        nameLabel?.textColor = currentTheme?.fontColor
         dateLabel?.textColor = currentTheme?.fontColor
     }
     
