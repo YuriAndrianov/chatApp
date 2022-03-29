@@ -9,11 +9,11 @@ import UIKit
 import FirebaseFirestore
 
 final class ConversationsListViewController: UIViewController {
-
+    
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
     }
-
+    
     private lazy var db = Firestore.firestore()
     private lazy var reference = db.collection("channels")
     
@@ -31,13 +31,13 @@ final class ConversationsListViewController: UIViewController {
         super.viewDidLoad()
         setupNavBar()
         setupTableView()
+        getChannels()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         chatTableView.backgroundColor = currentTheme?.backgroundColor
         chatTableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
-        updateChannels()
     }
     
     override func viewDidLayoutSubviews() {
@@ -46,7 +46,7 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func setupNavBar() {
-        title = "Tinkoff Chat"
+        title = "Channels"
         view.backgroundColor = currentTheme?.backgroundColor
         navigationController?.navigationBar.prefersLargeTitles = false
         
@@ -63,8 +63,8 @@ final class ConversationsListViewController: UIViewController {
                                                target: self,
                                                action: #selector(addChannelTapped))
         
-        self.navigationItem.leftBarButtonItem = addChannelButton
-        self.navigationItem.rightBarButtonItems = [myProfileButton, settingsButton]
+        self.navigationItem.rightBarButtonItem = addChannelButton
+        self.navigationItem.leftBarButtonItems = [myProfileButton, settingsButton]
     }
     
     private func setupTableView() {
@@ -74,10 +74,10 @@ final class ConversationsListViewController: UIViewController {
         view.addSubview(chatTableView)
     }
     
-    private func groupChannels() {
+    private func sortChannelsByDate() {
         channels = channels.sorted {
             if let lastDate = $0.lastActivity,
-            let firstDate = $1.lastActivity {
+               let firstDate = $1.lastActivity {
                 return lastDate > firstDate
             } else { return false }
         }
@@ -87,45 +87,64 @@ final class ConversationsListViewController: UIViewController {
         let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
         
         let channelData: [String: Any] = [
-            "identifier": channel.identifier as Any,
-            "name": channel.name as Any,
+            "identifier": channel.identifier,
+            "name": channel.name,
             "lastMessage": channel.lastMessage as Any,
             "lastActivity": Timestamp(date: channel.lastActivity ?? Date())
         ]
         
         reference.addDocument(data: channelData)
-        updateChannels()
     }
     
-    private func updateChannels() {
-        channels.removeAll()
-
+    private func getChannels() {
         reference.addSnapshotListener { [weak self] snapshot, error in
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
             }
-            
             guard let self = self else { return }
             
-            snapshot?.documents.forEach {
-                let data = $0.data()
+            snapshot?.documentChanges.forEach {
+                let data = $0.document.data()
                 
-                let identifier = $0.documentID
-                let name = data["name"] as? String
+                let identifier = $0.document.documentID
+                let name = data["name"] as? String ?? ""
                 let lastMessage = data["lastMessage"] as? String
                 let lastActivity = data["lastActivity"] as? Timestamp
-
+                
                 let channel = Channel(identifier: identifier,
                                       name: name,
                                       lastMessage: lastMessage,
                                       lastActivity: lastActivity?.dateValue())
-                self.channels.append(channel)
+                
+                switch $0.type {
+                case .added: self.addChannelToTable(channel)
+                case .modified: self.updateChannelInTable(channel)
+                case .removed: self.removeChannelFromTable(channel)
+                }
             }
-
-            self.groupChannels()
-            self.chatTableView.reloadData()
         }
+    }
+    
+    private func addChannelToTable(_ channel: Channel) {
+        if channels.contains(channel) { return }
+        channels.append(channel)
+        sortChannelsByDate()
+        
+        guard let index = channels.firstIndex(of: channel) else { return }
+        chatTableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    private func updateChannelInTable(_ channel: Channel) {
+        guard let index = channels.firstIndex(of: channel) else { return }
+        channels[index] = channel
+        chatTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    private func removeChannelFromTable(_ channel: Channel) {
+        guard let index = channels.firstIndex(of: channel) else { return }
+        channels.remove(at: index)
+        chatTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
     }
     
     @objc private func settingsTapped() {
@@ -169,7 +188,7 @@ final class ConversationsListViewController: UIViewController {
         let alertVC = responder as? UIAlertController
         alertVC?.actions[1].isEnabled = (field.text != "")
     }
-
+    
 }
 
 extension ConversationsListViewController: UITableViewDelegate {
@@ -197,19 +216,11 @@ extension ConversationsListViewController: UITableViewDelegate {
 }
 
 extension ConversationsListViewController: UITableViewDataSource {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 100
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Channels"
-    }
-    
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         channels.count
     }

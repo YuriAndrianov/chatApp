@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class User: Codable {
     
@@ -13,5 +14,7 @@ class User: Codable {
     var occupation: String?
     var location: String?
     var preferedTheme: String?
+    
+    static let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""
 
 }

@@ -25,12 +25,6 @@ final class ConversationTableViewCell: UITableViewCell {
         nameLabel?.text = channel.name
         dateLabel?.text = channel.lastActivity?.lastMessageDateFormat()
         setupViewWithMessage(channel.lastMessage)
-        
-//        contentView.backgroundColor = conversation.online ?
-//            currentTheme?.outcomingMessageColor : currentTheme?.backgroundColor
-//        
-//        messageLabel?.font = conversation.hasUnreadMessages ?
-//            .boldSystemFont(ofSize: 15) : .systemFont(ofSize: 13)
     }
     
     private func setupViewWithMessage(_ message: String?) {

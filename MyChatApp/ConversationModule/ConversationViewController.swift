@@ -42,9 +42,9 @@ final class ConversationViewController: UIViewController {
         
         setupUI()
         setupTableView()
-        updateMessages()
+        getMessages()
     }
-  
+    
     private func setupUI() {
         title = channel?.name ?? ""
         view.backgroundColor = currentTheme?.backgroundColor
@@ -58,15 +58,26 @@ final class ConversationViewController: UIViewController {
     }
     
     @objc func addMessage() {
-        let message: [String: Any] = [
-            "content": "Test message",
-            "created": Timestamp(date: Date()),
-            "senderID": 12345,
-            "senderName": "John Smith"
-        ]
+        let addChannelAlertVC = UIAlertController(title: "New message", message: nil, preferredStyle: .alert)
         
-        reference.addDocument(data: message)
-        updateMessages()
+        let sendAction = UIAlertAction(title: "Send", style: .default) { [weak self] _ in
+            guard let textField = addChannelAlertVC.textFields?.first else { return }
+            guard let text = textField.text else { return }
+            self?.createNewMessage(with: text)
+        }
+        sendAction.isEnabled = false
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        addChannelAlertVC.addAction(cancelAction)
+        addChannelAlertVC.addAction(sendAction)
+        addChannelAlertVC.addTextField { [weak self] field in
+            field.placeholder = "Start typing here..."
+            field.addTarget(self, action: #selector(self?.textChanged(_:)), for: .editingChanged)
+            field.keyboardAppearance = self?.currentTheme is NightTheme ? .dark : .default
+        }
+        
+        present(addChannelAlertVC, animated: true)
     }
     
     private func setupTableView() {
@@ -83,84 +94,92 @@ final class ConversationViewController: UIViewController {
         ])
     }
     
-    private func updateMessages() {
-        messages.removeAll()
-        
+    private func getMessages() {
         reference.addSnapshotListener { [weak self] snapshot, error in
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
             }
-            
             guard let self = self else { return }
             
-            snapshot?.documents.forEach {
-                let data = $0.data()
+            snapshot?.documentChanges.forEach {
+                let data = $0.document.data()
                 
-                let content = data["content"] as? String
+                let content = data["content"] as? String ?? ""
                 let created = data["created"] as? Timestamp
-                let senderId = data["senderId"] as? String
-                let senderName = data["senderName"] as? String
+                let senderId = data["senderID"] as? String ?? ""
+                let senderName = data["senderName"] as? String ?? ""
                 
                 let message = Message(content: content,
-                                      created: created?.dateValue(),
+                                      created: created?.dateValue() ?? Date(),
                                       senderId: senderId,
                                       senderName: senderName)
-                self.messages.append(message)
+                
+                switch $0.type {
+                case .added: self.addMessageToTable(message)
+                case .modified: self.updateMessageInTable(message)
+                case .removed: self.removeMessageFromTable(message)
+                }
             }
-            
-            self.groupMessagesByDate()
-            self.tableView.reloadData()
         }
     }
     
-    private func groupMessagesByDate() {
-        // grouping messages by dates in YYMMDD format
-        let messageDict = Dictionary(grouping: messages) { $0.created?.yearMonthDayOfMessage() }
+    private func addMessageToTable(_ message: Message) {
+        if messages.contains(message) { return }
+        messages.append(message)
+        messages = messages.sorted { $0.created > $1.created }
         
-        // sorting keys (dates) by >
-        let sortedKeys = messageDict.keys.sorted { lastDate, firstDate in
-            if let lastDate = lastDate,
-               let firstDate = firstDate {
-                return lastDate > firstDate
-            } else { return false }
-        }
-        
-        // creating values (messages)
-        sortedKeys.forEach {
-            // sorting values (messages) by dates
-            let values = messageDict[$0]?.sorted {
-                if let lastDate = $0.created,
-                   let firstDate = $1.created {
-                    return lastDate > firstDate
-                } else { return false }
+        guard let index = messages.firstIndex(of: message) else { return }
+        tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    private func updateMessageInTable(_ message: Message) {
+        guard let index = messages.firstIndex(of: message) else { return }
+        messages[index] = message
+        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    private func removeMessageFromTable(_ message: Message) {
+        guard let index = messages.firstIndex(of: message) else { return }
+        messages.remove(at: index)
+        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    private func createNewMessage(with text: String) {
+        DataManagerGCD.shared.readFromFile { [weak self] user in
+            guard let self = self else { return }
+            if let user = user {
+                let message: [String: Any] = [
+                    "content": text,
+                    "created": Timestamp(date: Date()),
+                    "senderID": User.userId,
+                    "senderName": user.fullname as Any
+                ]
+                self.reference.addDocument(data: message)
             }
-            groupedMessages.append(values ?? [])
         }
     }
+    
+    @objc func textChanged(_ sender: UITextField) {
+        let field = sender
+        var responder: UIResponder? = field
+        while !(responder is UIAlertController) { responder = responder?.next }
+        let alertVC = responder as? UIAlertController
+        alertVC?.actions[1].isEnabled = (field.text != "")
+    }
+    
 }
 
 extension ConversationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groupedMessages[section].count
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return groupedMessages.count
-    }
-    
-    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        guard let firstMessageInSection = groupedMessages[section].first,
-              let messageDate = firstMessageInSection.created else { return nil }
-        
-        return Calendar.current.isDateInToday(messageDate) ? "Today" : firstMessageInSection.created?.lastMessageDateFormat()
+        return messages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
                                                        for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
-        let message = groupedMessages[indexPath.section][indexPath.row]
+        let message = messages[indexPath.row]
         cell.configurate(with: message)
         cell.selectionStyle = .none
         cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
