@@ -52,12 +52,12 @@ final class ConversationViewController: UIViewController {
         let addMessageButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
                                                style: .done,
                                                target: self,
-                                               action: #selector(addMessage))
+                                               action: #selector(showAddMessageAlertVC))
         
         navigationItem.rightBarButtonItem = addMessageButton
     }
     
-    @objc func addMessage() {
+    @objc func showAddMessageAlertVC() {
         let addChannelAlertVC = UIAlertController(title: "New message", message: nil, preferredStyle: .alert)
         
         let sendAction = UIAlertAction(title: "Send", style: .default) { [weak self] _ in
@@ -104,7 +104,6 @@ final class ConversationViewController: UIViewController {
             
             snapshot?.documentChanges.forEach {
                 let data = $0.document.data()
-                
                 let content = data["content"] as? String ?? ""
                 let created = data["created"] as? Timestamp
                 let senderId = data["senderID"] as? String ?? ""
@@ -119,18 +118,16 @@ final class ConversationViewController: UIViewController {
                 case .added: self.addMessageToTable(message)
                 case .modified: self.updateMessageInTable(message)
                 case .removed: self.removeMessageFromTable(message)
+                default: break
                 }
             }
         }
     }
     
     private func addMessageToTable(_ message: Message) {
-        if messages.contains(message) { return }
         messages.append(message)
         messages = messages.sorted { $0.created > $1.created }
-        
-        guard let index = messages.firstIndex(of: message) else { return }
-        tableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView.reloadData()
     }
     
     private func updateMessageInTable(_ message: Message) {
@@ -149,13 +146,11 @@ final class ConversationViewController: UIViewController {
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
             if let user = user {
-                let message: [String: Any] = [
-                    "content": text,
-                    "created": Timestamp(date: Date()),
-                    "senderID": User.userId,
-                    "senderName": user.fullname as Any
-                ]
-                self.reference.addDocument(data: message)
+                let message = Message(content: text,
+                                      created: Date(),
+                                      senderId: User.userId,
+                                      senderName: user.fullname ?? "")
+                self.reference.addDocument(data: message.toDict)
             }
         }
     }

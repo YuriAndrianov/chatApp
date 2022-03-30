@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ThemesViewController: UIViewController, ThemePickerProtocol {
+final class ThemesViewController: UIViewController {
     
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -96,15 +96,9 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         
         // applying the chosen theme via delegate or completion handler
         let themePicker = ThemePicker.shared
-        
-        // использование делегата, если делегат не weak, то возможен retain cycle
-        themePicker.delegate = self
-        themePicker.apply(chosenTheme, completion: nil)
-        
-        // использование completion, без слабого захвата self возможен retain cycle
-//        themePicker.apply(chosenTheme) { [weak self] theme in
-//            self?.updateUI(with: theme)
-//        }
+        themePicker.apply(chosenTheme) { [weak self] theme in
+            self?.updateUI(with: theme)
+        }
         
     }
     

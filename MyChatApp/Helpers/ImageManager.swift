@@ -76,20 +76,4 @@ final class ImageManager {
         }
     }
     
-    func deleteAllImages() {
-        guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            
-            for fileURL in fileURLs where fileURL.pathExtension == "jpeg" {
-                try FileManager.default.removeItem(at: fileURL)
-            }
-
-            print("Removed all images")
-        } catch let removeError {
-            print("couldn't remove all files at path", removeError)
-        }
-        
-    }
-    
 }

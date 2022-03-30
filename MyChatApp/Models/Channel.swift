@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Channel {
     
@@ -13,6 +14,17 @@ struct Channel {
     let name: String
     let lastMessage: String?
     let lastActivity: Date?
+    
+}
+
+extension Channel {
+    
+    var toDict: [String: Any] {
+        return ["identifier": identifier,
+                "name": name,
+                "lastMessage": lastMessage as Any,
+                "lastActivity": lastActivity as Any]
+    }
     
 }
 

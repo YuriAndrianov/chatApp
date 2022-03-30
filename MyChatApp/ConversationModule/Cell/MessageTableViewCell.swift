@@ -28,6 +28,9 @@ final class MessageTableViewCell: UITableViewCell {
         super.prepareForReuse()
         nameLabel?.isHidden = false
         textLabelTopConstraint?.constant = 40
+        nameLabel?.text = nil
+        messageTextLabel?.text = nil
+        dateLabel?.text = nil
     }
     
     func configurate(with message: Message) {

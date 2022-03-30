@@ -86,15 +86,7 @@ final class ConversationsListViewController: UIViewController {
     
     private func createNewChannel(with title: String) {
         let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
-        
-        let channelData: [String: Any] = [
-            "identifier": channel.identifier,
-            "name": channel.name,
-            "lastMessage": channel.lastMessage as Any,
-            "lastActivity": Timestamp(date: channel.lastActivity ?? Date())
-        ]
-        
-        reference.addDocument(data: channelData)
+        reference.addDocument(data: channel.toDict)
     }
     
     private func getChannels() {

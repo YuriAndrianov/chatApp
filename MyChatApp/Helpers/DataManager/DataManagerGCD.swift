@@ -43,7 +43,7 @@ final class DataManagerGCD: DataManagerProtocol {
             completion(nil)
             return
         }
-        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
+        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("json")
         do {
             let user = try JSONDecoder().decode(User.self, from: Data(contentsOf: userFileURL))
             completion(user)

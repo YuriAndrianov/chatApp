@@ -7,20 +7,12 @@
 
 import UIKit
 
-protocol ThemePickerProtocol: AnyObject {
-    
-    func updateUI(with theme: ThemeProtocol?)
-    
-}
-
 final class ThemePicker {
     
     static let shared = ThemePicker()
     
     private(set) var currentTheme: ThemeProtocol?
-    
-    weak var delegate: ThemePickerProtocol?
-    
+
     private init() {}
     
     enum ThemeType {
@@ -72,11 +64,7 @@ final class ThemePicker {
         UINavigationBar.appearance().tintColor = currentTheme?.barButtonColor
         
         UIApplication.shared.windows.first { $0.isKeyWindow }?.reload()
-        
-        // при использовании делегата
-        delegate?.updateUI(with: currentTheme)
-        
-        // при использовании completion
+
         completion?(currentTheme ?? ClassicTheme())
     }
     
