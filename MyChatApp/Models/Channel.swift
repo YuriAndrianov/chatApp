@@ -35,12 +35,7 @@ extension Channel: Comparable {
     }
     
     static func < (lhs: Channel, rhs: Channel) -> Bool {
-        if let lhsDate = lhs.lastActivity,
-           let rhsDate = rhs.lastActivity {
-            return lhsDate < rhsDate
-        } else {
-            return lhs.name < rhs.name
-        }
+        return lhs.name < rhs.name
     }
     
 }

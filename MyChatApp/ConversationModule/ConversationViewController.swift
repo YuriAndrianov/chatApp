@@ -126,7 +126,7 @@ final class ConversationViewController: UIViewController {
     
     private func addMessageToTable(_ message: Message) {
         messages.append(message)
-        messages = messages.sorted { $0.created > $1.created }
+        messages.sort(by: >)
         tableView.reloadData()
     }
     
