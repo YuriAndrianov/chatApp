@@ -21,19 +21,13 @@ final class DataManagerGCD: DataManagerProtocol {
             if !FileManager.default.fileExists(atPath: userFileURL.path) {
                 FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)
             }
-            
-//            print("Path to file: ", userFileURL.path)
-            
+
             do {
                 try JSONEncoder().encode(user).write(to: userFileURL)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    completion(true)
-                })
+                DispatchQueue.main.async { completion(true) }
             } catch {
-                print(error)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    completion(false)
-                })
+                print(error.localizedDescription)
+                DispatchQueue.main.async { completion(false) }
             }
         }
     }
@@ -49,7 +43,7 @@ final class DataManagerGCD: DataManagerProtocol {
             completion(user)
         } catch {
             completion(nil)
-            print(error)
+            print(error.localizedDescription)
         }
     }
     

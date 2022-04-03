@@ -6,9 +6,12 @@
 //
 
 import UIKit
+import CoreData
 import FirebaseFirestore
 
 final class ConversationsListViewController: UIViewController {
+    
+    private let coreDataManager = OldCoreDataManager()
     
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
@@ -32,6 +35,7 @@ final class ConversationsListViewController: UIViewController {
         setupNavBar()
         setupTableView()
         getChannels()
+        fetchChannelsFromDB()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -44,6 +48,16 @@ final class ConversationsListViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         chatTableView.frame = view.bounds
+    }
+    
+    private func fetchChannelsFromDB() {
+        let dbChannels = coreDataManager.fetchChannels()
+        dbChannels.forEach { [weak self] in
+            let channel = Channel(dbChannel: $0)
+            DispatchQueue.main.async {
+                self?.addChannelToTable(channel)
+            }
+        }
     }
     
     private func setupNavBar() {
@@ -91,11 +105,12 @@ final class ConversationsListViewController: UIViewController {
     
     private func getChannels() {
         reference.addSnapshotListener { [weak self] snapshot, error in
+            guard let self = self else { return }
+            
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
             }
-            guard let self = self else { return }
             
             snapshot?.documentChanges.forEach {
                 let data = $0.document.data()
@@ -105,17 +120,77 @@ final class ConversationsListViewController: UIViewController {
                 let lastMessage = data["lastMessage"] as? String
                 let lastActivity = data["lastActivity"] as? Timestamp
                 
-                let channel = Channel(identifier: identifier,
+                let snapshotChannel = Channel(identifier: identifier,
                                       name: name,
                                       lastMessage: lastMessage,
                                       lastActivity: lastActivity?.dateValue())
                 
                 switch $0.type {
-                case .added: self.addChannelToTable(channel)
-                case .modified: self.updateChannelInTable(channel)
-                case .removed: self.removeChannelFromTable(channel)
+                case .added:
+                    self.coreDataManager.performSave { context in
+                        self.addChannelToDB(channel: snapshotChannel, context: context)
+                        print("Channel \"\(snapshotChannel.name)\" added from Firestore and saved to DB")
+                    }
+                case .modified:
+                    self.coreDataManager.performSave { context in
+                        self.updateChannelInDB(channel: snapshotChannel, context: context)
+                        print("Channel \"\(snapshotChannel.name)\" updated in Firestore and DB")
+                    }
+                case .removed:
+                    self.coreDataManager.performSave { context in
+                        self.removeChannelFromDB(channel: snapshotChannel, context: context)
+                        print("Channel \"\(snapshotChannel.name)\" deleted from Firestore and DB")
+                    }
                 }
             }
+        }
+    }
+    
+    private func createDBChannel(channel: Channel, context: NSManagedObjectContext) -> DBChannel {
+        let dbChannel = DBChannel(context: context)
+        dbChannel.identifier = channel.identifier
+        dbChannel.name = channel.name
+        dbChannel.lastMessage = channel.lastMessage
+        dbChannel.lastActivity = channel.lastActivity
+        return dbChannel
+    }
+    
+    private func addChannelToDB(channel: Channel, context: NSManagedObjectContext) {
+        let dbChannel = DBChannel(context: context)
+        dbChannel.identifier = channel.identifier
+        dbChannel.name = channel.name
+        dbChannel.lastMessage = channel.lastMessage
+        dbChannel.lastActivity = channel.lastActivity
+        
+        do {
+            try context.save()
+        } catch {
+            print(error.localizedDescription)
+        }
+//        let channel = Channel(dbChannel: dbChannel)
+//
+//        DispatchQueue.main.async { [weak self] in
+//            self?.addChannelToTable(channel)
+//        }
+    }
+    
+    private func updateChannelInDB(channel: Channel, context: NSManagedObjectContext) {
+        let dbChannel = createDBChannel(channel: channel, context: context)
+        let channel = Channel(dbChannel: dbChannel)
+        context.refresh(dbChannel, mergeChanges: true)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.updateChannelInTable(channel)
+        }
+    }
+    
+    private func removeChannelFromDB(channel: Channel, context: NSManagedObjectContext) {
+        let dbChannel = createDBChannel(channel: channel, context: context)
+        let channel = Channel(dbChannel: dbChannel)
+        context.delete(dbChannel)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.removeChannelFromTable(channel)
         }
     }
     
@@ -174,6 +249,7 @@ final class ConversationsListViewController: UIViewController {
         present(addChannelAlertVC, animated: true)
     }
     
+    // disables confirm button if text = ""
     @objc func textChanged(_ sender: UITextField) {
         let field = sender
         var responder: UIResponder? = field
@@ -183,6 +259,8 @@ final class ConversationsListViewController: UIViewController {
     }
     
 }
+
+// MARK: - tableview delegate
 
 extension ConversationsListViewController: UITableViewDelegate {
     
@@ -205,8 +283,10 @@ extension ConversationsListViewController: UITableViewDelegate {
             header.backgroundColor = currentTheme?.backgroundColor
         }
     }
-    
+
 }
+
+// MARK: - tableview datasource
 
 extension ConversationsListViewController: UITableViewDataSource {
 

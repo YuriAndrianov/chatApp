@@ -1,5 +1,5 @@
 //
-//  Array+Subscript.swift
+//  Array+subscript.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 11.03.2022.

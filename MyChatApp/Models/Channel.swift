@@ -39,3 +39,16 @@ extension Channel: Comparable {
     }
     
 }
+
+// MARK: - Custom init
+
+extension Channel {
+    
+    init(dbChannel: DBChannel) {
+        self.identifier = dbChannel.identifier ?? ""
+        self.name = dbChannel.name ?? ""
+        self.lastMessage = dbChannel.lastMessage
+        self.lastActivity = dbChannel.lastActivity
+    }
+    
+}

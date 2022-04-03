@@ -39,3 +39,16 @@ extension Message: Comparable {
     }
     
 }
+
+// MARK: - Custom init
+
+extension Message {
+    
+    init(dbMessage: DBMessage) {
+        self.content = dbMessage.content ?? ""
+        self.created = dbMessage.created ?? Date()
+        self.senderId = dbMessage.senderId ?? ""
+        self.senderName = dbMessage.senderName ?? ""
+    }
+    
+}

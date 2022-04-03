@@ -6,9 +6,12 @@
 //
 
 import UIKit
+import CoreData
 import FirebaseFirestore
 
 final class ConversationViewController: UIViewController {
+    
+    private let coreDataManager = OldCoreDataManager()
     
     var channel: Channel?
     
@@ -94,13 +97,24 @@ final class ConversationViewController: UIViewController {
         ])
     }
     
+    private func fetchMessagesFromDB() {
+        let dbMessages = coreDataManager.fetchMessages()
+        dbMessages.forEach { [weak self] in
+            let message = Message(dbMessage: $0)
+            DispatchQueue.main.async {
+                self?.addMessageToTable(message)
+            }
+        }
+    }
+    
     private func getMessages() {
         reference.addSnapshotListener { [weak self] snapshot, error in
+            guard let self = self else { return }
+            
             guard error == nil else {
                 print(error?.localizedDescription as Any)
                 return
             }
-            guard let self = self else { return }
             
             snapshot?.documentChanges.forEach {
                 let data = $0.document.data()
@@ -109,18 +123,65 @@ final class ConversationViewController: UIViewController {
                 let senderId = data["senderID"] as? String ?? ""
                 let senderName = data["senderName"] as? String ?? ""
                 
-                let message = Message(content: content,
+                let snapshotMessage = Message(content: content,
                                       created: created?.dateValue() ?? Date(),
                                       senderId: senderId,
                                       senderName: senderName)
                 
                 switch $0.type {
-                case .added: self.addMessageToTable(message)
-                case .modified: self.updateMessageInTable(message)
-                case .removed: self.removeMessageFromTable(message)
+                case .added:
+                    self.coreDataManager.performSave { context in
+                        self.addMessageToDB(message: snapshotMessage, context: context)
+                    }
+                case .modified:
+                    self.coreDataManager.performSave { context in
+                        self.updateMessageInDB(message: snapshotMessage, context: context)
+                    }
+                case .removed:
+                    self.coreDataManager.performSave { context in
+                        self.removeMessageFromDB(message: snapshotMessage, context: context)
+                    }
                 default: break
                 }
             }
+        }
+    }
+    
+    private func createDBMessage(message: Message, context: NSManagedObjectContext) -> DBMessage {
+        let dbMessage = DBMessage(context: context)
+        dbMessage.content = message.content
+        dbMessage.senderName = message.senderName
+        dbMessage.created = message.created
+        dbMessage.senderId = message.senderId
+        return dbMessage
+    }
+    
+    private func addMessageToDB(message: Message, context: NSManagedObjectContext) {
+        let dbMessage = createDBMessage(message: message, context: context)
+        let message = Message(dbMessage: dbMessage)
+
+        DispatchQueue.main.async { [weak self] in
+            self?.addMessageToTable(message)
+        }
+    }
+    
+    private func updateMessageInDB(message: Message, context: NSManagedObjectContext) {
+        let dbMessage = createDBMessage(message: message, context: context)
+        let message = Message(dbMessage: dbMessage)
+        context.refresh(dbMessage, mergeChanges: true)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.updateMessageInTable(message)
+        }
+    }
+    
+    private func removeMessageFromDB(message: Message, context: NSManagedObjectContext) {
+        let dbMessage = createDBMessage(message: message, context: context)
+        let message = Message(dbMessage: dbMessage)
+        context.delete(dbMessage)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.removeMessageFromTable(message)
         }
     }
     
@@ -155,6 +216,7 @@ final class ConversationViewController: UIViewController {
         }
     }
     
+    // disables send button if text = ""
     @objc func textChanged(_ sender: UITextField) {
         let field = sender
         var responder: UIResponder? = field
@@ -164,6 +226,8 @@ final class ConversationViewController: UIViewController {
     }
     
 }
+
+// MARK: - tableview delegate
 
 extension ConversationViewController: UITableViewDataSource {
     
@@ -182,6 +246,8 @@ extension ConversationViewController: UITableViewDataSource {
     }
     
 }
+
+// MARK: - tableview datasource
 
 extension ConversationViewController: UITableViewDelegate {
     
