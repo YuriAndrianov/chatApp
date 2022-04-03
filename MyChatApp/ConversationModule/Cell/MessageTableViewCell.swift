@@ -18,29 +18,46 @@ final class MessageTableViewCell: UITableViewCell {
 
     @IBOutlet weak var leadingConstraint: NSLayoutConstraint?
     @IBOutlet weak var trailingConstraint: NSLayoutConstraint?
+    @IBOutlet weak var textLabelTopConstraint: NSLayoutConstraint?
     @IBOutlet weak var messageTextLabel: UILabel?
     @IBOutlet weak var bubbleView: UIView?
     @IBOutlet weak var dateLabel: UILabel?
-
-    func configurate(with message: Message) {
-        setupViewIfIncoming(isTrue: message.isIncoming)
-        messageTextLabel?.text = message.text
-        dateLabel?.text = message.date?.timeOfMessage()
+    @IBOutlet weak var nameLabel: UILabel?
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        nameLabel?.isHidden = false
+        textLabelTopConstraint?.constant = 40
+        nameLabel?.text = nil
+        messageTextLabel?.text = nil
+        dateLabel?.text = nil
     }
     
-    private func setupViewIfIncoming(isTrue: Bool) {
-        if isTrue {
-            leadingConstraint?.constant = 20
-            trailingConstraint?.constant = contentView.frame.width / 4
-            bubbleView?.backgroundColor = currentTheme?.incomingMessageColor
-        } else {
-            leadingConstraint?.constant = contentView.frame.width / 4
+    func configurate(with message: Message) {
+        setupCell(with: message.senderId)
+        nameLabel?.text = message.senderName
+        messageTextLabel?.text = message.content
+        dateLabel?.text = message.created.lastMessageDateFormat()
+    }
+    
+    private func setupCell(with senderId: String?) {
+        if senderId == User.userId {
+            nameLabel?.isHidden = true
+            textLabelTopConstraint?.constant = 10
+            leadingConstraint?.constant = contentView.frame.width / 3
             trailingConstraint?.constant = 20
             bubbleView?.backgroundColor = currentTheme?.outcomingMessageColor
+        } else {
+            nameLabel?.isHidden = false
+            textLabelTopConstraint?.constant = 40
+            leadingConstraint?.constant = 20
+            trailingConstraint?.constant = contentView.frame.width / 3
+            bubbleView?.backgroundColor = currentTheme?.incomingMessageColor
         }
         
-        backgroundColor = currentTheme?.backGroundColor
+        backgroundColor = currentTheme?.backgroundColor
         messageTextLabel?.textColor = currentTheme?.fontColor
+        nameLabel?.textColor = currentTheme?.fontColor
         dateLabel?.textColor = currentTheme?.fontColor
     }
     

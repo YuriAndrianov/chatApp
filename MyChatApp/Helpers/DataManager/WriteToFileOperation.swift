@@ -20,7 +20,7 @@ final class WriteToFileOperation: Operation {
     
     override func main() {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
+        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("json")
         
         if !FileManager.default.fileExists(atPath: userFileURL.path) {
             FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)

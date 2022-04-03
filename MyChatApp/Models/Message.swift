@@ -6,12 +6,36 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct Message {
 
-    var date: Date?
-    var text: String?
-    var isIncoming: Bool
-    var unread: Bool
+    var content: String
+    var created: Date
+    var senderId: String
+    var senderName: String
+    
+}
 
+extension Message {
+    
+    var toDict: [String: Any] {
+        return ["content": content,
+                "created": Timestamp(date: created),
+                "senderID": senderId,
+                "senderName": senderName]
+    }
+    
+}
+
+extension Message: Comparable {
+    
+    static func == (lhs: Message, rhs: Message) -> Bool {
+        return lhs.senderId == rhs.senderId
+    }
+    
+    static func < (lhs: Message, rhs: Message) -> Bool {
+        return lhs.created < rhs.created
+    }
+    
 }

@@ -22,7 +22,7 @@ final class DataManagerGCD: DataManagerProtocol {
                 FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)
             }
             
-            print("Path to file: ", userFileURL.path)
+//            print("Path to file: ", userFileURL.path)
             
             do {
                 try JSONEncoder().encode(user).write(to: userFileURL)
@@ -43,7 +43,7 @@ final class DataManagerGCD: DataManagerProtocol {
             completion(nil)
             return
         }
-        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
+        let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("json")
         do {
             let user = try JSONDecoder().decode(User.self, from: Data(contentsOf: userFileURL))
             completion(user)

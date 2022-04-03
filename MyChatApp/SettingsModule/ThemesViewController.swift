@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ThemesViewController: UIViewController, ThemePickerProtocol {
+final class ThemesViewController: UIViewController {
     
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -31,7 +31,7 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
     }
     
     private func setupUI() {
-        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
         title = "Settings"
     }
     
@@ -96,15 +96,9 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         
         // applying the chosen theme via delegate or completion handler
         let themePicker = ThemePicker.shared
-        
-        // использование делегата, если делегат не weak, то возможен retain cycle
-        themePicker.delegate = self
-        themePicker.apply(chosenTheme, completion: nil)
-        
-        // использование completion, без слабого захвата self возможен retain cycle
-//        themePicker.apply(chosenTheme) { [weak self] theme in
-//            self?.updateUI(with: theme)
-//        }
+        themePicker.apply(chosenTheme) { [weak self] theme in
+            self?.updateUI(with: theme)
+        }
         
     }
     
@@ -112,7 +106,7 @@ final class ThemesViewController: UIViewController, ThemePickerProtocol {
         guard let theme = theme else { return }
         
         UIView.animate(withDuration: 0.05) {
-            self.view.backgroundColor = theme.backGroundColor
+            self.view.backgroundColor = theme.backgroundColor
             self.classicThemeView.label?.textColor = theme.fontColor
             self.dayThemeView.label?.textColor = theme.fontColor
             self.nightThemeView.label?.textColor = theme.fontColor

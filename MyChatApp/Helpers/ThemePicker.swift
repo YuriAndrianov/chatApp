@@ -7,20 +7,12 @@
 
 import UIKit
 
-protocol ThemePickerProtocol: AnyObject {
-    
-    func updateUI(with theme: ThemeProtocol?)
-    
-}
-
 final class ThemePicker {
     
     static let shared = ThemePicker()
     
     private(set) var currentTheme: ThemeProtocol?
-    
-    weak var delegate: ThemePickerProtocol?
-    
+
     private init() {}
     
     enum ThemeType {
@@ -63,33 +55,29 @@ final class ThemePicker {
         
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.backgroundColor = ThemePicker.shared.currentTheme?.navBarColor
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: ThemePicker.shared.currentTheme?.fontColor as Any]
-        navBarAppearance.titleTextAttributes = [.foregroundColor: ThemePicker.shared.currentTheme?.fontColor as Any]
+        navBarAppearance.backgroundColor = currentTheme?.navBarColor
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: currentTheme?.fontColor as Any]
+        navBarAppearance.titleTextAttributes = [.foregroundColor: currentTheme?.fontColor as Any]
         
         UINavigationBar.appearance().standardAppearance = navBarAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
-        UINavigationBar.appearance().tintColor = ThemePicker.shared.currentTheme?.barButtonColor
+        UINavigationBar.appearance().tintColor = currentTheme?.barButtonColor
         
         UIApplication.shared.windows.first { $0.isKeyWindow }?.reload()
-        
-        // при использовании делегата
-        delegate?.updateUI(with: ThemePicker.shared.currentTheme)
-        
-        // при использовании completion
-        completion?(ThemePicker.shared.currentTheme ?? ClassicTheme())
+
+        completion?(currentTheme ?? ClassicTheme())
     }
     
     private func savePreffered(theme: ThemeType, for user: User) {
         switch theme {
         case .classic:
-            ThemePicker.shared.currentTheme = ClassicTheme()
+            currentTheme = ClassicTheme()
             user.preferedTheme = "classic"
         case .day:
-            ThemePicker.shared.currentTheme = DayTheme()
+            currentTheme = DayTheme()
             user.preferedTheme = "day"
         case .night:
-            ThemePicker.shared.currentTheme = NightTheme()
+            currentTheme = NightTheme()
             user.preferedTheme = "night"
         }
         

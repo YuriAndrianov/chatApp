@@ -181,7 +181,7 @@ final class ProfileViewController: UIViewController {
     
     private func setupNavBar() {
         title = "My Profile"
-        view.backgroundColor = ThemePicker.shared.currentTheme?.backGroundColor
+        view.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
         
         self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
@@ -299,9 +299,12 @@ final class ProfileViewController: UIViewController {
         view.addSubview(spinner)
         spinner.startAnimating()
         
-        // block buttons
+        // block buttons and fields
         somethingIsChanged(false)
         cancelButton.isEnabled = false
+        fullNameTextField.isEnabled = false
+        occupationTextField.isEnabled = false
+        locationTextField.isEnabled = false
         
         // saving to file (1 sec)
         manager.writeToFile(user) { [weak self] success in

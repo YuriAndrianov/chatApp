@@ -18,26 +18,19 @@ extension Date {
         
         if calendar.isDateInToday(returningDate) {
             dateFormat = "HH:mm"
+            formatter.dateFormat = dateFormat
+            return "Today " + formatter.string(from: self)
         } else {
-            dateFormat = "dd MMM"
+            dateFormat = "dd MMM HH:mm"
+            formatter.dateFormat = dateFormat
+            return formatter.string(from: self)
         }
-        
-        formatter.dateFormat = dateFormat
-        
-        return formatter.string(from: self)
     }
     
     func yearMonthDayOfMessage() -> Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: self)
         return calendar.date(from: components) ?? Date()
-    }
-    
-    func timeOfMessage() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        
-        return formatter.string(from: self)
     }
     
 }

@@ -21,16 +21,10 @@ final class ConversationTableViewCell: UITableViewCell {
     @IBOutlet weak var dateLabel: UILabel?
     @IBOutlet weak var messageLabel: UILabel?
    
-    func configurate(with conversation: Conversation) {
-        nameLabel?.text = conversation.name
-        dateLabel?.text = conversation.date?.lastMessageDateFormat()
-        setupViewWithMessage(conversation.lastMessageText)
-        
-        contentView.backgroundColor = conversation.online ?
-            currentTheme?.outcomingMessageColor : currentTheme?.backGroundColor
-        
-        messageLabel?.font = conversation.hasUnreadMessages ?
-            .boldSystemFont(ofSize: 15) : .systemFont(ofSize: 13)
+    func configurate(with channel: Channel) {
+        nameLabel?.text = channel.name
+        dateLabel?.text = channel.lastActivity?.lastMessageDateFormat()
+        setupViewWithMessage(channel.lastMessage)
     }
     
     private func setupViewWithMessage(_ message: String?) {
@@ -46,7 +40,7 @@ final class ConversationTableViewCell: UITableViewCell {
         nameLabel?.textColor = currentTheme?.fontColor
         dateLabel?.textColor = currentTheme?.fontColor
         friendPhotoImageView?.tintColor = currentTheme?.barButtonColor
-        backgroundColor = currentTheme?.backGroundColor
+        backgroundColor = currentTheme?.backgroundColor
     }
     
 }

@@ -9,7 +9,7 @@ import UIKit
 
 protocol ThemeProtocol: AnyObject {
     
-    var backGroundColor: UIColor { get }
+    var backgroundColor: UIColor { get }
     var fontColor: UIColor { get }
     var incomingMessageColor: UIColor { get }
     var outcomingMessageColor: UIColor { get }
