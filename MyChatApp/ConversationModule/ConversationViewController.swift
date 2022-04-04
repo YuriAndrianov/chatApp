@@ -11,8 +11,7 @@ import FirebaseFirestore
 
 final class ConversationViewController: UIViewController {
     
-    private let coreDataManager = OldCoreDataManager()
-    
+    var coreDataManager: CoreDataManager?
     var channel: Channel?
     
     private var groupedMessages = [[Message]]()
@@ -40,12 +39,26 @@ final class ConversationViewController: UIViewController {
         return table
     }()
     
+    init(channel: Channel, coreDataManager: CoreDataManager) {
+        self.channel = channel
+        self.coreDataManager = coreDataManager
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupUI()
         setupTableView()
         getMessages()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.fetchMessagesFromDB()
+        }
     }
     
     private func setupUI() {
@@ -55,12 +68,136 @@ final class ConversationViewController: UIViewController {
         let addMessageButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
                                                style: .done,
                                                target: self,
-                                               action: #selector(showAddMessageAlertVC))
+                                               action: #selector(addMessageTapped))
         
         navigationItem.rightBarButtonItem = addMessageButton
     }
     
-    @objc func showAddMessageAlertVC() {
+    private func setupTableView() {
+        view.addSubview(tableView)
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        
+        NSLayoutConstraint.activate([
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30)
+        ])
+    }
+    
+    // MARK: - Fetching messages
+    
+    private func fetchMessagesFromDB() {
+        let dbMessages = coreDataManager?.fetchMessages()
+        
+        dbMessages?.filter { [weak self] in
+            $0.channel?.identifier == self?.channel?.identifier
+        }.forEach { [weak self] in
+            let message = Message(dbMessage: $0)
+            self?.addMessageToTable(message)
+        }
+    }
+    
+    private func getMessages() {
+        reference.addSnapshotListener { [weak self] snapshot, error in
+            guard let self = self else { return }
+            
+            guard error == nil else {
+                print(error?.localizedDescription as Any)
+                return
+            }
+
+            snapshot?.documentChanges.forEach {
+                let data = $0.document.data()
+                let content = data["content"] as? String ?? ""
+                let created = data["created"] as? Timestamp
+                let senderId = data["senderID"] as? String ?? ""
+                let senderName = data["senderName"] as? String ?? ""
+                
+                let snapshotMessage = Message(content: content,
+                                      created: created?.dateValue() ?? Date(),
+                                      senderId: senderId,
+                                      senderName: senderName)
+                
+                switch $0.type {
+                case .added:
+                    self.addMessageToTable(snapshotMessage)
+                    
+                    self.coreDataManager?.performSave { context in
+                        self.saveMessageToDB(message: snapshotMessage, context: context)
+                    }
+                case .modified:
+                    self.updateMessageInTable(snapshotMessage)
+                    
+                    self.coreDataManager?.performSave { context in
+                        self.updateMessageInDB(message: snapshotMessage, context: context)
+                    }
+                case .removed:
+                    self.removeMessageFromTable(snapshotMessage)
+                    
+                    self.coreDataManager?.performSave { context in
+                        self.removeMessageFromDB(message: snapshotMessage, context: context)
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Handling message changes in coredata
+    
+    private func saveMessageToDB(message: Message, context: NSManagedObjectContext) {
+        let dbMessage = DBMessage(context: context)
+        dbMessage.content = message.content
+        dbMessage.senderName = message.senderName
+        dbMessage.created = message.created
+        dbMessage.senderId = message.senderId
+    }
+    
+    private func updateMessageInDB(message: Message, context: NSManagedObjectContext) {
+        let dbMessage = DBMessage(context: context)
+        dbMessage.content = message.content
+        dbMessage.senderName = message.senderName
+        dbMessage.created = message.created
+        dbMessage.senderId = message.senderId
+        
+        context.refresh(dbMessage, mergeChanges: true)
+    }
+    
+    private func removeMessageFromDB(message: Message, context: NSManagedObjectContext) {
+        let dbMessage = DBMessage(context: context)
+        dbMessage.content = message.content
+        dbMessage.senderName = message.senderName
+        dbMessage.created = message.created
+        dbMessage.senderId = message.senderId
+        
+        context.delete(dbMessage)
+    }
+    
+    // MARK: - Handling message changes in tableview
+    
+    private func addMessageToTable(_ message: Message) {
+        messages.append(message)
+        messages.sort(by: >)
+        tableView.reloadData()
+    }
+    
+    private func updateMessageInTable(_ message: Message) {
+        guard let index = messages.firstIndex(of: message) else { return }
+        messages[index] = message
+        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    private func removeMessageFromTable(_ message: Message) {
+        guard let index = messages.firstIndex(of: message) else { return }
+        messages.remove(at: index)
+        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+    }
+    
+    // MARK: - actions
+    
+    @objc func addMessageTapped() {
         let addChannelAlertVC = UIAlertController(title: "New message", message: nil, preferredStyle: .alert)
         
         let sendAction = UIAlertAction(title: "Send", style: .default) { [weak self] _ in
@@ -83,125 +220,7 @@ final class ConversationViewController: UIViewController {
         present(addChannelAlertVC, animated: true)
     }
     
-    private func setupTableView() {
-        view.addSubview(tableView)
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
-        
-        NSLayoutConstraint.activate([
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30)
-        ])
-    }
-    
-    private func fetchMessagesFromDB() {
-        let dbMessages = coreDataManager.fetchMessages()
-        dbMessages.forEach { [weak self] in
-            let message = Message(dbMessage: $0)
-            DispatchQueue.main.async {
-                self?.addMessageToTable(message)
-            }
-        }
-    }
-    
-    private func getMessages() {
-        reference.addSnapshotListener { [weak self] snapshot, error in
-            guard let self = self else { return }
-            
-            guard error == nil else {
-                print(error?.localizedDescription as Any)
-                return
-            }
-            
-            snapshot?.documentChanges.forEach {
-                let data = $0.document.data()
-                let content = data["content"] as? String ?? ""
-                let created = data["created"] as? Timestamp
-                let senderId = data["senderID"] as? String ?? ""
-                let senderName = data["senderName"] as? String ?? ""
-                
-                let snapshotMessage = Message(content: content,
-                                      created: created?.dateValue() ?? Date(),
-                                      senderId: senderId,
-                                      senderName: senderName)
-                
-                switch $0.type {
-                case .added:
-                    self.coreDataManager.performSave { context in
-                        self.addMessageToDB(message: snapshotMessage, context: context)
-                    }
-                case .modified:
-                    self.coreDataManager.performSave { context in
-                        self.updateMessageInDB(message: snapshotMessage, context: context)
-                    }
-                case .removed:
-                    self.coreDataManager.performSave { context in
-                        self.removeMessageFromDB(message: snapshotMessage, context: context)
-                    }
-                default: break
-                }
-            }
-        }
-    }
-    
-    private func createDBMessage(message: Message, context: NSManagedObjectContext) -> DBMessage {
-        let dbMessage = DBMessage(context: context)
-        dbMessage.content = message.content
-        dbMessage.senderName = message.senderName
-        dbMessage.created = message.created
-        dbMessage.senderId = message.senderId
-        return dbMessage
-    }
-    
-    private func addMessageToDB(message: Message, context: NSManagedObjectContext) {
-        let dbMessage = createDBMessage(message: message, context: context)
-        let message = Message(dbMessage: dbMessage)
-
-        DispatchQueue.main.async { [weak self] in
-            self?.addMessageToTable(message)
-        }
-    }
-    
-    private func updateMessageInDB(message: Message, context: NSManagedObjectContext) {
-        let dbMessage = createDBMessage(message: message, context: context)
-        let message = Message(dbMessage: dbMessage)
-        context.refresh(dbMessage, mergeChanges: true)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.updateMessageInTable(message)
-        }
-    }
-    
-    private func removeMessageFromDB(message: Message, context: NSManagedObjectContext) {
-        let dbMessage = createDBMessage(message: message, context: context)
-        let message = Message(dbMessage: dbMessage)
-        context.delete(dbMessage)
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.removeMessageFromTable(message)
-        }
-    }
-    
-    private func addMessageToTable(_ message: Message) {
-        messages.append(message)
-        messages.sort(by: >)
-        tableView.reloadData()
-    }
-    
-    private func updateMessageInTable(_ message: Message) {
-        guard let index = messages.firstIndex(of: message) else { return }
-        messages[index] = message
-        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-    }
-    
-    private func removeMessageFromTable(_ message: Message) {
-        guard let index = messages.firstIndex(of: message) else { return }
-        messages.remove(at: index)
-        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-    }
+    // MARK: - Helpers
     
     private func createNewMessage(with text: String) {
         DataManagerGCD.shared.readFromFile { [weak self] user in

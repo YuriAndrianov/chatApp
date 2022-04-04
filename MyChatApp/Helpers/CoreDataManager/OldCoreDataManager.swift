@@ -7,7 +7,7 @@
 
 import CoreData
 
-final class OldCoreDataManager {
+final class OldCoreDataManager: CoreDataManager {
     
     private lazy var managedObjectModel: NSManagedObjectModel = {
         guard
@@ -50,6 +50,21 @@ final class OldCoreDataManager {
         return context
     }()
     
+    func performSave(_ block: @escaping (NSManagedObjectContext) -> Void) {
+        let context = writeContext
+        context.perform {
+            block(context)
+            
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     func fetchChannels() -> [DBChannel] {
         let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
         
@@ -72,19 +87,4 @@ final class OldCoreDataManager {
         }
     }
     
-    func performSave(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        let context = writeContext
-        
-        context.perform {
-            block(context)
-            
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
-    }
 }

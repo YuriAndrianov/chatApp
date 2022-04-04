@@ -16,7 +16,7 @@ final class DataManagerGCD: DataManagerProtocol {
     func writeToFile(_ user: User, completion: @escaping ((Bool) -> Void)) {
         DispatchQueue.global(qos: .background).async {
             guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-            let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("txt")
+            let userFileURL = documentsDirectory.appendingPathComponent("user").appendingPathExtension("json")
             
             if !FileManager.default.fileExists(atPath: userFileURL.path) {
                 FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)

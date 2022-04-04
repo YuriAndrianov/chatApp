@@ -11,7 +11,7 @@ import FirebaseFirestore
 
 final class ConversationsListViewController: UIViewController {
     
-    private let coreDataManager = OldCoreDataManager()
+    var coreDataManager: CoreDataManager?
     
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
@@ -30,12 +30,24 @@ final class ConversationsListViewController: UIViewController {
     
     private var channels = [Channel]()
     
+    init(coreDataManager: CoreDataManager) {
+        self.coreDataManager = coreDataManager
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
         setupTableView()
         getChannels()
-        fetchChannelsFromDB()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.fetchChannelsFromDB()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,16 +60,6 @@ final class ConversationsListViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         chatTableView.frame = view.bounds
-    }
-    
-    private func fetchChannelsFromDB() {
-        let dbChannels = coreDataManager.fetchChannels()
-        dbChannels.forEach { [weak self] in
-            let channel = Channel(dbChannel: $0)
-            DispatchQueue.main.async {
-                self?.addChannelToTable(channel)
-            }
-        }
     }
     
     private func setupNavBar() {
@@ -89,18 +91,14 @@ final class ConversationsListViewController: UIViewController {
         view.addSubview(chatTableView)
     }
     
-    private func sortChannelsByDate() {
-        channels = channels.sorted {
-            if let lastDate = $0.lastActivity,
-               let firstDate = $1.lastActivity {
-                return lastDate > firstDate
-            } else { return false }
-        }
-    }
+    // MARK: - Fetching channels
     
-    private func createNewChannel(with title: String) {
-        let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
-        reference.addDocument(data: channel.toDict)
+    private func fetchChannelsFromDB() {
+        let dbChannels = coreDataManager?.fetchChannels()
+        dbChannels?.forEach { [weak self] in
+            let channel = Channel(dbChannel: $0)
+            self?.addChannelToTable(channel)
+        }
     }
     
     private func getChannels() {
@@ -111,7 +109,7 @@ final class ConversationsListViewController: UIViewController {
                 print(error?.localizedDescription as Any)
                 return
             }
-            
+
             snapshot?.documentChanges.forEach {
                 let data = $0.document.data()
                 
@@ -127,93 +125,83 @@ final class ConversationsListViewController: UIViewController {
                 
                 switch $0.type {
                 case .added:
-                    self.coreDataManager.performSave { context in
-                        self.addChannelToDB(channel: snapshotChannel, context: context)
-                        print("Channel \"\(snapshotChannel.name)\" added from Firestore and saved to DB")
+                    self.addChannelToTable(snapshotChannel)
+
+                    self.coreDataManager?.performSave { context in
+                        self.saveChannelToDB(channel: snapshotChannel, context: context)
                     }
                 case .modified:
-                    self.coreDataManager.performSave { context in
+                    self.updateChannelInTable(snapshotChannel)
+                    
+                    self.coreDataManager?.performSave { context in
                         self.updateChannelInDB(channel: snapshotChannel, context: context)
-                        print("Channel \"\(snapshotChannel.name)\" updated in Firestore and DB")
                     }
                 case .removed:
-                    self.coreDataManager.performSave { context in
+                    self.updateChannelInTable(snapshotChannel)
+                    
+                    self.coreDataManager?.performSave { context in
                         self.removeChannelFromDB(channel: snapshotChannel, context: context)
-                        print("Channel \"\(snapshotChannel.name)\" deleted from Firestore and DB")
                     }
                 }
             }
         }
     }
     
-    private func createDBChannel(channel: Channel, context: NSManagedObjectContext) -> DBChannel {
-        let dbChannel = DBChannel(context: context)
-        dbChannel.identifier = channel.identifier
-        dbChannel.name = channel.name
-        dbChannel.lastMessage = channel.lastMessage
-        dbChannel.lastActivity = channel.lastActivity
-        return dbChannel
-    }
+    // MARK: - Handling channel changes in coredata
     
-    private func addChannelToDB(channel: Channel, context: NSManagedObjectContext) {
+    private func saveChannelToDB(channel: Channel, context: NSManagedObjectContext) {
         let dbChannel = DBChannel(context: context)
         dbChannel.identifier = channel.identifier
         dbChannel.name = channel.name
         dbChannel.lastMessage = channel.lastMessage
         dbChannel.lastActivity = channel.lastActivity
-        
-        do {
-            try context.save()
-        } catch {
-            print(error.localizedDescription)
-        }
-//        let channel = Channel(dbChannel: dbChannel)
-//
-//        DispatchQueue.main.async { [weak self] in
-//            self?.addChannelToTable(channel)
-//        }
+        print("Channel \"\(channel.name)\" saved to DB")
     }
     
     private func updateChannelInDB(channel: Channel, context: NSManagedObjectContext) {
-        let dbChannel = createDBChannel(channel: channel, context: context)
-        let channel = Channel(dbChannel: dbChannel)
-        context.refresh(dbChannel, mergeChanges: true)
+        let dbChannel = DBChannel(context: context)
+        dbChannel.identifier = channel.identifier
+        dbChannel.name = channel.name
+        dbChannel.lastMessage = channel.lastMessage
+        dbChannel.lastActivity = channel.lastActivity
         
-        DispatchQueue.main.async { [weak self] in
-            self?.updateChannelInTable(channel)
-        }
+        context.refresh(dbChannel, mergeChanges: true)
+        print("Channel \"\(channel.name)\" updated in DB")
     }
     
     private func removeChannelFromDB(channel: Channel, context: NSManagedObjectContext) {
-        let dbChannel = createDBChannel(channel: channel, context: context)
-        let channel = Channel(dbChannel: dbChannel)
-        context.delete(dbChannel)
+        let dbChannel = DBChannel(context: context)
+        dbChannel.identifier = channel.identifier
+        dbChannel.name = channel.name
+        dbChannel.lastMessage = channel.lastMessage
+        dbChannel.lastActivity = channel.lastActivity
         
-        DispatchQueue.main.async { [weak self] in
-            self?.removeChannelFromTable(channel)
-        }
+        context.delete(dbChannel)
+        print("Channel \"\(channel.name)\" deleted from DB")
     }
+    
+    // MARK: - Handling channel changes in tableview
     
     private func addChannelToTable(_ channel: Channel) {
         if channels.contains(channel) { return }
         channels.append(channel)
         sortChannelsByDate()
-        
-        guard let index = channels.firstIndex(of: channel) else { return }
-        chatTableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        chatTableView.reloadData()
     }
     
     private func updateChannelInTable(_ channel: Channel) {
         guard let index = channels.firstIndex(of: channel) else { return }
         channels[index] = channel
-        chatTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        chatTableView.reloadData()
     }
     
     private func removeChannelFromTable(_ channel: Channel) {
         guard let index = channels.firstIndex(of: channel) else { return }
         channels.remove(at: index)
-        chatTableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        chatTableView.reloadData()
     }
+    
+    // MARK: - Actions
     
     @objc private func settingsTapped() {
         let themesVC = ThemesViewController()
@@ -249,6 +237,22 @@ final class ConversationsListViewController: UIViewController {
         present(addChannelAlertVC, animated: true)
     }
     
+    // MARK: - Helpers
+    
+    private func sortChannelsByDate() {
+        channels = channels.sorted {
+            if let lastDate = $0.lastActivity,
+               let firstDate = $1.lastActivity {
+                return lastDate > firstDate
+            } else { return false }
+        }
+    }
+    
+    private func createNewChannel(with title: String) {
+        let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
+        reference.addDocument(data: channel.toDict)
+    }
+    
     // disables confirm button if text = ""
     @objc func textChanged(_ sender: UITextField) {
         let field = sender
@@ -268,8 +272,10 @@ extension ConversationsListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let channel = channels[indexPath.row]
-        let conversationVC = ConversationViewController()
-        conversationVC.channel = channel
+        let coreDataManager = NewCoreDataManager()
+        
+        let conversationVC = ConversationViewController(channel: channel, coreDataManager: coreDataManager)
+        
         navigationController?.pushViewController(conversationVC, animated: true)
     }
     
