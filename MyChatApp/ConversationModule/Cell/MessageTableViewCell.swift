@@ -33,32 +33,33 @@ final class MessageTableViewCell: UITableViewCell {
         dateLabel?.text = nil
     }
     
-    func configurate(with message: Message) {
-        setupCell(with: message.senderId)
-        nameLabel?.text = message.senderName
-        messageTextLabel?.text = message.content
-        dateLabel?.text = message.created.lastMessageDateFormat()
+    func configurateAsIncoming(with message: Message) {
+        nameLabel?.isHidden = false
+        textLabelTopConstraint?.constant = 40
+        leadingConstraint?.constant = 20
+        trailingConstraint?.constant = contentView.frame.width / 3
+        bubbleView?.backgroundColor = currentTheme?.incomingMessageColor
+        setupCell(with: message)
     }
     
-    private func setupCell(with senderId: String?) {
-        if senderId == User.userId {
-            nameLabel?.isHidden = true
-            textLabelTopConstraint?.constant = 10
-            leadingConstraint?.constant = contentView.frame.width / 3
-            trailingConstraint?.constant = 20
-            bubbleView?.backgroundColor = currentTheme?.outcomingMessageColor
-        } else {
-            nameLabel?.isHidden = false
-            textLabelTopConstraint?.constant = 40
-            leadingConstraint?.constant = 20
-            trailingConstraint?.constant = contentView.frame.width / 3
-            bubbleView?.backgroundColor = currentTheme?.incomingMessageColor
-        }
-        
+    func configurateAsOutcoming(with message: Message) {
+        nameLabel?.isHidden = true
+        textLabelTopConstraint?.constant = 10
+        leadingConstraint?.constant = contentView.frame.width / 3
+        trailingConstraint?.constant = 20
+        bubbleView?.backgroundColor = currentTheme?.outcomingMessageColor
+        setupCell(with: message)
+    }
+    
+    private func setupCell(with message: Message?) {
         backgroundColor = currentTheme?.backgroundColor
         messageTextLabel?.textColor = currentTheme?.fontColor
         nameLabel?.textColor = currentTheme?.fontColor
         dateLabel?.textColor = currentTheme?.fontColor
+        
+        nameLabel?.text = message?.senderName
+        messageTextLabel?.text = message?.content
+        dateLabel?.text = message?.created?.lastMessageDateFormat()
     }
     
 }

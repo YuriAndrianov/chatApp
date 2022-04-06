@@ -12,6 +12,7 @@ import FirebaseFirestore
 final class ConversationsListViewController: UIViewController {
     
     var coreDataManager: CoreDataManager?
+    var firestoreManager: FirestoreManager?
     
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
@@ -21,7 +22,7 @@ final class ConversationsListViewController: UIViewController {
     private lazy var reference = db.collection("channels")
     
     private lazy var chatTableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
+        let table = UITableView()
         table.backgroundColor = currentTheme?.backgroundColor
         table.register(ConversationTableViewCell.nib,
                        forCellReuseIdentifier: ConversationTableViewCell.identifier)
@@ -30,8 +31,9 @@ final class ConversationsListViewController: UIViewController {
     
     private var channels = [Channel]()
     
-    init(coreDataManager: CoreDataManager) {
+    init(coreDataManager: CoreDataManager, firestoreManager: FirestoreManager?) {
         self.coreDataManager = coreDataManager
+        self.firestoreManager = firestoreManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -45,9 +47,9 @@ final class ConversationsListViewController: UIViewController {
         setupTableView()
         getChannels()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.fetchChannelsFromDB()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+//            self?.fetchChannelsFromDB()
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -102,31 +104,16 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func getChannels() {
-        reference.addSnapshotListener { [weak self] snapshot, error in
+        firestoreManager?.fetch(.channels) { [weak self] snapshot in
             guard let self = self else { return }
             
-            guard error == nil else {
-                print(error?.localizedDescription as Any)
-                return
-            }
-
             snapshot?.documentChanges.forEach {
-                let data = $0.document.data()
-                
-                let identifier = $0.document.documentID
-                let name = data["name"] as? String ?? ""
-                let lastMessage = data["lastMessage"] as? String
-                let lastActivity = data["lastActivity"] as? Timestamp
-                
-                let snapshotChannel = Channel(identifier: identifier,
-                                      name: name,
-                                      lastMessage: lastMessage,
-                                      lastActivity: lastActivity?.dateValue())
+                guard let snapshotChannel = Channel(from: $0.document) else { return }
                 
                 switch $0.type {
                 case .added:
                     self.addChannelToTable(snapshotChannel)
-
+                    
                     self.coreDataManager?.performSave { context in
                         self.saveChannelToDB(channel: snapshotChannel, context: context)
                     }
@@ -155,7 +142,7 @@ final class ConversationsListViewController: UIViewController {
         dbChannel.name = channel.name
         dbChannel.lastMessage = channel.lastMessage
         dbChannel.lastActivity = channel.lastActivity
-        print("Channel \"\(channel.name)\" saved to DB")
+        print("Channel \"\(String(describing: channel.name))\" saved to DB")
     }
     
     private func updateChannelInDB(channel: Channel, context: NSManagedObjectContext) {
@@ -166,7 +153,15 @@ final class ConversationsListViewController: UIViewController {
         dbChannel.lastActivity = channel.lastActivity
         
         context.refresh(dbChannel, mergeChanges: true)
-        print("Channel \"\(channel.name)\" updated in DB")
+        print("Channel \"\(String(describing: channel.name))\" updated in DB")
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     private func removeChannelFromDB(channel: Channel, context: NSManagedObjectContext) {
@@ -177,7 +172,15 @@ final class ConversationsListViewController: UIViewController {
         dbChannel.lastActivity = channel.lastActivity
         
         context.delete(dbChannel)
-        print("Channel \"\(channel.name)\" deleted from DB")
+        print("Channel \"\(String(describing: channel.name))\" deleted from DB")
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     // MARK: - Handling channel changes in tableview
@@ -250,7 +253,7 @@ final class ConversationsListViewController: UIViewController {
     
     private func createNewChannel(with title: String) {
         let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
-        reference.addDocument(data: channel.toDict)
+        firestoreManager?.addDocument(.channels, data: channel.toDict)
     }
     
     // disables confirm button if text = ""
@@ -259,7 +262,9 @@ final class ConversationsListViewController: UIViewController {
         var responder: UIResponder? = field
         while !(responder is UIAlertController) { responder = responder?.next }
         let alertVC = responder as? UIAlertController
-        alertVC?.actions[1].isEnabled = (field.text != "")
+        alertVC?.actions[1, default: UIAlertAction(title: "default action",
+                                                   style: .cancel,
+                                                   handler: nil)].isEnabled = (field.text != "")
     }
     
 }
@@ -271,23 +276,15 @@ extension ConversationsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let channel = channels[indexPath.row]
+        let channel = channels[indexPath.row, default: Channel(identifier: "",
+                                                               name: "default channel",
+                                                               lastMessage: nil,
+                                                               lastActivity: nil)]
         let coreDataManager = NewCoreDataManager()
         
         let conversationVC = ConversationViewController(channel: channel, coreDataManager: coreDataManager)
         
         navigationController?.pushViewController(conversationVC, animated: true)
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header = view as? UITableViewHeaderFooterView else { return }
-        header.textLabel?.textColor = currentTheme?.fontColor
-        
-        if #available(iOS 14.0, *) {
-            header.backgroundConfiguration?.backgroundColor = currentTheme?.backgroundColor
-        } else {
-            header.backgroundColor = currentTheme?.backgroundColor
-        }
     }
 
 }
@@ -308,7 +305,7 @@ extension ConversationsListViewController: UITableViewDataSource {
         guard let cell = chatTableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
                                                            for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
         
-        let channel = channels[indexPath.row]
+        let channel = channels[indexPath.row, default: Channel(identifier: "", name: "default channel", lastMessage: nil, lastActivity: nil)]
         cell.configurate(with: channel)
         return cell
     }

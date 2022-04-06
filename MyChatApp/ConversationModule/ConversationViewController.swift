@@ -12,6 +12,7 @@ import FirebaseFirestore
 final class ConversationViewController: UIViewController {
     
     var coreDataManager: CoreDataManager?
+    var firestoreManager: FirestoreManager?
     var channel: Channel?
     
     private var groupedMessages = [[Message]]()
@@ -23,8 +24,8 @@ final class ConversationViewController: UIViewController {
     
     private lazy var db = Firestore.firestore()
     
-    private lazy var reference: CollectionReference = {
-        let id = channel?.identifier ?? ""
+    private lazy var reference: CollectionReference? = {
+        guard let id = channel?.identifier else { return nil }
         return db.collection("channels").document(id).collection("messages")
     }()
     
@@ -42,6 +43,7 @@ final class ConversationViewController: UIViewController {
     init(channel: Channel, coreDataManager: CoreDataManager) {
         self.channel = channel
         self.coreDataManager = coreDataManager
+        self.firestoreManager = FirestoreManager(channel: channel)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -56,9 +58,9 @@ final class ConversationViewController: UIViewController {
         setupTableView()
         getMessages()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            self?.fetchMessagesFromDB()
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+//            self?.fetchMessagesFromDB()
+//        }
     }
     
     private func setupUI() {
@@ -95,31 +97,19 @@ final class ConversationViewController: UIViewController {
         dbMessages?.filter { [weak self] in
             $0.channel?.identifier == self?.channel?.identifier
         }.forEach { [weak self] in
-            let message = Message(dbMessage: $0)
+            guard let message = Message(dbMessage: $0) else { return }
             self?.addMessageToTable(message)
         }
     }
     
     private func getMessages() {
-        reference.addSnapshotListener { [weak self] snapshot, error in
+        firestoreManager?.fetch(.messages) { [weak self] snapshot in
             guard let self = self else { return }
             
-            guard error == nil else {
-                print(error?.localizedDescription as Any)
-                return
-            }
-
             snapshot?.documentChanges.forEach {
                 let data = $0.document.data()
-                let content = data["content"] as? String ?? ""
-                let created = data["created"] as? Timestamp
-                let senderId = data["senderID"] as? String ?? ""
-                let senderName = data["senderName"] as? String ?? ""
                 
-                let snapshotMessage = Message(content: content,
-                                      created: created?.dateValue() ?? Date(),
-                                      senderId: senderId,
-                                      senderName: senderName)
+                guard let snapshotMessage = Message(from: data) else { return }
                 
                 switch $0.type {
                 case .added:
@@ -186,13 +176,13 @@ final class ConversationViewController: UIViewController {
     private func updateMessageInTable(_ message: Message) {
         guard let index = messages.firstIndex(of: message) else { return }
         messages[index] = message
-        tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView.reloadData()
     }
     
     private func removeMessageFromTable(_ message: Message) {
         guard let index = messages.firstIndex(of: message) else { return }
         messages.remove(at: index)
-        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        tableView.reloadData()
     }
     
     // MARK: - actions
@@ -225,14 +215,37 @@ final class ConversationViewController: UIViewController {
     private func createNewMessage(with text: String) {
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
-            if let user = user {
+            guard
+                let user = user,
+                let userName = user.fullname,
+                userName != "" else {
+                    self.showNoUserAlert()
+                    return
+                }
+
                 let message = Message(content: text,
                                       created: Date(),
                                       senderId: User.userId,
                                       senderName: user.fullname ?? "")
-                self.reference.addDocument(data: message.toDict)
-            }
+            self.firestoreManager?.addDocument(.messages, data: message.toDict)
         }
+    }
+    
+    private func showNoUserAlert() {
+        let alert = UIAlertController(title: "Error",
+                                      message: "You must have your username filled in your profile to send messages",
+                                      preferredStyle: .alert)
+        
+        let goToProfileVCAction = UIAlertAction(title: "Go to \"My profile\"",
+                                                style: .default) { [weak self] _ in
+            let profileVC = ProfileViewController()
+            let navigationController = CustomNavigationController(rootViewController: profileVC)
+            self?.present(navigationController, animated: true, completion: nil)
+        }
+        
+        alert.addAction(goToProfileVCAction)
+        
+        present(alert, animated: true)
     }
     
     // disables send button if text = ""
@@ -246,7 +259,7 @@ final class ConversationViewController: UIViewController {
     
 }
 
-// MARK: - tableview delegate
+// MARK: - tableview datasource
 
 extension ConversationViewController: UITableViewDataSource {
     
@@ -257,8 +270,16 @@ extension ConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
                                                        for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
-        let message = messages[indexPath.row]
-        cell.configurate(with: message)
+        let message = messages[indexPath.row, default: Message(content: "default",
+                                                               created: Date(),
+                                                               senderId: "",
+                                                               senderName: "default name")]
+        if message.senderId == User.userId {
+            cell.configurateAsOutcoming(with: message)
+        } else {
+            cell.configurateAsIncoming(with: message)
+        }
+        
         cell.selectionStyle = .none
         cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
         return cell
@@ -266,7 +287,7 @@ extension ConversationViewController: UITableViewDataSource {
     
 }
 
-// MARK: - tableview datasource
+// MARK: - tableview delegate
 
 extension ConversationViewController: UITableViewDelegate {
     

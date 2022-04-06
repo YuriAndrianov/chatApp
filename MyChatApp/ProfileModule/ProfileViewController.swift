@@ -10,6 +10,9 @@ import UIKit
 final class ProfileViewController: UIViewController {
     
     private let styleSheet = ProfileVCStyleSheet()
+    private let scrollView = UIScrollView()
+    
+    private var user = User()
     
     private var isLargeScreenDevice: Bool {
         // check if current device is not iPhone SE (1 gen)
@@ -49,17 +52,11 @@ final class ProfileViewController: UIViewController {
     }()
     
     private lazy var saveGCDButton: UIButton = {
-        let button = styleSheet.createSaveButton(withTitle: "Save GCD")
+        let button = styleSheet.createSaveButton(withTitle: "Save")
         button.addTarget(self, action: #selector(saveGCDButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    private lazy var saveOperationsButton: UIButton = {
-        let button = styleSheet.createSaveButton(withTitle: "Save Operations")
-        button.addTarget(self, action: #selector(saveOperationButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
+
     private lazy var editPhotoButton: UIButton = {
         let button = styleSheet.createEditPhotoButton()
         button.addTarget(self, action: #selector(editPhotoButtonTapped), for: .touchUpInside)
@@ -71,27 +68,19 @@ final class ProfileViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var saveButtonsStack: UIStackView = {
-        let stack = styleSheet.createSaveButtonsStackView()
-        return stack
-    }()
-    
-    private let scrollView = UIScrollView()
-    
-    private var user = User()
-    
-    private var tappedButton: UIButton?
-    
+    private lazy var isSomethingChanged = false {
+        didSet {
+            saveGCDButton.isEnabled = isSomethingChanged ? true : false
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
         setupViews()
         setConstraints()
         setDelegates()
-
-        // Choose what type of manager to use * Extra task
         restoreUserDataUsing(manager: DataManagerGCD.shared)
-//        restoreUserDataUsing(manager: FileManagerOperation.shared)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,14 +126,15 @@ final class ProfileViewController: UIViewController {
         }
         
         ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
+            guard let self = self else { return }
             if let image = image {
-                self?.profileImageView.image = image
+                self.profileImageView.image = image
             } else {
-                self?.profileImageView.image = UIImage(systemName: "person.circle")
+                self.profileImageView.image = UIImage(systemName: "person.circle")
             }
         }
         
-        somethingIsChanged(false)
+        isSomethingChanged = false
     }
     
     private func setupUIIfEditingAllowedIs(_ bool: Bool) {
@@ -158,7 +148,7 @@ final class ProfileViewController: UIViewController {
                 self.editButton.alpha = 0
                 self.cancelButton.alpha = 1
                 self.editPhotoButton.alpha = 1
-                self.saveButtonsStack.alpha = 1
+                self.saveGCDButton.alpha = 1
                 self.fullNameTextField.layer.borderWidth = 1
                 self.occupationTextField.layer.borderWidth = 1
                 self.locationTextField.layer.borderWidth = 1
@@ -171,7 +161,7 @@ final class ProfileViewController: UIViewController {
                 self.editButton.alpha = 1
                 self.cancelButton.alpha = 0
                 self.editPhotoButton.alpha = 0
-                self.saveButtonsStack.alpha = 0
+                self.saveGCDButton.alpha = 0
                 self.fullNameTextField.layer.borderWidth = 0
                 self.occupationTextField.layer.borderWidth = 0
                 self.locationTextField.layer.borderWidth = 0
@@ -191,32 +181,24 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupViews() {
-        [saveGCDButton, saveOperationsButton].forEach { saveButtonsStack.addArrangedSubview($0) }
-        
         [
             profileImageView,
             fullNameTextField,
             occupationTextField,
             locationTextField,
             cancelButton,
-            saveButtonsStack,
+            saveGCDButton,
             editButton
         ].forEach { stackView.addArrangedSubview($0) }
         
         view.addSubview(scrollView)
         [stackView, editPhotoButton].forEach { scrollView.addSubview($0) }
     }
-    
-    private func somethingIsChanged(_ bool: Bool) {
-        // Turns true if user typed or deleted any character or changed photo
-        if bool {
-            saveGCDButton.isEnabled = true
-            saveOperationsButton.isEnabled = true
-        } else {
-            saveGCDButton.isEnabled = false
-            saveOperationsButton.isEnabled = false
-        }
-    }
+//
+//    private func somethingIsChanged(_ bool: Bool) {
+//        // Turns true if user typed or deleted any character or changed photo
+//        saveGCDButton.isEnabled = bool ? true : false
+//    }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -253,13 +235,11 @@ final class ProfileViewController: UIViewController {
     
     @objc private func cancelButtonTapped() {
         restoreUserDataUsing(manager: DataManagerGCD.shared)
-//        restoreUserDataUsing(manager: DataManagerOperation.shared)
         setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
     
     @objc private func saveGCDButtonTapped() {
-        tappedButton = saveGCDButton
         // saving image
         if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
             ImageManager.shared.saveImage(imageName: "User", image: image)
@@ -275,23 +255,6 @@ final class ProfileViewController: UIViewController {
         tryToSaveDataUsing(manager: DataManagerGCD.shared)
     }
     
-    @objc private func saveOperationButtonTapped() {
-        tappedButton = saveOperationsButton
-        // saving image
-        if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
-            ImageManager.shared.saveImage(imageName: "User", image: image)
-        } else {
-            ImageManager.shared.deleteImage(imageName: "User")
-        }
-        
-        // adding properties to self.user from textfields
-        user.fullname = fullNameTextField.text
-        user.occupation = occupationTextField.text
-        user.location = locationTextField.text
-
-        tryToSaveDataUsing(manager: DataManagerOperation.shared)
-    }
-    
     private func tryToSaveDataUsing(manager: DataManagerProtocol) {
         // make activity indicator
         let spinner = styleSheet.createSpinner()
@@ -300,24 +263,25 @@ final class ProfileViewController: UIViewController {
         spinner.startAnimating()
         
         // block buttons and fields
-        somethingIsChanged(false)
+        isSomethingChanged = false
         cancelButton.isEnabled = false
         fullNameTextField.isEnabled = false
         occupationTextField.isEnabled = false
         locationTextField.isEnabled = false
         
-        // saving to file (1 sec)
+        // saving to file
         manager.writeToFile(user) { [weak self] success in
+            guard let self = self else { return }
             // remove activity indicator
             spinner.stopAnimating()
-            self?.view.endEditing(true)
+            self.view.endEditing(true)
             
             if success {
                 // show success alert
-                self?.showSaveSuccessAlert()
+                self.showSaveSuccessAlert()
             } else {
                 // show error alert
-                self?.showSaveErrorAlert()
+                self.showSaveErrorAlert()
             }
         }
     }
@@ -327,8 +291,9 @@ final class ProfileViewController: UIViewController {
         let alertVC = UIAlertController(title: nil, message: "Successfully saved", preferredStyle: .alert)
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
-            self?.setupUIIfEditingAllowedIs(false)
-            self?.cancelButton.isEnabled = true
+            guard let self = self else { return }
+            self.setupUIIfEditingAllowedIs(false)
+            self.cancelButton.isEnabled = true
         }))
         
         present(alertVC, animated: true, completion: nil)
@@ -338,21 +303,15 @@ final class ProfileViewController: UIViewController {
         let alertVC = UIAlertController(title: "Error", message: "Failed to save data", preferredStyle: .alert)
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
-            self?.restoreUserDataUsing(manager: DataManagerGCD.shared)
-            self?.setupUIIfEditingAllowedIs(false)
-            self?.cancelButton.isEnabled = true
+            guard let self = self else { return }
+            self.restoreUserDataUsing(manager: DataManagerGCD.shared)
+            self.setupUIIfEditingAllowedIs(false)
+            self.cancelButton.isEnabled = true
         }))
         
         alertVC.addAction(UIAlertAction(title: "Repeat", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            if let tappedButton = self.tappedButton {
-                switch tappedButton {
-                case self.saveGCDButton:  self.tryToSaveDataUsing(manager: DataManagerGCD.shared)
-                case self.saveOperationsButton: self.tryToSaveDataUsing(manager: DataManagerOperation.shared)
-                default: break
-                }
-            }
-           
+            self.tryToSaveDataUsing(manager: DataManagerGCD.shared)
         }))
         
         present(alertVC, animated: true, completion: nil)
@@ -364,20 +323,22 @@ final class ProfileViewController: UIViewController {
         // check if camera is available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let cameraButton = UIAlertAction(title: "Camera", style: .default) { [weak self] _ in
-                self?.showImagePicker(selectedSource: .camera)
+                guard let self = self else { return }
+                self.showImagePicker(selectedSource: .camera)
             }
             alertVC.addAction(cameraButton)
         }
         
         let libraryButton = UIAlertAction(title: "Gallery", style: .default) { [weak self] _ in
-            self?.showImagePicker(selectedSource: .photoLibrary)
+            guard let self = self else { return }
+            self.showImagePicker(selectedSource: .photoLibrary)
         }
         alertVC.addAction(libraryButton)
         
         let deleteButton = UIAlertAction(title: "Delete photo", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
             self.profileImageView.image = UIImage(systemName: "person.circle")
-            self.somethingIsChanged(true)
+            self.isSomethingChanged = true
         }
         
         // if there is a profile photo then add a delete button
@@ -427,7 +388,7 @@ extension ProfileViewController {
             editButton.widthAnchor.constraint(equalToConstant: 40),
             editButton.heightAnchor.constraint(equalToConstant: 40),
             
-            saveButtonsStack.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
+            saveGCDButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
             
             cancelButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
             
@@ -455,7 +416,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.editedImage] as? UIImage {
             profileImageView.image = selectedImage
-            somethingIsChanged(true)
+            isSomethingChanged = true
         }
         picker.dismiss(animated: true)
     }
@@ -470,7 +431,7 @@ extension ProfileViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        somethingIsChanged(true)
+        isSomethingChanged = true
         let text = (textField.text ?? "") + string
         
         let result: String

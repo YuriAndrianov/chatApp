@@ -34,6 +34,7 @@
 		E25E7A8A27F9E50D0039144D /* DebugOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A8927F9E50D0039144D /* DebugOptions.swift */; };
 		E25E7A8C27F9E7670039144D /* NSManagedObject+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A8B27F9E7670039144D /* NSManagedObject+init.swift */; };
 		E25E7A8E27FB848B0039144D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A8D27FB848B0039144D /* CoreDataManager.swift */; };
+		E25E7A9127FE16B70039144D /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A9027FE16B70039144D /* FirestoreManager.swift */; };
 		E28DE38027E5FEB9009D9300 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE37F27E5FEB9009D9300 /* ImageManager.swift */; };
 		E28DE38227E64236009D9300 /* DataManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38127E64236009D9300 /* DataManagerProtocol.swift */; };
 		E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38327E642AB009D9300 /* DataManagerGCD.swift */; };
@@ -83,6 +84,7 @@
 		E25E7A8927F9E50D0039144D /* DebugOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugOptions.swift; sourceTree = "<group>"; };
 		E25E7A8B27F9E7670039144D /* NSManagedObject+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+init.swift"; sourceTree = "<group>"; };
 		E25E7A8D27FB848B0039144D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		E25E7A9027FE16B70039144D /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		E28DE37F27E5FEB9009D9300 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		E28DE38127E64236009D9300 /* DataManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerProtocol.swift; sourceTree = "<group>"; };
 		E28DE38327E642AB009D9300 /* DataManagerGCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerGCD.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 		E25D373427DF5DB300E6A746 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E25E7A8F27FDF3C80039144D /* FirestoreManager */,
 				E25E7A8827F9A4B00039144D /* CoreDataManager */,
 				E28DE38927E70D3F009D9300 /* DataManager */,
 				E28DE37F27E5FEB9009D9300 /* ImageManager.swift */,
@@ -251,6 +254,14 @@
 				E25E7A8427F9A49A0039144D /* OldCoreDataManager.swift */,
 			);
 			path = CoreDataManager;
+			sourceTree = "<group>";
+		};
+		E25E7A8F27FDF3C80039144D /* FirestoreManager */ = {
+			isa = PBXGroup;
+			children = (
+				E25E7A9027FE16B70039144D /* FirestoreManager.swift */,
+			);
+			path = FirestoreManager;
 			sourceTree = "<group>";
 		};
 		E28DE38927E70D3F009D9300 /* DataManager */ = {
@@ -465,6 +476,7 @@
 				E25D372427DCD50E00E6A746 /* ThemeProtocol.swift in Sources */,
 				E25E7A8527F9A49A0039144D /* OldCoreDataManager.swift in Sources */,
 				E28DE38827E644E3009D9300 /* User.swift in Sources */,
+				E25E7A9127FE16B70039144D /* FirestoreManager.swift in Sources */,
 				E25D372827DCD71000E6A746 /* DayTheme.swift in Sources */,
 				FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */,
 				E25E7A8727F9A4A80039144D /* NewCoreDataManager.swift in Sources */,

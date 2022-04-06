@@ -30,9 +30,11 @@ final class ConversationTableViewCell: UITableViewCell {
     private func setupViewWithMessage(_ message: String?) {
         if message == nil {
             messageLabel?.text = "No messages yet"
+            messageLabel?.font = .italicSystemFont(ofSize: 13)
             messageLabel?.textColor = currentTheme?.barButtonColor
         } else {
             messageLabel?.text = message
+            messageLabel?.font = .systemFont(ofSize: 13)
             messageLabel?.textColor = currentTheme?.fontColor
         }
         

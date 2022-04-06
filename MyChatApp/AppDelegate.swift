@@ -17,7 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         let coreDataManager = NewCoreDataManager()
-        let conversationsVC = ConversationsListViewController(coreDataManager: coreDataManager)
+        let firestoreManager = FirestoreManager()
+        
+        let conversationsVC = ConversationsListViewController(coreDataManager: coreDataManager,
+                                                              firestoreManager: firestoreManager)
         
         let navigationController = CustomNavigationController(rootViewController: conversationsVC)
        

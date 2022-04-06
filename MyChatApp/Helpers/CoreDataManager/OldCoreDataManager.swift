@@ -55,13 +55,13 @@ final class OldCoreDataManager: CoreDataManager {
         context.perform {
             block(context)
             
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
+//            if context.hasChanges {
+//                do {
+//                    try context.save()
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
         }
     }
     
