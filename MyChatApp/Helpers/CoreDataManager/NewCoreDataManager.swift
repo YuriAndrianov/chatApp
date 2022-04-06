@@ -58,4 +58,63 @@ final class NewCoreDataManager: CoreDataManager {
         }
     }
     
+    func fetchChannelWithPredicate(channel: Channel) -> DBChannel? {
+        let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
+        
+        guard let id = channel.identifier else { return nil }
+        
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        fetchRequest.predicate = predicate
+        
+        do {
+            return try container.viewContext.fetch(fetchRequest).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func fetchMessageWithPredicate(message: Message) -> DBMessage? {
+        let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
+        
+        guard let senderId = message.senderId,
+              let created = message.created else { return nil }
+        
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
+        fetchRequest.predicate = predicate
+        
+        do {
+            return try container.viewContext.fetch(fetchRequest).first
+        } catch let error {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func deleteObject(_ object: NSManagedObject) {
+        guard let context = object.managedObjectContext else { return }
+        context.delete(object)
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func refreshObject(_ object: NSManagedObject) {
+        guard let context = object.managedObjectContext else { return }
+        context.refresh(object, mergeChanges: true)
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
 }

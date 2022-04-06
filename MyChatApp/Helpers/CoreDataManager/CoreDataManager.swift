@@ -7,12 +7,28 @@
 
 import CoreData
 
-protocol CoreDataManager {
+protocol ChannelFetchable {
     
     func fetchChannels() -> [DBChannel]
     
+    func fetchChannelWithPredicate(channel: Channel) -> DBChannel?
+    
+}
+
+protocol MessageFetchable {
+    
     func fetchMessages() -> [DBMessage]
     
+    func fetchMessageWithPredicate(message: Message) -> DBMessage?
+    
+}
+
+protocol CoreDataManager: ChannelFetchable, MessageFetchable {
+
     func performSave(_ block: @escaping (NSManagedObjectContext) -> Void)
+    
+    func deleteObject(_ object: NSManagedObject)
+    
+    func refreshObject(_ object: NSManagedObject)
     
 }

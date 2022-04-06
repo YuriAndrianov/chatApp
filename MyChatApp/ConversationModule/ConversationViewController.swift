@@ -21,14 +21,7 @@ final class ConversationViewController: UIViewController {
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
     }
-    
-    private lazy var db = Firestore.firestore()
-    
-    private lazy var reference: CollectionReference? = {
-        guard let id = channel?.identifier else { return nil }
-        return db.collection("channels").document(id).collection("messages")
-    }()
-    
+
     private lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.register(MessageTableViewCell.nib,
@@ -58,9 +51,9 @@ final class ConversationViewController: UIViewController {
         setupTableView()
         getMessages()
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-//            self?.fetchMessagesFromDB()
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.fetchMessagesFromDB()
+        }
     }
     
     private func setupUI() {
@@ -114,22 +107,16 @@ final class ConversationViewController: UIViewController {
                 switch $0.type {
                 case .added:
                     self.addMessageToTable(snapshotMessage)
-                    
                     self.coreDataManager?.performSave { context in
                         self.saveMessageToDB(message: snapshotMessage, context: context)
                     }
                 case .modified:
                     self.updateMessageInTable(snapshotMessage)
+                    self.updateMessageInDB(message: snapshotMessage)
                     
-                    self.coreDataManager?.performSave { context in
-                        self.updateMessageInDB(message: snapshotMessage, context: context)
-                    }
                 case .removed:
                     self.removeMessageFromTable(snapshotMessage)
-                    
-                    self.coreDataManager?.performSave { context in
-                        self.removeMessageFromDB(message: snapshotMessage, context: context)
-                    }
+                    self.deleteMessageFromDB(message: snapshotMessage)
                 }
             }
         }
@@ -145,24 +132,17 @@ final class ConversationViewController: UIViewController {
         dbMessage.senderId = message.senderId
     }
     
-    private func updateMessageInDB(message: Message, context: NSManagedObjectContext) {
-        let dbMessage = DBMessage(context: context)
+    private func updateMessageInDB(message: Message) {
+        guard let dbMessage = self.coreDataManager?.fetchMessageWithPredicate(message: message) else { return }
         dbMessage.content = message.content
         dbMessage.senderName = message.senderName
-        dbMessage.created = message.created
-        dbMessage.senderId = message.senderId
         
-        context.refresh(dbMessage, mergeChanges: true)
+        self.coreDataManager?.refreshObject(dbMessage)
     }
     
-    private func removeMessageFromDB(message: Message, context: NSManagedObjectContext) {
-        let dbMessage = DBMessage(context: context)
-        dbMessage.content = message.content
-        dbMessage.senderName = message.senderName
-        dbMessage.created = message.created
-        dbMessage.senderId = message.senderId
-        
-        context.delete(dbMessage)
+    private func deleteMessageFromDB(message: Message) {
+        guard let dbMessage = self.coreDataManager?.fetchMessageWithPredicate(message: message) else { return }
+        self.coreDataManager?.deleteObject(dbMessage)
     }
     
     // MARK: - Handling message changes in tableview

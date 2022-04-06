@@ -17,10 +17,7 @@ final class ConversationsListViewController: UIViewController {
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
     }
-    
-    private lazy var db = Firestore.firestore()
-    private lazy var reference = db.collection("channels")
-    
+
     private lazy var chatTableView: UITableView = {
         let table = UITableView()
         table.backgroundColor = currentTheme?.backgroundColor
@@ -47,9 +44,9 @@ final class ConversationsListViewController: UIViewController {
         setupTableView()
         getChannels()
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-//            self?.fetchChannelsFromDB()
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            self?.fetchChannelsFromDB()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -119,16 +116,11 @@ final class ConversationsListViewController: UIViewController {
                     }
                 case .modified:
                     self.updateChannelInTable(snapshotChannel)
+                    self.updateChannelInDB(channel: snapshotChannel)
                     
-                    self.coreDataManager?.performSave { context in
-                        self.updateChannelInDB(channel: snapshotChannel, context: context)
-                    }
                 case .removed:
                     self.updateChannelInTable(snapshotChannel)
-                    
-                    self.coreDataManager?.performSave { context in
-                        self.removeChannelFromDB(channel: snapshotChannel, context: context)
-                    }
+                    self.deleteChannelFromDB(channel: snapshotChannel)
                 }
             }
         }
@@ -145,42 +137,20 @@ final class ConversationsListViewController: UIViewController {
         print("Channel \"\(String(describing: channel.name))\" saved to DB")
     }
     
-    private func updateChannelInDB(channel: Channel, context: NSManagedObjectContext) {
-        let dbChannel = DBChannel(context: context)
-        dbChannel.identifier = channel.identifier
+    private func updateChannelInDB(channel: Channel) {
+        guard let dbChannel = self.coreDataManager?.fetchChannelWithPredicate(channel: channel) else { return }
         dbChannel.name = channel.name
         dbChannel.lastMessage = channel.lastMessage
         dbChannel.lastActivity = channel.lastActivity
         
-        context.refresh(dbChannel, mergeChanges: true)
-        print("Channel \"\(String(describing: channel.name))\" updated in DB")
-        
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
+        self.coreDataManager?.refreshObject(dbChannel)
+        print("Channel \"\(String(describing: dbChannel.name))\" updated in DB")
     }
     
-    private func removeChannelFromDB(channel: Channel, context: NSManagedObjectContext) {
-        let dbChannel = DBChannel(context: context)
-        dbChannel.identifier = channel.identifier
-        dbChannel.name = channel.name
-        dbChannel.lastMessage = channel.lastMessage
-        dbChannel.lastActivity = channel.lastActivity
-        
-        context.delete(dbChannel)
-        print("Channel \"\(String(describing: channel.name))\" deleted from DB")
-        
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
+    private func deleteChannelFromDB(channel: Channel) {
+        guard let dbChannel = self.coreDataManager?.fetchChannelWithPredicate(channel: channel) else { return }
+        self.coreDataManager?.deleteObject(dbChannel)
+        print("Channel \"\(String(describing: dbChannel.name))\" deleted from DB")
     }
     
     // MARK: - Handling channel changes in tableview
@@ -286,17 +256,17 @@ extension ConversationsListViewController: UITableViewDelegate {
         
         navigationController?.pushViewController(conversationVC, animated: true)
     }
-
+    
 }
 
 // MARK: - tableview datasource
 
 extension ConversationsListViewController: UITableViewDataSource {
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         channels.count
     }
