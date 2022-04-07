@@ -93,7 +93,7 @@ final class ConversationsListViewController: UIViewController {
     // MARK: - Fetching channels
     
     private func fetchChannelsFromDB() {
-        let dbChannels = coreDataManager?.fetchChannels()
+        let dbChannels = coreDataManager?.fetchChannels(predicate: nil)
         dbChannels?.forEach { [weak self] in
             let channel = Channel(dbChannel: $0)
             self?.addChannelToTable(channel)
@@ -129,6 +129,12 @@ final class ConversationsListViewController: UIViewController {
     // MARK: - Handling channel changes in coredata
     
     private func saveChannelToDB(channel: Channel, context: NSManagedObjectContext) {
+        // checking uniqueness
+        guard let id = channel.identifier else { return }
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        
+        guard coreDataManager?.fetchChannels(predicate: predicate).first == nil else { return }
+        
         let dbChannel = DBChannel(context: context)
         dbChannel.identifier = channel.identifier
         dbChannel.name = channel.name
@@ -138,7 +144,10 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func updateChannelInDB(channel: Channel) {
-        guard let dbChannel = self.coreDataManager?.fetchChannelWithPredicate(channel: channel) else { return }
+        guard let id = channel.identifier else { return }
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        
+        guard let dbChannel = coreDataManager?.fetchChannels(predicate: predicate).first else { return }
         dbChannel.name = channel.name
         dbChannel.lastMessage = channel.lastMessage
         dbChannel.lastActivity = channel.lastActivity
@@ -148,7 +157,10 @@ final class ConversationsListViewController: UIViewController {
     }
     
     private func deleteChannelFromDB(channel: Channel) {
-        guard let dbChannel = self.coreDataManager?.fetchChannelWithPredicate(channel: channel) else { return }
+        guard let id = channel.identifier else { return }
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        
+        guard let dbChannel = coreDataManager?.fetchChannels(predicate: predicate).first else { return }
         self.coreDataManager?.deleteObject(dbChannel)
         print("Channel \"\(String(describing: dbChannel.name))\" deleted from DB")
     }
@@ -156,6 +168,7 @@ final class ConversationsListViewController: UIViewController {
     // MARK: - Handling channel changes in tableview
     
     private func addChannelToTable(_ channel: Channel) {
+        // checking uniqueness
         if channels.contains(channel) { return }
         channels.append(channel)
         sortChannelsByDate()

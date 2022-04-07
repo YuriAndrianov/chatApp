@@ -85,11 +85,11 @@ final class ConversationViewController: UIViewController {
     // MARK: - Fetching messages
     
     private func fetchMessagesFromDB() {
-        let dbMessages = coreDataManager?.fetchMessages()
-        
-        dbMessages?.filter { [weak self] in
-            $0.channel?.identifier == self?.channel?.identifier
-        }.forEach { [weak self] in
+        guard let channelID = channel?.identifier else { return }
+        let predicate = NSPredicate(format: "channel.identifier == %@", channelID)
+        let dbMessages = coreDataManager?.fetchMessages(predicate: predicate)
+
+        dbMessages?.forEach { [weak self] in
             guard let message = Message(dbMessage: $0) else { return }
             self?.addMessageToTable(message)
         }
@@ -125,24 +125,48 @@ final class ConversationViewController: UIViewController {
     // MARK: - Handling message changes in coredata
     
     private func saveMessageToDB(message: Message, context: NSManagedObjectContext) {
+        // checking uniqueness
+        guard let senderId = message.senderId,
+              let created = message.created else { return }
+        
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
+        
+        guard coreDataManager?.fetchMessages(predicate: predicate).first == nil else { return }
+        
         let dbMessage = DBMessage(context: context)
         dbMessage.content = message.content
         dbMessage.senderName = message.senderName
         dbMessage.created = message.created
         dbMessage.senderId = message.senderId
+        
+        print("Message from \"\(String(describing: message.created))\" saved to DB")
     }
     
     private func updateMessageInDB(message: Message) {
-        guard let dbMessage = self.coreDataManager?.fetchMessageWithPredicate(message: message) else { return }
+        guard let senderId = message.senderId,
+              let created = message.created else { return }
+        
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
+        
+        guard let dbMessage = coreDataManager?.fetchMessages(predicate: predicate).first else { return }
         dbMessage.content = message.content
         dbMessage.senderName = message.senderName
         
         self.coreDataManager?.refreshObject(dbMessage)
+        
+        print("Message from \"\(String(describing: message.created))\" updated in DB")
     }
     
     private func deleteMessageFromDB(message: Message) {
-        guard let dbMessage = self.coreDataManager?.fetchMessageWithPredicate(message: message) else { return }
+        guard let senderId = message.senderId,
+              let created = message.created else { return }
+        
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
+        
+        guard let dbMessage = coreDataManager?.fetchMessages(predicate: predicate).first else { return }
         self.coreDataManager?.deleteObject(dbMessage)
+        
+        print("Message from \"\(String(describing: message.created))\" deleted from DB")
     }
     
     // MARK: - Handling message changes in tableview

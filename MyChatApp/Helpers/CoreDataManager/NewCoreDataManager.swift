@@ -21,28 +21,30 @@ final class NewCoreDataManager: CoreDataManager {
         return container
     }()
     
-    func fetchChannels() -> [DBChannel] {
+    func fetchChannels(predicate: NSPredicate?) -> [DBChannel] {
         let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
         
-        do {
-            return try container.viewContext.fetch(fetchRequest)
-        } catch {
-            print(error.localizedDescription)
-            return []
-        }
-    }
-    
-    func fetchMessages() -> [DBMessage] {
-        let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
+        if let predicate = predicate { fetchRequest.predicate = predicate }
         
         do {
             return try container.viewContext.fetch(fetchRequest)
-        } catch {
+        } catch let error {
             print(error.localizedDescription)
             return []
         }
     }
     
+    func fetchMessages(predicate: NSPredicate) -> [DBMessage] {
+        let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
+        fetchRequest.predicate = predicate
+        do {
+            return try container.viewContext.fetch(fetchRequest)
+        } catch {
+            print(error.localizedDescription)
+            return []
+        }
+    }
+
     func performSave(_ block: @escaping (NSManagedObjectContext) -> Void) {
         let context = container.newBackgroundContext()
         context.perform {
@@ -55,39 +57,6 @@ final class NewCoreDataManager: CoreDataManager {
                     print(error.localizedDescription)
                 }
             }
-        }
-    }
-    
-    func fetchChannelWithPredicate(channel: Channel) -> DBChannel? {
-        let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
-        
-        guard let id = channel.identifier else { return nil }
-        
-        let predicate = NSPredicate(format: "identifier == %@", id)
-        fetchRequest.predicate = predicate
-        
-        do {
-            return try container.viewContext.fetch(fetchRequest).first
-        } catch let error {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
-    func fetchMessageWithPredicate(message: Message) -> DBMessage? {
-        let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
-        
-        guard let senderId = message.senderId,
-              let created = message.created else { return nil }
-        
-        let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
-        fetchRequest.predicate = predicate
-        
-        do {
-            return try container.viewContext.fetch(fetchRequest).first
-        } catch let error {
-            print(error.localizedDescription)
-            return nil
         }
     }
     

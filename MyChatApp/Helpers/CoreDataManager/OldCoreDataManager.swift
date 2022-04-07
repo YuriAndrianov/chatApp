@@ -8,7 +8,7 @@
 import CoreData
 
 final class OldCoreDataManager: CoreDataManager {
-  
+
     private lazy var managedObjectModel: NSManagedObjectModel = {
         guard
             let moduleURL = Bundle.main.url(forResource: "MyChatApp", withExtension: "momd"),
@@ -65,8 +65,9 @@ final class OldCoreDataManager: CoreDataManager {
         }
     }
     
-    func fetchChannels() -> [DBChannel] {
+    func fetchChannels(predicate: NSPredicate?) -> [DBChannel] {
         let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
+        if let predicate = predicate { fetchRequest.predicate = predicate }
         
         do {
             return try readContext.fetch(fetchRequest)
@@ -76,8 +77,9 @@ final class OldCoreDataManager: CoreDataManager {
         }
     }
     
-    func fetchMessages() -> [DBMessage] {
+    func fetchMessages(predicate: NSPredicate) -> [DBMessage] {
         let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
+        fetchRequest.predicate = predicate
         
         do {
             return try readContext.fetch(fetchRequest)
@@ -86,40 +88,7 @@ final class OldCoreDataManager: CoreDataManager {
             return []
         }
     }
- 
-    func fetchChannelWithPredicate(channel: Channel) -> DBChannel? {
-        let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
-        
-        guard let id = channel.identifier else { return nil }
-        
-        let predicate = NSPredicate(format: "identifier == %@", id)
-        fetchRequest.predicate = predicate
-        
-        do {
-            return try readContext.fetch(fetchRequest).first
-        } catch let error {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
-    func fetchMessageWithPredicate(message: Message) -> DBMessage? {
-        let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
-        
-        guard let senderId = message.senderId,
-              let created = message.created else { return nil }
-        
-        let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
-        fetchRequest.predicate = predicate
-        
-        do {
-            return try readContext.fetch(fetchRequest).first
-        } catch let error {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
+
     func deleteObject(_ object: NSManagedObject) {
         guard let context = object.managedObjectContext else { return }
         context.delete(object)
