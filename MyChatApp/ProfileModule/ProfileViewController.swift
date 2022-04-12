@@ -194,11 +194,6 @@ final class ProfileViewController: UIViewController {
         view.addSubview(scrollView)
         [stackView, editPhotoButton].forEach { scrollView.addSubview($0) }
     }
-//
-//    private func somethingIsChanged(_ bool: Bool) {
-//        // Turns true if user typed or deleted any character or changed photo
-//        saveGCDButton.isEnabled = bool ? true : false
-//    }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {

@@ -18,6 +18,12 @@ final class ConversationViewController: UIViewController {
     private var groupedMessages = [[Message]]()
     private var messages = [Message]()
     
+    private var messageText: String? {
+        didSet {
+            containerView.sendButton.isEnabled = (messageText == "" || messageText == nil) ? false : true
+        }
+    }
+    
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
     }
@@ -33,6 +39,24 @@ final class ConversationViewController: UIViewController {
         return table
     }()
     
+    private lazy var containerView: CustomInputView = {
+        let view = CustomInputView()
+        view.sendButton.isEnabled = false
+        view.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    private lazy var containerViewBottomAnchorConstraint: NSLayoutConstraint = {
+        return  NSLayoutConstraint(item: containerView,
+                                   attribute: .bottom,
+                                   relatedBy: .equal,
+                                   toItem: view,
+                                   attribute: .bottom,
+                                   multiplier: 1,
+                                   constant: 0)
+    }()
+       
     init(channel: Channel, coreDataManager: CoreDataManager) {
         self.channel = channel
         self.coreDataManager = coreDataManager
@@ -47,7 +71,9 @@ final class ConversationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupUI()
+        title = channel?.name ?? ""
+        view.backgroundColor = currentTheme?.backgroundColor
+        setupContainerView()
         setupTableView()
         getMessages()
         
@@ -56,16 +82,58 @@ final class ConversationViewController: UIViewController {
         }
     }
     
-    private func setupUI() {
-        title = channel?.name ?? ""
-        view.backgroundColor = currentTheme?.backgroundColor
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        registerObservers()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func registerObservers() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            containerViewBottomAnchorConstraint.constant = -keyboardSize.height
+            
+            UIView.animate(withDuration: duration) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        containerViewBottomAnchorConstraint.constant = 0
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    private func setupContainerView() {
+        containerView.textView.delegate = self
+        view.addSubview(containerView)
         
-        let addMessageButton = UIBarButtonItem(image: UIImage(systemName: "plus"),
-                                               style: .done,
-                                               target: self,
-                                               action: #selector(addMessageTapped))
+        NSLayoutConstraint.activate([
+            containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            containerViewBottomAnchorConstraint,
+            containerView.heightAnchor.constraint(equalToConstant: 65)
+        ])
         
-        navigationItem.rightBarButtonItem = addMessageButton
     }
     
     private func setupTableView() {
@@ -73,12 +141,13 @@ final class ConversationViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        tableView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapToDismiss(_:))))
         
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30)
+            tableView.bottomAnchor.constraint(equalTo: containerView.topAnchor)
         ])
     }
     
@@ -166,7 +235,7 @@ final class ConversationViewController: UIViewController {
         guard let dbMessage = coreDataManager?.fetchMessages(predicate: predicate).first else { return }
         self.coreDataManager?.deleteObject(dbMessage)
         
-        print("Message from \"\(String(describing: message.created))\" deleted from DB")
+        print("Message from\"\(String(describing: message.created))\" deleted from DB")
     }
     
     // MARK: - Handling message changes in tableview
@@ -191,27 +260,14 @@ final class ConversationViewController: UIViewController {
     
     // MARK: - actions
     
-    @objc func addMessageTapped() {
-        let addChannelAlertVC = UIAlertController(title: "New message", message: nil, preferredStyle: .alert)
-        
-        let sendAction = UIAlertAction(title: "Send", style: .default) { [weak self] _ in
-            guard let textField = addChannelAlertVC.textFields?.first else { return }
-            guard let text = textField.text else { return }
-            self?.createNewMessage(with: text)
-        }
-        sendAction.isEnabled = false
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
-        addChannelAlertVC.addAction(cancelAction)
-        addChannelAlertVC.addAction(sendAction)
-        addChannelAlertVC.addTextField { [weak self] field in
-            field.placeholder = "Start typing here..."
-            field.addTarget(self, action: #selector(self?.textChanged(_:)), for: .editingChanged)
-            field.keyboardAppearance = self?.currentTheme is NightTheme ? .dark : .default
-        }
-        
-        present(addChannelAlertVC, animated: true)
+    @objc private func sendButtonTapped() {
+        guard let messageText = messageText else { return }
+        createNewMessage(with: messageText)
+        containerView.textView.text = nil
+    }
+    
+    @objc func tapToDismiss(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
     
     // MARK: - Helpers
@@ -250,15 +306,6 @@ final class ConversationViewController: UIViewController {
         alert.addAction(goToProfileVCAction)
         
         present(alert, animated: true)
-    }
-    
-    // disables send button if text = ""
-    @objc func textChanged(_ sender: UITextField) {
-        let field = sender
-        var responder: UIResponder? = field
-        while !(responder is UIAlertController) { responder = responder?.next }
-        let alertVC = responder as? UIAlertController
-        alertVC?.actions[1].isEnabled = (field.text != "")
     }
     
 }
@@ -305,6 +352,24 @@ extension ConversationViewController: UITableViewDelegate {
         } else {
             footer.backgroundColor = currentTheme?.backgroundColor
         }
+    }
+    
+}
+
+extension ConversationViewController: UITextViewDelegate {
+
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let resultText = (textView.text ?? "") + text
+        
+        let result: String
+        if range.length == 1 {
+            let end = resultText.index(resultText.startIndex, offsetBy: resultText.count - 1)
+            result = String(resultText[resultText.startIndex..<end])
+        } else { result = resultText }
+
+        messageText = result
+        textView.text = result
+        return false
     }
     
 }
