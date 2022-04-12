@@ -25,16 +25,12 @@ final class WriteToFileOperation: Operation {
         if !FileManager.default.fileExists(atPath: userFileURL.path) {
             FileManager.default.createFile(atPath: userFileURL.path, contents: nil, attributes: nil)
         }
-        
-        print("Path to file: ", userFileURL.path)
-        
+
         do {
             try JSONEncoder().encode(user).write(to: userFileURL)
-            sleep(1)
             completion?(true)
         } catch {
-            print(error)
-            sleep(1)
+            print(error.localizedDescription)
             completion?(false)
         }
     }

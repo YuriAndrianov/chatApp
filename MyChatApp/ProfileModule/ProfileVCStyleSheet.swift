@@ -85,6 +85,7 @@ final class ProfileVCStyleSheet {
         button.setTitleColor(.link, for: .normal)
         button.setTitleColor(.systemGray, for: .disabled)
         button.titleLabel?.font = .boldSystemFont(ofSize: 15)
+        button.alpha = 0
         button.layer.cornerRadius = 8
         return button
     }
@@ -107,17 +108,6 @@ final class ProfileVCStyleSheet {
         stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
-    }
-    
-    func createSaveButtonsStackView() -> UIStackView {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.alignment = .fill
-        stack.distribution = .fillEqually
-        stack.spacing = 10
-        stack.alpha = 0
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
     }
     
     func createSpinner() -> UIActivityIndicatorView {
