@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        let coreDataManager = OldCoreDataManager()
+        let coreDataManager = NewCoreDataManager()
         let firestoreManager = FirestoreManager()
         
         let conversationsVC = ConversationsListViewController(coreDataManager: coreDataManager,

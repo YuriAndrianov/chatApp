@@ -1,13 +1,22 @@
 //
-//  NewCoreDataManager.swift
+//  NewCoreDataStack.swift
 //  MyChatApp
 //
-//  Created by Юрий Андрианов on 03.04.2022.
+//  Created by Юрий Андрианов on 14.04.2022.
 //
 
+import Foundation
 import CoreData
 
-final class NewCoreDataManager: CoreDataManager {
+class NewCoreDataStack: CoreDataStackProtocol {
+    
+    var readContext: NSManagedObjectContext {
+        return container.viewContext
+    }
+    
+    var writeContext: NSManagedObjectContext {
+        return container.newBackgroundContext()
+    }
     
     private lazy var container: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "MyChatApp")
@@ -19,30 +28,6 @@ final class NewCoreDataManager: CoreDataManager {
         return container
     }()
     
-    func fetchChannels(predicate: NSPredicate?) -> [DBChannel] {
-        let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
-        
-        if let predicate = predicate { fetchRequest.predicate = predicate }
-        
-        do {
-            return try container.viewContext.fetch(fetchRequest)
-        } catch let error {
-            print(error.localizedDescription)
-            return []
-        }
-    }
-    
-    func fetchMessages(predicate: NSPredicate) -> [DBMessage] {
-        let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
-        fetchRequest.predicate = predicate
-        do {
-            return try container.viewContext.fetch(fetchRequest)
-        } catch {
-            print(error.localizedDescription)
-            return []
-        }
-    }
-
     func performSave(_ block: @escaping (NSManagedObjectContext) -> Void) {
         let context = container.newBackgroundContext()
         context.perform {

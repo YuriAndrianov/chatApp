@@ -10,8 +10,8 @@ import FirebaseFirestore
 
 struct Channel {
     
-    let identifier: String?
-    let name: String?
+    let identifier: String
+    let name: String
     let lastMessage: String?
     let lastActivity: Date?
     
@@ -35,9 +35,7 @@ extension Channel: Comparable {
     }
     
     static func < (lhs: Channel, rhs: Channel) -> Bool {
-        guard let leftName = lhs.name,
-              let rightName = rhs.name else { return false }
-        return leftName < rightName
+        return lhs.name < rhs.name
     }
     
 }
@@ -47,8 +45,8 @@ extension Channel: Comparable {
 extension Channel {
     
     init(dbChannel: DBChannel) {
-        self.identifier = dbChannel.identifier
-        self.name = dbChannel.name
+        self.identifier = dbChannel.identifier ?? ""
+        self.name = dbChannel.name ?? ""
         self.lastMessage = dbChannel.lastMessage
         self.lastActivity = dbChannel.lastActivity
     }
@@ -57,7 +55,7 @@ extension Channel {
         let data = document.data()
         
         let identifier = document.documentID
-        let name = data["name"] as? String
+        let name = data["name"] as? String ?? ""
         let lastMessage = data["lastMessage"] as? String
         let lastActivity = data["lastActivity"] as? Timestamp
 

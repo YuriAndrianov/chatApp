@@ -9,7 +9,7 @@ import CoreData
 
 // Fixes bug with Multiple NSEntityDescriptions claim the NSManagedObject subclass https://github.com/drewmccormack/ensembles/issues/275
 
-public extension NSManagedObject {
+extension NSManagedObject {
 
     convenience init(context: NSManagedObjectContext) {
         let name = String(describing: type(of: self))

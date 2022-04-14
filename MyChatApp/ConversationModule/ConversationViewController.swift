@@ -11,8 +11,8 @@ import FirebaseFirestore
 
 final class ConversationViewController: UIViewController {
     
-    var coreDataManager: CoreDataManager?
-    var firestoreManager: FirestoreManager?
+    private var coreDataManager: CoreDataManager
+    private var firestoreManager: FirestoreManager
     var channel: Channel?
     
     private var groupedMessages = [[Message]]()
@@ -77,7 +77,7 @@ final class ConversationViewController: UIViewController {
         setupTableView()
         getMessages()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.fetchMessagesFromDB()
         }
     }
@@ -156,16 +156,17 @@ final class ConversationViewController: UIViewController {
     private func fetchMessagesFromDB() {
         guard let channelID = channel?.identifier else { return }
         let predicate = NSPredicate(format: "channel.identifier == %@", channelID)
-        let dbMessages = coreDataManager?.fetchMessages(predicate: predicate)
+        let dbMessages = coreDataManager.fetchMessages(predicate: predicate)
 
-        dbMessages?.forEach { [weak self] in
+        dbMessages.forEach { [weak self] in
             guard let message = Message(dbMessage: $0) else { return }
             self?.addMessageToTable(message)
+            print($0.channel)
         }
     }
     
     private func getMessages() {
-        firestoreManager?.fetch(.messages) { [weak self] snapshot in
+        firestoreManager.fetch(.messages) { [weak self] snapshot in
             guard let self = self else { return }
             
             snapshot?.documentChanges.forEach {
@@ -176,7 +177,7 @@ final class ConversationViewController: UIViewController {
                 switch $0.type {
                 case .added:
                     self.addMessageToTable(snapshotMessage)
-                    self.coreDataManager?.performSave { context in
+                    self.coreDataManager.performSave { context in
                         self.saveMessageToDB(message: snapshotMessage, context: context)
                     }
                 case .modified:
@@ -195,12 +196,12 @@ final class ConversationViewController: UIViewController {
     
     private func saveMessageToDB(message: Message, context: NSManagedObjectContext) {
         // checking uniqueness
-        guard let senderId = message.senderId,
-              let created = message.created else { return }
+        let senderId = message.senderId
+        let created = message.created
         
         let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
         
-        guard coreDataManager?.fetchMessages(predicate: predicate).first == nil else { return }
+        guard coreDataManager.fetchMessages(predicate: predicate).first == nil else { return }
         
         let dbMessage = DBMessage(context: context)
         dbMessage.content = message.content
@@ -212,28 +213,28 @@ final class ConversationViewController: UIViewController {
     }
     
     private func updateMessageInDB(message: Message) {
-        guard let senderId = message.senderId,
-              let created = message.created else { return }
+        let senderId = message.senderId
+        let created = message.created
         
         let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
         
-        guard let dbMessage = coreDataManager?.fetchMessages(predicate: predicate).first else { return }
+        guard let dbMessage = coreDataManager.fetchMessages(predicate: predicate).first else { return }
         dbMessage.content = message.content
         dbMessage.senderName = message.senderName
         
-        self.coreDataManager?.refreshObject(dbMessage)
+        self.coreDataManager.refreshObject(dbMessage)
         
         print("Message from \"\(String(describing: message.created))\" updated in DB")
     }
     
     private func deleteMessageFromDB(message: Message) {
-        guard let senderId = message.senderId,
-              let created = message.created else { return }
+        let senderId = message.senderId
+        let created = message.created
         
         let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
         
-        guard let dbMessage = coreDataManager?.fetchMessages(predicate: predicate).first else { return }
-        self.coreDataManager?.deleteObject(dbMessage)
+        guard let dbMessage = coreDataManager.fetchMessages(predicate: predicate).first else { return }
+        self.coreDataManager.deleteObject(dbMessage)
         
         print("Message from\"\(String(describing: message.created))\" deleted from DB")
     }
@@ -287,7 +288,7 @@ final class ConversationViewController: UIViewController {
                                       created: Date(),
                                       senderId: User.userId,
                                       senderName: user.fullname ?? "")
-            self.firestoreManager?.addDocument(.messages, data: message.toDict)
+            self.firestoreManager.addDocument(.messages, data: message.toDict)
         }
     }
     
@@ -320,11 +321,12 @@ extension ConversationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
-                                                       for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
-        let message = messages[indexPath.row, default: Message(content: "default",
-                                                               created: Date(),
-                                                               senderId: "",
-                                                               senderName: "default name")]
+                                                       for: indexPath) as? MessageTableViewCell,
+              let message = messages[safeIndex: indexPath.row] else {
+                  print("index out of range")
+                  return UITableViewCell()
+              }
+        
         if message.senderId == User.userId {
             cell.configurateAsOutcoming(with: message)
         } else {
