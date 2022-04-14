@@ -11,7 +11,7 @@ import FirebaseFirestore
 
 final class ConversationsListViewController: UIViewController {
     
-    private var coreDataManager: CoreDataManager
+    private var coreDataManager: ChatObjectsFetchable
     private var firestoreManager: FirestoreManager
     
     private var currentTheme: ThemeProtocol? {
@@ -28,7 +28,7 @@ final class ConversationsListViewController: UIViewController {
     
     private var channels = [Channel]()
     
-    init(coreDataManager: CoreDataManager, firestoreManager: FirestoreManager) {
+    init(coreDataManager: ChatObjectsFetchable, firestoreManager: FirestoreManager) {
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
         super.init(nibName: nil, bundle: nil)
@@ -42,17 +42,16 @@ final class ConversationsListViewController: UIViewController {
         super.viewDidLoad()
         setupNavBar()
         setupTableView()
-        getChannels()
+        //        getChannels()
         
-        DispatchQueue.main.async { [weak self] in
-            self?.fetchChannelsFromDB()
-        }
+        coreDataManager.channelsFetchedResultsController?.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         chatTableView.backgroundColor = currentTheme?.backgroundColor
         chatTableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        fetchChannelsFromDB()
         chatTableView.reloadData() // updates color of table if currentTheme has changed
     }
     
@@ -93,11 +92,7 @@ final class ConversationsListViewController: UIViewController {
     // MARK: - Fetching channels
     
     private func fetchChannelsFromDB() {
-        let dbChannels = coreDataManager.fetchChannels(predicate: nil)
-        dbChannels.forEach { [weak self] in
-            let channel = Channel(dbChannel: $0)
-            self?.addChannelToTable(channel)
-        }
+        coreDataManager.fetchChannels(with: nil)
     }
     
     private func getChannels() {
@@ -109,17 +104,12 @@ final class ConversationsListViewController: UIViewController {
                 
                 switch $0.type {
                 case .added:
-                    self.addChannelToTable(snapshotChannel)
-                    
-                    self.coreDataManager.performSave { context in
+                    self.coreDataManager.coreDataStack.performSave { context in
                         self.saveChannelToDB(channel: snapshotChannel, context: context)
                     }
                 case .modified:
-                    self.updateChannelInTable(snapshotChannel)
                     self.updateChannelInDB(channel: snapshotChannel)
-                    
                 case .removed:
-                    self.updateChannelInTable(snapshotChannel)
                     self.deleteChannelFromDB(channel: snapshotChannel)
                 }
             }
@@ -133,7 +123,8 @@ final class ConversationsListViewController: UIViewController {
         let id = channel.identifier
         let predicate = NSPredicate(format: "identifier == %@", id)
         
-        guard coreDataManager.fetchChannels(predicate: predicate).first == nil else { return }
+        coreDataManager.fetchChannels(with: predicate)
+        guard coreDataManager.channelsFetchedResultsController?.fetchedObjects?.first == nil else { return }
         
         let dbChannel = DBChannel(context: context)
         dbChannel.identifier = channel.identifier
@@ -147,12 +138,13 @@ final class ConversationsListViewController: UIViewController {
         let id = channel.identifier
         let predicate = NSPredicate(format: "identifier == %@", id)
         
-        guard let dbChannel = coreDataManager.fetchChannels(predicate: predicate).first else { return }
+        coreDataManager.fetchChannels(with: predicate)
+        guard let dbChannel = coreDataManager.channelsFetchedResultsController?.fetchedObjects?.first else { return }
         dbChannel.name = channel.name
         dbChannel.lastMessage = channel.lastMessage
         dbChannel.lastActivity = channel.lastActivity
         
-        self.coreDataManager.refreshObject(dbChannel)
+        self.coreDataManager.coreDataStack.refreshObject(dbChannel)
         print("Channel \"\(String(describing: dbChannel.name))\" updated in DB")
     }
     
@@ -160,31 +152,10 @@ final class ConversationsListViewController: UIViewController {
         let id = channel.identifier
         let predicate = NSPredicate(format: "identifier == %@", id)
         
-        guard let dbChannel = coreDataManager.fetchChannels(predicate: predicate).first else { return }
-        self.coreDataManager.deleteObject(dbChannel)
+        coreDataManager.fetchChannels(with: predicate)
+        guard let dbChannel = coreDataManager.channelsFetchedResultsController?.fetchedObjects?.first else { return }
+        self.coreDataManager.coreDataStack.deleteObject(dbChannel)
         print("Channel \"\(String(describing: dbChannel.name))\" deleted from DB")
-    }
-    
-    // MARK: - Handling channel changes in tableview
-    
-    private func addChannelToTable(_ channel: Channel) {
-        // checking uniqueness
-        if channels.contains(channel) { return }
-        channels.append(channel)
-        sortChannelsByDate()
-        chatTableView.reloadData()
-    }
-    
-    private func updateChannelInTable(_ channel: Channel) {
-        guard let index = channels.firstIndex(of: channel) else { return }
-        channels[index] = channel
-        chatTableView.reloadData()
-    }
-    
-    private func removeChannelFromTable(_ channel: Channel) {
-        guard let index = channels.firstIndex(of: channel) else { return }
-        channels.remove(at: index)
-        chatTableView.reloadData()
     }
     
     // MARK: - Actions
@@ -260,15 +231,25 @@ extension ConversationsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        guard let channel = channels[safeIndex: indexPath.row] else {
-            print("index out of range")
-            return
-        }
-        let coreDataManager = NewCoreDataManager()
+        guard let dbChannel = coreDataManager.channelsFetchedResultsController?.object(at: indexPath) else { return }
+        let channel = Channel(dbChannel: dbChannel)
         
+        let coreDataManager = NewCoreDataManager()
         let conversationVC = ConversationViewController(channel: channel, coreDataManager: coreDataManager)
-
+        
         navigationController?.pushViewController(conversationVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, _ in
+            guard let dbChannel = self?.coreDataManager.channelsFetchedResultsController?.object(at: indexPath) else { return }
+            self?.coreDataManager.coreDataStack.deleteObject(dbChannel)
+            self?.fetchChannelsFromDB()
+            print("Channel \"\(String(describing: dbChannel.name))\" deleted from DB")
+        }
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
 }
@@ -282,19 +263,55 @@ extension ConversationsListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        channels.count
+        coreDataManager.channelsFetchedResultsController?.fetchedObjects?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = chatTableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
                                                            for: indexPath) as? ConversationTableViewCell,
-              let channel = channels[safeIndex: indexPath.row] else {
-                  print("index out of range")
-                  return UITableViewCell()
-              }
+              let dbChannel = coreDataManager.channelsFetchedResultsController?.object(at: indexPath) else { return UITableViewCell() }
+        
+        let channel = Channel(dbChannel: dbChannel)
         
         cell.configurate(with: channel)
         return cell
+    }
+    
+}
+
+extension ConversationsListViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        chatTableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        chatTableView.endUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            chatTableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .delete:
+            guard let indexPath = indexPath else { return }
+            chatTableView.deleteRows(at: [indexPath], with: .automatic)
+        case .move:
+            guard let indexPath = indexPath,
+                  let newIndexPath = newIndexPath else { return }
+            chatTableView.deleteRows(at: [indexPath], with: .automatic)
+            chatTableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .update:
+            guard let indexPath = indexPath else { return }
+            chatTableView.reloadRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            return
+        }
     }
     
 }

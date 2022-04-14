@@ -161,7 +161,6 @@ final class ConversationViewController: UIViewController {
         dbMessages.forEach { [weak self] in
             guard let message = Message(dbMessage: $0) else { return }
             self?.addMessageToTable(message)
-            print($0.channel)
         }
     }
     
