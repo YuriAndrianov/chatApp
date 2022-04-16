@@ -10,12 +10,8 @@ import CoreData
 
 class NewCoreDataStack: CoreDataStackProtocol {
     
-    var readContext: NSManagedObjectContext {
+    var context: NSManagedObjectContext {
         return container.viewContext
-    }
-    
-    var writeContext: NSManagedObjectContext {
-        return container.newBackgroundContext()
     }
     
     private lazy var container: NSPersistentContainer = {
@@ -28,23 +24,19 @@ class NewCoreDataStack: CoreDataStackProtocol {
         return container
     }()
     
-    func performSave(_ block: @escaping (NSManagedObjectContext) -> Void) {
-        let context = container.newBackgroundContext()
-        context.perform {
-            block(context)
-            
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch {
-                    print(error.localizedDescription)
-                }
+    func saveObject(_ object: NSManagedObject) {
+        guard let context = object.managedObjectContext else { return }
+        
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
     
     func deleteObject(_ object: NSManagedObject) {
-        guard let context = object.managedObjectContext else { return }
         context.delete(object)
         
         if context.hasChanges {
@@ -57,7 +49,6 @@ class NewCoreDataStack: CoreDataStackProtocol {
     }
     
     func refreshObject(_ object: NSManagedObject) {
-        guard let context = object.managedObjectContext else { return }
         context.refresh(object, mergeChanges: true)
         
         if context.hasChanges {

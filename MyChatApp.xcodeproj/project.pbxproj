@@ -203,12 +203,12 @@
 			path = ConversationModule;
 			sourceTree = "<group>";
 		};
-		E25CF52D28089DFE002D166F /* FetchedResultsController */ = {
+		E25CF52D28089DFE002D166F /* DataBaseChatManager */ = {
 			isa = PBXGroup;
 			children = (
 				E25CF52E28089E43002D166F /* DataBaseChatManager.swift */,
 			);
-			path = FetchedResultsController;
+			path = DataBaseChatManager;
 			sourceTree = "<group>";
 		};
 		E25CF53028089EBB002D166F /* CoreDataStack */ = {
@@ -262,7 +262,7 @@
 			isa = PBXGroup;
 			children = (
 				E25CF53028089EBB002D166F /* CoreDataStack */,
-				E25CF52D28089DFE002D166F /* FetchedResultsController */,
+				E25CF52D28089DFE002D166F /* DataBaseChatManager */,
 				E25E7A8F27FDF3C80039144D /* FirestoreManager */,
 				E25E7A8827F9A4B00039144D /* CoreDataManager */,
 				E28DE38927E70D3F009D9300 /* DataManager */,

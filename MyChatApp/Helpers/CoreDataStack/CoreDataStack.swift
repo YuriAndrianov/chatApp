@@ -10,9 +10,8 @@ import CoreData
 
 protocol CoreDataStackProtocol {
     
-    var readContext: NSManagedObjectContext { get }
-    var writeContext: NSManagedObjectContext { get }
-    func performSave(_ block: @escaping (NSManagedObjectContext) -> Void)
+    var context: NSManagedObjectContext { get }
+    func saveObject(_ object: NSManagedObject)
     func deleteObject(_ object: NSManagedObject)
     func refreshObject(_ object: NSManagedObject)
     

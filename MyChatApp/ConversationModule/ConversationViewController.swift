@@ -11,10 +11,9 @@ import FirebaseFirestore
 
 final class ConversationViewController: UIViewController {
     
-    private var coreDataManager: CoreDataManager
+    private var coreDataManager: ChatObjectsFetchable
     private var firestoreManager: FirestoreManager
-    var channel: Channel?
-    
+    private var channel: Channel?
     private var groupedMessages = [[Message]]()
     private var messages = [Message]()
     
@@ -57,10 +56,14 @@ final class ConversationViewController: UIViewController {
                                    constant: 0)
     }()
        
-    init(channel: Channel, coreDataManager: CoreDataManager) {
+    init(channel: Channel, coreDataManager: ChatObjectsFetchable) {
         self.channel = channel
         self.coreDataManager = coreDataManager
-        self.firestoreManager = FirestoreManager(channel: channel)
+        
+        let firestoreManager = FirestoreManager()
+        firestoreManager.channel = channel
+        self.firestoreManager = firestoreManager
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -75,16 +78,20 @@ final class ConversationViewController: UIViewController {
         view.backgroundColor = currentTheme?.backgroundColor
         setupContainerView()
         setupTableView()
-        getMessages()
         
-        DispatchQueue.main.async { [weak self] in
-            self?.fetchMessagesFromDB()
-        }
+        guard let id = channel?.identifier else { return }
+        coreDataManager.messagePredicate = NSPredicate(format: "channel.identifier == %@", id)
+        coreDataManager.messagesFetchedResultsController.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         registerObservers()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        getMessages()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -153,17 +160,6 @@ final class ConversationViewController: UIViewController {
     
     // MARK: - Fetching messages
     
-    private func fetchMessagesFromDB() {
-        guard let channelID = channel?.identifier else { return }
-        let predicate = NSPredicate(format: "channel.identifier == %@", channelID)
-        let dbMessages = coreDataManager.fetchMessages(predicate: predicate)
-
-        dbMessages.forEach { [weak self] in
-            guard let message = Message(dbMessage: $0) else { return }
-            self?.addMessageToTable(message)
-        }
-    }
-    
     private func getMessages() {
         firestoreManager.fetch(.messages) { [weak self] snapshot in
             guard let self = self else { return }
@@ -175,16 +171,10 @@ final class ConversationViewController: UIViewController {
                 
                 switch $0.type {
                 case .added:
-                    self.addMessageToTable(snapshotMessage)
-                    self.coreDataManager.performSave { context in
-                        self.saveMessageToDB(message: snapshotMessage, context: context)
-                    }
+                    self.saveMessageToDB(message: snapshotMessage)
                 case .modified:
-                    self.updateMessageInTable(snapshotMessage)
                     self.updateMessageInDB(message: snapshotMessage)
-                    
                 case .removed:
-                    self.removeMessageFromTable(snapshotMessage)
                     self.deleteMessageFromDB(message: snapshotMessage)
                 }
             }
@@ -193,21 +183,22 @@ final class ConversationViewController: UIViewController {
     
     // MARK: - Handling message changes in coredata
     
-    private func saveMessageToDB(message: Message, context: NSManagedObjectContext) {
+    private func saveMessageToDB(message: Message) {
         // checking uniqueness
         let senderId = message.senderId
         let created = message.created
         
         let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
         
-        guard coreDataManager.fetchMessages(predicate: predicate).first == nil else { return }
+        guard coreDataManager.fetchMessage(with: predicate) == nil else { return }
         
-        let dbMessage = DBMessage(context: context)
+        let dbMessage = DBMessage(context: coreDataManager.context)
         dbMessage.content = message.content
         dbMessage.senderName = message.senderName
         dbMessage.created = message.created
         dbMessage.senderId = message.senderId
         
+        coreDataManager.saveObject(dbMessage)
         print("Message from \"\(String(describing: message.created))\" saved to DB")
     }
     
@@ -217,7 +208,7 @@ final class ConversationViewController: UIViewController {
         
         let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
         
-        guard let dbMessage = coreDataManager.fetchMessages(predicate: predicate).first else { return }
+        guard let dbMessage = coreDataManager.fetchMessage(with: predicate) else { return }
         dbMessage.content = message.content
         dbMessage.senderName = message.senderName
         
@@ -232,30 +223,10 @@ final class ConversationViewController: UIViewController {
         
         let predicate = NSPredicate(format: "senderId == %@ && created == %@", senderId, created as CVarArg)
         
-        guard let dbMessage = coreDataManager.fetchMessages(predicate: predicate).first else { return }
-        self.coreDataManager.deleteObject(dbMessage)
+        guard let dbMessage = coreDataManager.fetchMessage(with: predicate) else { return }
+        coreDataManager.deleteObject(dbMessage)
         
         print("Message from\"\(String(describing: message.created))\" deleted from DB")
-    }
-    
-    // MARK: - Handling message changes in tableview
-    
-    private func addMessageToTable(_ message: Message) {
-        messages.append(message)
-        messages.sort(by: >)
-        tableView.reloadData()
-    }
-    
-    private func updateMessageInTable(_ message: Message) {
-        guard let index = messages.firstIndex(of: message) else { return }
-        messages[index] = message
-        tableView.reloadData()
-    }
-    
-    private func removeMessageFromTable(_ message: Message) {
-        guard let index = messages.firstIndex(of: message) else { return }
-        messages.remove(at: index)
-        tableView.reloadData()
     }
     
     // MARK: - actions
@@ -315,16 +286,19 @@ final class ConversationViewController: UIViewController {
 extension ConversationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messages.count
+        guard let sections = coreDataManager.messagesFetchedResultsController.sections else { return 0 }
+        return sections[section].numberOfObjects
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
-                                                       for: indexPath) as? MessageTableViewCell,
-              let message = messages[safeIndex: indexPath.row] else {
+                                                       for: indexPath) as? MessageTableViewCell else {
                   print("index out of range")
                   return UITableViewCell()
               }
+        let dbMessage = coreDataManager.messagesFetchedResultsController.object(at: indexPath)
+        
+        guard let message = Message(dbMessage: dbMessage) else { return UITableViewCell() }
         
         if message.senderId == User.userId {
             cell.configurateAsOutcoming(with: message)
@@ -371,6 +345,43 @@ extension ConversationViewController: UITextViewDelegate {
         messageText = result
         textView.text = result
         return false
+    }
+    
+}
+
+extension ConversationViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .delete:
+            guard let indexPath = indexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        case .move:
+            guard let indexPath = indexPath,
+                  let newIndexPath = newIndexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .update:
+            guard let indexPath = indexPath else { return }
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            return
+        }
     }
     
 }
