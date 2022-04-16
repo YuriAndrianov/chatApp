@@ -11,11 +11,9 @@ final class NewCoreDataManager: CoreDataManager {
     
     private lazy var container: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "MyChatApp")
-        container.loadPersistentStores { storeDescription, error in
+        container.loadPersistentStores { _, error in
             if let error = error {
                 print(error.localizedDescription)
-            } else {
-                print(storeDescription)
             }
         }
         return container

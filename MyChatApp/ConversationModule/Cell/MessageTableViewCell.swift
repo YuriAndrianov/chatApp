@@ -59,7 +59,7 @@ final class MessageTableViewCell: UITableViewCell {
         
         nameLabel?.text = message?.senderName
         messageTextLabel?.text = message?.content
-        dateLabel?.text = message?.created?.lastMessageDateFormat()
+        dateLabel?.text = message?.created.lastMessageDateFormat()
     }
     
 }

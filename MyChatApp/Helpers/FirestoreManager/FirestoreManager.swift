@@ -17,12 +17,7 @@ final class FirestoreManager {
         guard let id = channel?.identifier else { return nil }
         return channelsCollectionReference.document(id).collection("messages")
     }()
-    
-    convenience init(channel: Channel?) {
-        self.init()
-        self.channel = channel
-    }
-    
+   
     enum ObjectType {
         case channels
         case messages
@@ -59,6 +54,10 @@ final class FirestoreManager {
         }
         
         reference?.addDocument(data: data)
+    }
+    
+    func deleteObject(with id: String) {
+        channelsCollectionReference.document(id).delete()
     }
     
 }
