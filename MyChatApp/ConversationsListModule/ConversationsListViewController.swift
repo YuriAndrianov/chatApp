@@ -128,7 +128,7 @@ final class ConversationsListViewController: UIViewController {
         dbChannel.lastActivity = channel.lastActivity
         
         coreDataManager.saveObject(dbChannel)
-        print("Channel \"\(String(describing: channel.name))\" saved to DB")
+        print("Channel \"\(dbChannel.name ?? "")\" saved to DB")
     }
     
     private func updateChannelInDB(channel: Channel) {
@@ -140,7 +140,7 @@ final class ConversationsListViewController: UIViewController {
         dbChannel.lastMessage = channel.lastMessage
         dbChannel.lastActivity = channel.lastActivity
         coreDataManager.refreshObject(dbChannel)
-        print("Channel \"\(String(describing: dbChannel.name))\" updated in DB")
+        print("Channel \"\(dbChannel.name ?? "")\" updated in DB")
     }
     
     private func deleteChannelFromDB(channel: Channel) {
@@ -149,7 +149,7 @@ final class ConversationsListViewController: UIViewController {
         
         guard let dbChannel = coreDataManager.fetchChannel(with: predicate) else { return }
         coreDataManager.deleteObject(dbChannel)
-        print("Channel \"\(String(describing: dbChannel.name))\" deleted from DB")
+        print("Channel \"\(dbChannel.name ?? "")\" deleted from DB")
     }
     
     // MARK: - Actions
@@ -190,18 +190,28 @@ final class ConversationsListViewController: UIViewController {
     
     // MARK: - Helpers
     
-    private func sortChannelsByDate() {
-        channels = channels.sorted {
-            if let lastDate = $0.lastActivity,
-               let firstDate = $1.lastActivity {
-                return lastDate > firstDate
-            } else { return false }
-        }
-    }
-    
     private func createNewChannel(with title: String) {
         let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
         firestoreManager.addDocument(.channels, data: channel.toDict)
+    }
+    
+    private func showAlertDelete(_ channel: DBChannel) {
+        let alert = UIAlertController(title: nil,
+                                      message: "Are you sure want to delete \"\(channel.name ?? "")\" channel?",
+                                      preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction(title: "Yes", style: .default) { [weak self] _ in
+            guard let id = channel.identifier else { return }
+            self?.firestoreManager.deleteObject(with: id)
+            print("Channel \"\(channel.name ?? "")\" deleted from DB")
+        }
+        
+        let cancelAction = UIAlertAction(title: "No", style: .cancel, handler: nil)
+        
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
     }
     
     // disables confirm button if text = ""
@@ -227,7 +237,7 @@ extension ConversationsListViewController: UITableViewDelegate {
         
         let dbChannel = coreDataManager.channelsFetchedResultsController.object(at: indexPath)
         let channel = Channel(dbChannel: dbChannel)
-        
+        let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
         let conversationVC = ConversationViewController(channel: channel, coreDataManager: coreDataManager)
         
         navigationController?.pushViewController(conversationVC, animated: true)
@@ -236,10 +246,8 @@ extension ConversationsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, _ in
-            guard let dbChannel = self?.coreDataManager.channelsFetchedResultsController.object(at: indexPath),
-                  let id = dbChannel.identifier else { return }
-            self?.firestoreManager.deleteObject(with: id)
-            print("Channel \"\(String(describing: dbChannel.name))\" deleted from DB")
+            guard let dbChannel = self?.coreDataManager.channelsFetchedResultsController.object(at: indexPath) else { return }
+            self?.showAlertDelete(dbChannel)
         }
         
         return UISwipeActionsConfiguration(actions: [deleteAction])
@@ -264,9 +272,7 @@ extension ConversationsListViewController: UITableViewDataSource {
         guard let cell = chatTableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
                                                            for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
         let dbChannel = coreDataManager.channelsFetchedResultsController.object(at: indexPath)
-        
         let channel = Channel(dbChannel: dbChannel)
-        
         cell.configurate(with: channel)
         return cell
     }

@@ -41,8 +41,6 @@ class DataBaseChatManager: ChatObjectsFetchable {
     private var coreDataStack: CoreDataStackProtocol
     
     lazy var channelsFetchedResultsController: NSFetchedResultsController<DBChannel> = {
-        let context = coreDataStack.context
-        
         let fetchRequest = DBChannel.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "lastActivity", ascending: false)]
         
@@ -55,13 +53,11 @@ class DataBaseChatManager: ChatObjectsFetchable {
         } catch {
             print(error.localizedDescription)
         }
-        
+
         return controller
     }()
     
     lazy var messagesFetchedResultsController: NSFetchedResultsController<DBMessage> = {
-        let context = coreDataStack.context
-        
         let fetchRequest = DBMessage.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "created", ascending: false)]
         fetchRequest.predicate = messagePredicate
@@ -75,7 +71,7 @@ class DataBaseChatManager: ChatObjectsFetchable {
         } catch {
             print(error.localizedDescription)
         }
-        
+
         return controller
     }()
     
@@ -88,7 +84,7 @@ class DataBaseChatManager: ChatObjectsFetchable {
         fetchRequest.predicate = predicate
         
         do {
-            return try coreDataStack.context.fetch(fetchRequest).first
+            return try context.fetch(fetchRequest).first
         } catch let error {
             print(error.localizedDescription)
             return nil
@@ -100,7 +96,7 @@ class DataBaseChatManager: ChatObjectsFetchable {
         fetchRequest.predicate = predicate
         
         do {
-            return try coreDataStack.context.fetch(fetchRequest).first
+            return try context.fetch(fetchRequest).first
         } catch let error {
             print(error.localizedDescription)
             return nil

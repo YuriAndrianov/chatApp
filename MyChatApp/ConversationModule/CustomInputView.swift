@@ -41,7 +41,7 @@ final class CustomInputView: UIView {
         tv.textColor = currentTheme?.fontColor
         tv.autocorrectionType = .no
         tv.layer.cornerRadius = 10
-        tv.layer.borderColor = UIColor.systemGray.cgColor
+        tv.layer.borderColor = UIColor.label.cgColor
         tv.layer.borderWidth = 0.5
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.keyboardAppearance = currentTheme is NightTheme ? .dark : .default
