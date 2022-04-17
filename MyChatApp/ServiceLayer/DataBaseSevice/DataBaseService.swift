@@ -1,5 +1,5 @@
 //
-//  ChatObjectsFetching.swift
+//  DataBaseService.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -7,7 +7,7 @@
 
 import CoreData
 
-protocol ChatObjectsFetching {
+protocol DataBaseService {
     
     var context: NSManagedObjectContext { get }
     

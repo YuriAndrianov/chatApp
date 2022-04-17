@@ -7,7 +7,7 @@
 
 import FirebaseFirestore
 
-final class FirestoreManager: FirestoreChatHandling {
+final class FirestoreManager: FirestoreService {
     
     var channel: Channel?
     

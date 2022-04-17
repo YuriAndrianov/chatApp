@@ -11,7 +11,7 @@ final class ConversationPresenter: ConversationPresenting {
     
     weak var view: ConversationPresentable?
 
-    var coreDataManager: ChatObjectsFetching
+    var coreDataManager: DataBaseService
     var firestoreManager: FirestoreManager
     var router: Routing
     var channel: Channel
@@ -22,7 +22,7 @@ final class ConversationPresenter: ConversationPresenting {
     }
     
     required init(view: ConversationPresentable,
-                  coreDataManager: ChatObjectsFetching,
+                  coreDataManager: DataBaseService,
                   firestoreManager: FirestoreManager,
                   router: Routing,
                   channel: Channel) {

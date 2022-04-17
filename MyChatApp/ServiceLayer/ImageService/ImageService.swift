@@ -1,5 +1,5 @@
 //
-//  ImageHandling.swift
+//  ImageService.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ImageHandling: AnyObject {
+protocol ImageService: AnyObject {
     
     func saveImage(imageName: String, image: UIImage)
     

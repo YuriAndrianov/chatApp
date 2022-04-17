@@ -12,7 +12,7 @@ final class ConversationTableViewCell: UITableViewCell {
     static let identifier = "chatCell"
     static let nib = UINib(nibName: "ConversationTableViewCell", bundle: .main)
     
-    private var currentTheme: ThemeProtocol? {
+    private var currentTheme: Theme? {
         return ThemePicker.shared.currentTheme
     }
     

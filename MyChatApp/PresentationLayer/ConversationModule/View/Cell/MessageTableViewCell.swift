@@ -12,7 +12,7 @@ final class MessageTableViewCell: UITableViewCell {
     static let identifier = "messageCell"
     static let nib = UINib(nibName: "MessageTableViewCell", bundle: .main)
     
-    private var currentTheme: ThemeProtocol? {
+    private var currentTheme: Theme? {
         return ThemePicker.shared.currentTheme
     }
 

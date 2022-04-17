@@ -11,12 +11,12 @@ import CoreData
 protocol ConversationPresenting: AnyObject {
     
     var channel: Channel { get set }
-    var coreDataManager: ChatObjectsFetching { get set }
+    var coreDataManager: DataBaseService { get set }
     var firestoreManager: FirestoreManager { get set }
     var messageText: String? { get set }
     
     init(view: ConversationPresentable,
-         coreDataManager: ChatObjectsFetching,
+         coreDataManager: DataBaseService,
          firestoreManager: FirestoreManager,
          router: Routing,
          channel: Channel)

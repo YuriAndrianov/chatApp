@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-class DataBaseChatManager: ChatObjectsFetching {
+class DataBaseChatManager: DataBaseService {
     
     var messagePredicate: NSPredicate?
     

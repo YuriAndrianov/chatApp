@@ -9,7 +9,7 @@ import UIKit
 
 final class ThemesViewController: UIViewController {
     
-    private let themePicker: ThemeHandling
+    private let themePicker: ThemeService
     private let classicThemeView = CustomThemeView()
     private let dayThemeView = CustomThemeView()
     private let nightThemeView = CustomThemeView()
@@ -23,7 +23,7 @@ final class ThemesViewController: UIViewController {
         return stack
     }()
     
-    init(with themePicker: ThemeHandling) {
+    init(with themePicker: ThemeService) {
         self.themePicker = themePicker
         super.init(nibName: nil, bundle: nil)
     }
@@ -111,7 +111,7 @@ final class ThemesViewController: UIViewController {
         
     }
     
-    func updateUI(with theme: ThemeProtocol?) {
+    func updateUI(with theme: Theme?) {
         guard let theme = theme else { return }
         
         UIView.animate(withDuration: 0.05) {

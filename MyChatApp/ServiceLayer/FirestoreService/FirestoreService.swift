@@ -1,5 +1,5 @@
 //
-//  FirestoreChatHandling.swift
+//  FirestoreService.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -7,7 +7,7 @@
 
 import FirebaseFirestore
 
-protocol FirestoreChatHandling: AnyObject {
+protocol FirestoreService: AnyObject {
     
     var db: Firestore { get }
     

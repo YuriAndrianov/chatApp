@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class DayTheme: ThemeProtocol {
+final class DayTheme: Theme {
     
     var backgroundColor: UIColor = UIColor(named: "dayThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "dayFontColor") ?? .label

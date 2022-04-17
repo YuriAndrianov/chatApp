@@ -12,7 +12,7 @@ final class ConversationsListViewController: UIViewController, ConversationListP
     
     var presenter: ConversationListPresenting?
 
-    private var currentTheme: ThemeProtocol? {
+    private var currentTheme: Theme? {
         return ThemePicker.shared.currentTheme
     }
     

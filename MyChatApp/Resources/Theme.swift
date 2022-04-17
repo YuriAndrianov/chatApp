@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ThemeProtocol: AnyObject {
+protocol Theme: AnyObject {
     
     var backgroundColor: UIColor { get }
     var fontColor: UIColor { get }

@@ -11,15 +11,15 @@ final class ConversationListPresenter: ConversationListPresenting {
     
     weak var view: ConversationListPresentable?
 
-    var coreDataManager: ChatObjectsFetching
+    var coreDataManager: DataBaseService
     
-    var firestoreManager: FirestoreChatHandling
+    var firestoreManager: FirestoreService
     
     var router: Routing
     
     required init(view: ConversationListPresentable,
-                  coreDataManager: ChatObjectsFetching,
-                  firestoreManager: FirestoreChatHandling,
+                  coreDataManager: DataBaseService,
+                  firestoreManager: FirestoreService,
                   router: Routing) {
         self.view = view
         self.coreDataManager = coreDataManager

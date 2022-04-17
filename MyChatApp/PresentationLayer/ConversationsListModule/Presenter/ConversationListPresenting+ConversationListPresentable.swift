@@ -10,12 +10,12 @@ import CoreData
 
 protocol ConversationListPresenting: AnyObject {
     
-    var coreDataManager: ChatObjectsFetching { get set }
-    var firestoreManager: FirestoreChatHandling { get set }
+    var coreDataManager: DataBaseService { get set }
+    var firestoreManager: FirestoreService { get set }
     
     init(view: ConversationListPresentable,
-         coreDataManager: ChatObjectsFetching,
-         firestoreManager: FirestoreChatHandling,
+         coreDataManager: DataBaseService,
+         firestoreManager: FirestoreService,
          router: Routing)
     
     func viewDidLoad()

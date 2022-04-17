@@ -1,5 +1,5 @@
 //
-//  ThemeHandling.swift
+//  ThemeService.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -7,13 +7,13 @@
 
 import Foundation
 
-protocol ThemeHandling: AnyObject {
+protocol ThemeService: AnyObject {
     
-    var currentTheme: ThemeProtocol? { get }
+    var currentTheme: Theme? { get }
     
     func applySavedTheme()
     
-    func apply(_ theme: ThemeType, completion: ((ThemeProtocol) -> Void)?)
+    func apply(_ theme: ThemeType, completion: ((Theme) -> Void)?)
     
 }
 

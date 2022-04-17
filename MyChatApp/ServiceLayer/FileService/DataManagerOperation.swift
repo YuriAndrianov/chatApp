@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class DataManagerOperation: DataManaging {
+final class DataManagerOperation: DataService {
     
     static let shared = DataManagerOperation()
     

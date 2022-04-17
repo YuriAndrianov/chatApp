@@ -21,9 +21,9 @@ final class ProfileViewController: UIViewController {
         return view
     }()
     
-    private var fileManager: DataManaging
-    private var imageManager: ImageHandling
-    private var themePicker: ThemeHandling
+    private var fileManager: DataService
+    private var imageManager: ImageService
+    private var themePicker: ThemeService
     private var user = User()
     
     private lazy var isSomethingChanged = false {
@@ -32,7 +32,7 @@ final class ProfileViewController: UIViewController {
         }
     }
     
-    init(with fileManager: DataManaging, imageManager: ImageHandling, themePicker: ThemeHandling) {
+    init(with fileManager: DataService, imageManager: ImageService, themePicker: ThemeService) {
         self.fileManager = fileManager
         self.imageManager = imageManager
         self.themePicker = themePicker
