@@ -14,10 +14,12 @@ protocol ConversationListPresenterProtocol: AnyObject {
     var coreDataManager: ChatObjectsFetchable { get set }
     var firestoreManager: FirestoreManager { get set }
     
-    init(view: UIViewController,
+    init(view: ConversationListViewProtocol,
          coreDataManager: ChatObjectsFetchable,
          firestoreManager: FirestoreManager,
          router: RouterProtocol)
+    
+    func viewDidLoad()
     
     func viewDidAppear()
     
@@ -33,9 +35,11 @@ protocol ConversationListPresenterProtocol: AnyObject {
     
 }
 
-class ConversationListPresenter: ConversationListPresenterProtocol {
+protocol ConversationListViewProtocol: NSFetchedResultsControllerDelegate {}
+
+final class ConversationListPresenter: ConversationListPresenterProtocol {
     
-    weak var view: UIViewController?
+    weak var view: ConversationListViewProtocol?
 
     var coreDataManager: ChatObjectsFetchable
     
@@ -43,7 +47,7 @@ class ConversationListPresenter: ConversationListPresenterProtocol {
     
     var router: RouterProtocol
     
-    required init(view: UIViewController,
+    required init(view: ConversationListViewProtocol,
                   coreDataManager: ChatObjectsFetchable,
                   firestoreManager: FirestoreManager,
                   router: RouterProtocol) {
@@ -53,7 +57,38 @@ class ConversationListPresenter: ConversationListPresenterProtocol {
         self.router = router
     }
     
+    func viewDidLoad() {
+        guard let view = self.view else { return }
+        coreDataManager.channelsFetchedResultsController.delegate = view
+    }
+    
     func viewDidAppear() {
+        fetchChannelsFromFirestore()
+    }
+    
+    func newChannelCreationDidConfirm(with title: String) {
+        createNewChannelInFirebase(with: title)
+    }
+    
+    func channelDeleteDidConfirm(_ channel: DBChannel) {
+        deleteChannelFromFirebase(channel)
+    }
+    
+    func channelCellTapped(_ indexPath: IndexPath) {
+        let dbChannel = coreDataManager.channelsFetchedResultsController.object(at: indexPath)
+        let channel = Channel(dbChannel: dbChannel)
+        router.showConversation(channel: channel)
+    }
+    
+    func settingsButtonTapped() {
+        router.showSettings()
+    }
+    
+    func myProfileButtonTapped() {
+        router.showMyProfile()
+    }
+    
+    private func fetchChannelsFromFirestore() {
         firestoreManager.fetch(.channels) { [weak self] snapshot in
             guard let self = self else { return }
             
@@ -70,26 +105,6 @@ class ConversationListPresenter: ConversationListPresenterProtocol {
                 }
             }
         }
-    }
-    
-    func newChannelCreationDidConfirm(with title: String) {
-        let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
-        firestoreManager.addDocument(.channels, data: channel.toDict)
-    }
-    
-    func channelDeleteDidConfirm(_ channel: DBChannel) {
-        guard let id = channel.identifier else { return }
-        firestoreManager.deleteObject(with: id)
-        print("Channel \"\(channel.name ?? "")\" deleted from DB")
-    }
-    
-    func channelCellTapped(_ indexPath: IndexPath) {
-        let dbChannel = coreDataManager.channelsFetchedResultsController.object(at: indexPath)
-        let channel = Channel(dbChannel: dbChannel)
-//        let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
-//        let conversationVC = ConversationViewController(channel: channel, coreDataManager: coreDataManager)
-//
-        router.showConversation(channel: channel)
     }
     
     private func saveChannelToDB(channel: Channel) {
@@ -130,12 +145,15 @@ class ConversationListPresenter: ConversationListPresenterProtocol {
         print("Channel \"\(dbChannel.name ?? "")\" deleted from DB")
     }
     
-    func settingsButtonTapped() {
-        router.showSettings()
+    private func createNewChannelInFirebase(with title: String) {
+        let channel = Channel(identifier: "", name: title, lastMessage: nil, lastActivity: Date())
+        firestoreManager.addDocument(.channels, data: channel.toDict)
     }
     
-    func myProfileButtonTapped() {
-        router.showMyProfile()
+    private func deleteChannelFromFirebase(_ channel: DBChannel) {
+        guard let id = channel.identifier else { return }
+        firestoreManager.deleteObject(with: id)
+        print("Channel \"\(channel.name ?? "")\" deleted from DB")
     }
     
 }

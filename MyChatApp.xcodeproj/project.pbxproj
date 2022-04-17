@@ -21,6 +21,7 @@
 		E25CF537280B4436002D166F /* ModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF536280B4436002D166F /* ModuleBuilder.swift */; };
 		E25CF53A280B44C3002D166F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF539280B44C3002D166F /* Router.swift */; };
 		E25CF53C280B4851002D166F /* ConversationListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF53B280B4851002D166F /* ConversationListPresenter.swift */; };
+		E25CF53E280BF293002D166F /* ConversationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF53D280BF293002D166F /* ConversationPresenter.swift */; };
 		E25D36AE27D644D900E6A746 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36AD27D644D900E6A746 /* Message.swift */; };
 		E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */; };
 		E25D36B627D67B3900E6A746 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */; };
@@ -78,6 +79,7 @@
 		E25CF536280B4436002D166F /* ModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBuilder.swift; sourceTree = "<group>"; };
 		E25CF539280B44C3002D166F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		E25CF53B280B4851002D166F /* ConversationListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListPresenter.swift; sourceTree = "<group>"; };
+		E25CF53D280BF293002D166F /* ConversationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPresenter.swift; sourceTree = "<group>"; };
 		E25D36AD27D644D900E6A746 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
@@ -154,9 +156,8 @@
 		E2561C8327D60CDC00EBD365 /* ConversationsListModule */ = {
 			isa = PBXGroup;
 			children = (
-				E2561C8527D60CFE00EBD365 /* Cell */,
-				E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */,
-				E25CF53B280B4851002D166F /* ConversationListPresenter.swift */,
+				E25CF544280C08FE002D166F /* View */,
+				E25CF545280C090A002D166F /* Presenter */,
 			);
 			path = ConversationsListModule;
 			sourceTree = "<group>";
@@ -164,8 +165,7 @@
 		E2561C8427D60CEE00EBD365 /* ProfileModule */ = {
 			isa = PBXGroup;
 			children = (
-				FAC70C6E27C61143000417F5 /* ProfileViewController.swift */,
-				E28DE38A27E76CB3009D9300 /* ProfileVCStyleSheet.swift */,
+				E25CF548280C093F002D166F /* View */,
 			);
 			path = ProfileModule;
 			sourceTree = "<group>";
@@ -203,19 +203,20 @@
 		E2561C8C27D63D1100EBD365 /* ConversationModule */ = {
 			isa = PBXGroup;
 			children = (
-				E25D36AC27D642CE00E6A746 /* Cell */,
-				E2561C8A27D63D0D00EBD365 /* ConversationViewController.swift */,
-				E25E7A9227FF6F460039144D /* CustomInputView.swift */,
+				E25CF546280C0921002D166F /* View */,
+				E25CF547280C092C002D166F /* Presenter */,
 			);
 			path = ConversationModule;
 			sourceTree = "<group>";
 		};
-		E25CF52D28089DFE002D166F /* DataBaseChatManager */ = {
+		E25CF52D28089DFE002D166F /* DataBaseSevice */ = {
 			isa = PBXGroup;
 			children = (
+				E25E7A8827F9A4B00039144D /* CoreDataManager */,
+				E25CF53028089EBB002D166F /* CoreDataStack */,
 				E25CF52E28089E43002D166F /* DataBaseChatManager.swift */,
 			);
-			path = DataBaseChatManager;
+			path = DataBaseSevice;
 			sourceTree = "<group>";
 		};
 		E25CF53028089EBB002D166F /* CoreDataStack */ = {
@@ -243,6 +244,108 @@
 			path = Router;
 			sourceTree = "<group>";
 		};
+		E25CF53F280C079B002D166F /* PresentationLayer */ = {
+			isa = PBXGroup;
+			children = (
+				E2561C8327D60CDC00EBD365 /* ConversationsListModule */,
+				E2561C8C27D63D1100EBD365 /* ConversationModule */,
+				E2561C8427D60CEE00EBD365 /* ProfileModule */,
+				E25D371327DBBCA500E6A746 /* SettingsModule */,
+				E2561C8727D60D6200EBD365 /* Models */,
+			);
+			path = PresentationLayer;
+			sourceTree = "<group>";
+		};
+		E25CF540280C07AC002D166F /* ServiceLayer */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF543280C0871002D166F /* ThemeService */,
+				E25CF542280C0865002D166F /* ImageService */,
+				E25E7A8F27FDF3C80039144D /* FirestoreService */,
+				E28DE38927E70D3F009D9300 /* FileService */,
+				E25CF52D28089DFE002D166F /* DataBaseSevice */,
+			);
+			path = ServiceLayer;
+			sourceTree = "<group>";
+		};
+		E25CF541280C07BD002D166F /* CoreLayer */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF535280B441F002D166F /* ModuleBuilder */,
+				E25CF538280B44B4002D166F /* Router */,
+			);
+			path = CoreLayer;
+			sourceTree = "<group>";
+		};
+		E25CF542280C0865002D166F /* ImageService */ = {
+			isa = PBXGroup;
+			children = (
+				E28DE37F27E5FEB9009D9300 /* ImageManager.swift */,
+			);
+			path = ImageService;
+			sourceTree = "<group>";
+		};
+		E25CF543280C0871002D166F /* ThemeService */ = {
+			isa = PBXGroup;
+			children = (
+				E25D372B27DCDE0400E6A746 /* ThemePicker.swift */,
+			);
+			path = ThemeService;
+			sourceTree = "<group>";
+		};
+		E25CF544280C08FE002D166F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E2561C8527D60CFE00EBD365 /* Cell */,
+				E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E25CF545280C090A002D166F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF53B280B4851002D166F /* ConversationListPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E25CF546280C0921002D166F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E25D36AC27D642CE00E6A746 /* Cell */,
+				E2561C8A27D63D0D00EBD365 /* ConversationViewController.swift */,
+				E25E7A9227FF6F460039144D /* CustomInputView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E25CF547280C092C002D166F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF53D280BF293002D166F /* ConversationPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E25CF548280C093F002D166F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				FAC70C6E27C61143000417F5 /* ProfileViewController.swift */,
+				E28DE38A27E76CB3009D9300 /* ProfileVCStyleSheet.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E25CF549280C095C002D166F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E25D371427DBBCDB00E6A746 /* ThemesViewController.swift */,
+				E2E756B227EE2F2C0041279A /* CustomViews */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		E25D36AC27D642CE00E6A746 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,8 +358,7 @@
 		E25D371327DBBCA500E6A746 /* SettingsModule */ = {
 			isa = PBXGroup;
 			children = (
-				E25D371427DBBCDB00E6A746 /* ThemesViewController.swift */,
-				E2E756B227EE2F2C0041279A /* Views */,
+				E25CF549280C095C002D166F /* View */,
 			);
 			path = SettingsModule;
 			sourceTree = "<group>";
@@ -284,13 +386,6 @@
 		E25D373427DF5DB300E6A746 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E25CF53028089EBB002D166F /* CoreDataStack */,
-				E25CF52D28089DFE002D166F /* DataBaseChatManager */,
-				E25E7A8F27FDF3C80039144D /* FirestoreManager */,
-				E25E7A8827F9A4B00039144D /* CoreDataManager */,
-				E28DE38927E70D3F009D9300 /* DataManager */,
-				E28DE37F27E5FEB9009D9300 /* ImageManager.swift */,
-				E25D372B27DCDE0400E6A746 /* ThemePicker.swift */,
 				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
 				E25CF52B28089B33002D166F /* DebugOptions.swift */,
 			);
@@ -307,15 +402,15 @@
 			path = CoreDataManager;
 			sourceTree = "<group>";
 		};
-		E25E7A8F27FDF3C80039144D /* FirestoreManager */ = {
+		E25E7A8F27FDF3C80039144D /* FirestoreService */ = {
 			isa = PBXGroup;
 			children = (
 				E25E7A9027FE16B70039144D /* FirestoreManager.swift */,
 			);
-			path = FirestoreManager;
+			path = FirestoreService;
 			sourceTree = "<group>";
 		};
-		E28DE38927E70D3F009D9300 /* DataManager */ = {
+		E28DE38927E70D3F009D9300 /* FileService */ = {
 			isa = PBXGroup;
 			children = (
 				E28DE38127E64236009D9300 /* DataManagerProtocol.swift */,
@@ -324,10 +419,10 @@
 				E28DE38E27E793FD009D9300 /* WriteToFileOperation.swift */,
 				E28DE39027E795F1009D9300 /* ReadFromFileOperation.swift */,
 			);
-			path = DataManager;
+			path = FileService;
 			sourceTree = "<group>";
 		};
-		E2E756B227EE2F2C0041279A /* Views */ = {
+		E2E756B227EE2F2C0041279A /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
 				E25D371627DCBF0700E6A746 /* CustomThemeView.swift */,
@@ -335,7 +430,7 @@
 				E2E7568627EB8D610041279A /* ThemeButton.swift */,
 				E2E7568427EB8C9F0041279A /* ThemeButton.xib */,
 			);
-			path = Views;
+			path = CustomViews;
 			sourceTree = "<group>";
 		};
 		FAC70C5E27C61143000417F5 = {
@@ -361,16 +456,12 @@
 		FAC70C6927C61143000417F5 /* MyChatApp */ = {
 			isa = PBXGroup;
 			children = (
-				E25CF538280B44B4002D166F /* Router */,
-				E25CF535280B441F002D166F /* ModuleBuilder */,
 				FAC70C6A27C61143000417F5 /* AppDelegate.swift */,
+				E25CF541280C07BD002D166F /* CoreLayer */,
+				E25CF540280C07AC002D166F /* ServiceLayer */,
+				E25CF53F280C079B002D166F /* PresentationLayer */,
 				E25D373427DF5DB300E6A746 /* Helpers */,
 				E25D371A27DCBFE200E6A746 /* Resources */,
-				E2561C8327D60CDC00EBD365 /* ConversationsListModule */,
-				E2561C8C27D63D1100EBD365 /* ConversationModule */,
-				E2561C8427D60CEE00EBD365 /* ProfileModule */,
-				E25D371327DBBCA500E6A746 /* SettingsModule */,
-				E2561C8727D60D6200EBD365 /* Models */,
 				E2561C8627D60D0A00EBD365 /* Extensions */,
 				FAC70C7327C61149000417F5 /* Assets.xcassets */,
 				FAC70C7527C61149000417F5 /* LaunchScreen.storyboard */,
@@ -543,6 +634,7 @@
 				E25E7A8C27F9E7670039144D /* NSManagedObject+init.swift in Sources */,
 				E28DE38B27E76CB3009D9300 /* ProfileVCStyleSheet.swift in Sources */,
 				E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */,
+				E25CF53E280BF293002D166F /* ConversationPresenter.swift in Sources */,
 				E28DE38F27E793FD009D9300 /* WriteToFileOperation.swift in Sources */,
 				E28DE39127E795F1009D9300 /* ReadFromFileOperation.swift in Sources */,
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,

@@ -31,8 +31,8 @@ class Router: RouterProtocol {
 
     func showConversationList() {
         if let navigationController = navigationController {
-            guard let mainVC = builder?.createConversationListModule(router: self) else { return }
-            navigationController.pushViewController(mainVC, animated: true)
+            guard let conversationListVC = builder?.createConversationListModule(router: self) else { return }
+            navigationController.pushViewController(conversationListVC, animated: true)
         }
     }
 

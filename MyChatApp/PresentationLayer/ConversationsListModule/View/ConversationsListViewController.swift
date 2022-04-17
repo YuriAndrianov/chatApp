@@ -7,9 +7,8 @@
 
 import UIKit
 import CoreData
-import FirebaseFirestore
 
-final class ConversationsListViewController: UIViewController {
+final class ConversationsListViewController: UIViewController, ConversationListViewProtocol {
     
     var presenter: ConversationListPresenterProtocol?
 
@@ -31,7 +30,7 @@ final class ConversationsListViewController: UIViewController {
         super.viewDidLoad()
         setupNavBar()
         setupTableView()
-        presenter?.coreDataManager.channelsFetchedResultsController.delegate = self
+        presenter?.viewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {

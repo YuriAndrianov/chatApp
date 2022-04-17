@@ -36,14 +36,20 @@ class ModuleBuilder: BuilderProtocol {
     }
 
     func createConversationModule(channel: Channel, router: RouterProtocol) -> UIViewController {
-//        let view = ConversationViewController()
-//        let networkService = NetworkService()
-//        let presenter = DetailPresenter(view: view, router: router, service: networkService, article: article)
-//        view.presenter = presenter
-//
-//        return view
-        return UIViewController()
+        let view = ConversationViewController()
+        let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
+        let firestoreManager = FirestoreManager()
+        firestoreManager.channel = channel
+        
+        let presenter = ConversationPresenter(view: view,
+                                              coreDataManager: coreDataManager,
+                                              firestoreManager: firestoreManager,
+                                              router: router,
+                                              channel: channel)
+        view.presenter = presenter
 
+        return view
+        
     }
     
     func createSettingsModule(router: RouterProtocol) -> UIViewController {
