@@ -9,78 +9,51 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
-    private let styleSheet = ProfileVCStyleSheet()
-    private let scrollView = UIScrollView()
+    private lazy var customView: MyProfileView = {
+        let view = MyProfileView()
+        view.editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        view.cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        view.saveGCDButton.addTarget(self, action: #selector(saveGCDButtonTapped), for: .touchUpInside)
+        view.editPhotoButton.addTarget(self, action: #selector(editPhotoButtonTapped), for: .touchUpInside)
+        view.fullNameTextField.delegate = self
+        view.occupationTextField.delegate = self
+        view.locationTextField.delegate = self
+        return view
+    }()
     
+    private var fileManager: DataManaging
+    private var imageManager: ImageHandling
+    private var themePicker: ThemeHandling
     private var user = User()
-    
-    private var isLargeScreenDevice: Bool {
-        // check if current device is not iPhone SE (1 gen)
-        return UIScreen.main.bounds.width > 375
-    }
-    
-    private lazy var profileImageView: UIImageView = {
-        let imageView = styleSheet.createProfileImageView()
-        return imageView
-    }()
-    
-    private lazy var fullNameTextField: UITextField = {
-        let field = styleSheet.createFullNameTextField()
-        return field
-    }()
-    
-    private lazy var occupationTextField: UITextField = {
-        let field = styleSheet.createSecondaryTextField("Enter your occupation...")
-        return field
-    }()
-    
-    private lazy var locationTextField: UITextField = {
-        let field = styleSheet.createSecondaryTextField("Enter your location...")
-        return field
-    }()
-    
-    private lazy var editButton: UIButton = {
-        let button = styleSheet.createEditButton()
-        button.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var cancelButton: UIButton = {
-        let button = styleSheet.createCancelButton()
-        button.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var saveGCDButton: UIButton = {
-        let button = styleSheet.createSaveButton(withTitle: "Save")
-        button.addTarget(self, action: #selector(saveGCDButtonTapped), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var editPhotoButton: UIButton = {
-        let button = styleSheet.createEditPhotoButton()
-        button.addTarget(self, action: #selector(editPhotoButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
-    private lazy var stackView: UIStackView = {
-        let stackView = styleSheet.createMainStackView()
-        return stackView
-    }()
     
     private lazy var isSomethingChanged = false {
         didSet {
-            saveGCDButton.isEnabled = isSomethingChanged ? true : false
+            customView.saveGCDButton.isEnabled = isSomethingChanged ? true : false
         }
+    }
+    
+    init(with fileManager: DataManaging, imageManager: ImageHandling, themePicker: ThemeHandling) {
+        self.fileManager = fileManager
+        self.imageManager = imageManager
+        self.themePicker = themePicker
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.fileManager = DataManagerGCD.shared
+        self.imageManager = ImageManager.shared
+        self.themePicker = ThemePicker.shared
+        super.init(coder: coder)
+    }
+    
+    override func loadView() {
+        view = customView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
-        setupViews()
-        setConstraints()
-        setDelegates()
-        restoreUserDataUsing(manager: DataManagerGCD.shared)
+        restoreUserData()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -89,7 +62,7 @@ final class ProfileViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        scrollView.frame = view.bounds
+        customView.scrollView.frame = view.bounds
     }
     
     deinit {
@@ -108,29 +81,23 @@ final class ProfileViewController: UIViewController {
                                                object: nil)
     }
     
-    private func setDelegates() {
-        fullNameTextField.delegate = self
-        occupationTextField.delegate = self
-        locationTextField.delegate = self
-    }
-    
-    private func restoreUserDataUsing(manager: DataManagerProtocol) {
-        manager.readFromFile { [weak self] user in
+    private func restoreUserData() {
+        fileManager.readFromFile { [weak self] user in
             guard let self = self else { return }
             if let user = user {
                 self.user = user
-                self.fullNameTextField.text = user.fullname
-                self.occupationTextField.text = user.occupation
-                self.locationTextField.text = user.location
+                self.customView.fullNameTextField.text = user.fullname
+                self.customView.occupationTextField.text = user.occupation
+                self.customView.locationTextField.text = user.location
             }
         }
         
-        ImageManager.shared.loadImageFromDiskWith(fileName: "User") { [weak self] image in
+        imageManager.loadImageFromDiskWith(fileName: "User") { [weak self] image in
             guard let self = self else { return }
             if let image = image {
-                self.profileImageView.image = image
+                self.customView.profileImageView.image = image
             } else {
-                self.profileImageView.image = UIImage(systemName: "person.circle")
+                self.customView.profileImageView.image = UIImage(systemName: "person.circle")
             }
         }
         
@@ -138,77 +105,34 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupUIIfEditingAllowedIs(_ bool: Bool) {
-        // Turns true when edit button tapped and false when save button tapped
-        if bool {
-            fullNameTextField.isEnabled = true
-            occupationTextField.isEnabled = true
-            locationTextField.isEnabled = true
-            fullNameTextField.becomeFirstResponder()
-            UIView.animate(withDuration: 0.2) {
-                self.editButton.alpha = 0
-                self.cancelButton.alpha = 1
-                self.editPhotoButton.alpha = 1
-                self.saveGCDButton.alpha = 1
-                self.fullNameTextField.layer.borderWidth = 1
-                self.occupationTextField.layer.borderWidth = 1
-                self.locationTextField.layer.borderWidth = 1
-            }
-        } else {
-            fullNameTextField.isEnabled = false
-            occupationTextField.isEnabled = false
-            locationTextField.isEnabled = false
-            UIView.animate(withDuration: 0.2) {
-                self.editButton.alpha = 1
-                self.cancelButton.alpha = 0
-                self.editPhotoButton.alpha = 0
-                self.saveGCDButton.alpha = 0
-                self.fullNameTextField.layer.borderWidth = 0
-                self.occupationTextField.layer.borderWidth = 0
-                self.locationTextField.layer.borderWidth = 0
-            }
-        }
+        customView.setupUIIfEditingAllowedIs(bool)
     }
     
     private func setupNavBar() {
         title = "My Profile"
-        view.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
+        view.backgroundColor = themePicker.currentTheme?.backgroundColor
         
-        self.navigationController?.navigationBar.prefersLargeTitles = isLargeScreenDevice
+        self.navigationController?.navigationBar.prefersLargeTitles = customView.isLargeScreenDevice
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
                                                                  style: .plain,
                                                                  target: self,
                                                                  action: #selector(closeButtonTapped))
     }
     
-    private func setupViews() {
-        [
-            profileImageView,
-            fullNameTextField,
-            occupationTextField,
-            locationTextField,
-            cancelButton,
-            saveGCDButton,
-            editButton
-        ].forEach { stackView.addArrangedSubview($0) }
-        
-        view.addSubview(scrollView)
-        [stackView, editPhotoButton].forEach { scrollView.addSubview($0) }
-    }
-    
     @objc private func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            customView.scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
             
-            let activeView: UIView? = [fullNameTextField, occupationTextField, locationTextField].first { $0.isFirstResponder }
+            let activeView: UIView? = [customView.fullNameTextField, customView.occupationTextField, customView.locationTextField].first { $0.isFirstResponder }
             if let activeView = activeView {
                 let scrollPoint = CGPoint(x: 0, y: self.view.frame.height - keyboardSize.height - activeView.frame.height - 130)
-                scrollView.setContentOffset(scrollPoint, animated: true)
+                customView.scrollView.setContentOffset(scrollPoint, animated: true)
             }
         }
     }
     
     @objc private func keyboardWillHide(_ notification: Notification) {
-        scrollView.contentInset = .zero
+        customView.scrollView.contentInset = .zero
     }
     
     // MARK: - Button's methods
@@ -229,43 +153,44 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        restoreUserDataUsing(manager: DataManagerGCD.shared)
+        restoreUserData()
         setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
     
     @objc private func saveGCDButtonTapped() {
         // saving image
-        if let image = profileImageView.image, profileImageView.image != UIImage(systemName: "person.circle") {
-            ImageManager.shared.saveImage(imageName: "User", image: image)
+        if let image = customView.profileImageView.image,
+            customView.profileImageView.image != UIImage(systemName: "person.circle") {
+            imageManager.saveImage(imageName: "User", image: image)
         } else {
-            ImageManager.shared.deleteImage(imageName: "User")
+            imageManager.deleteImage(imageName: "User")
         }
         
         // adding properties to self.user from textfields
-        user.fullname = fullNameTextField.text
-        user.occupation = occupationTextField.text
-        user.location = locationTextField.text
+        user.fullname = customView.fullNameTextField.text
+        user.occupation = customView.occupationTextField.text
+        user.location = customView.locationTextField.text
 
-        tryToSaveDataUsing(manager: DataManagerGCD.shared)
+        tryToSaveData()
     }
     
-    private func tryToSaveDataUsing(manager: DataManagerProtocol) {
+    private func tryToSaveData() {
         // make activity indicator
-        let spinner = styleSheet.createSpinner()
+        let spinner = customView.createSpinner()
         spinner.center = view.center
         view.addSubview(spinner)
         spinner.startAnimating()
         
         // block buttons and fields
         isSomethingChanged = false
-        cancelButton.isEnabled = false
-        fullNameTextField.isEnabled = false
-        occupationTextField.isEnabled = false
-        locationTextField.isEnabled = false
+        customView.cancelButton.isEnabled = false
+        customView.fullNameTextField.isEnabled = false
+        customView.occupationTextField.isEnabled = false
+        customView.locationTextField.isEnabled = false
         
         // saving to file
-        manager.writeToFile(user) { [weak self] success in
+        fileManager.writeToFile(user) { [weak self] success in
             guard let self = self else { return }
             // remove activity indicator
             spinner.stopAnimating()
@@ -288,7 +213,7 @@ final class ProfileViewController: UIViewController {
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
             guard let self = self else { return }
             self.setupUIIfEditingAllowedIs(false)
-            self.cancelButton.isEnabled = true
+            self.customView.cancelButton.isEnabled = true
         }))
         
         present(alertVC, animated: true, completion: nil)
@@ -299,14 +224,14 @@ final class ProfileViewController: UIViewController {
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.restoreUserDataUsing(manager: DataManagerGCD.shared)
+            self.restoreUserData()
             self.setupUIIfEditingAllowedIs(false)
-            self.cancelButton.isEnabled = true
+            self.customView.cancelButton.isEnabled = true
         }))
         
         alertVC.addAction(UIAlertAction(title: "Repeat", style: .default, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.tryToSaveDataUsing(manager: DataManagerGCD.shared)
+            self.tryToSaveData()
         }))
         
         present(alertVC, animated: true, completion: nil)
@@ -332,12 +257,12 @@ final class ProfileViewController: UIViewController {
         
         let deleteButton = UIAlertAction(title: "Delete photo", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            self.profileImageView.image = UIImage(systemName: "person.circle")
+            self.customView.profileImageView.image = UIImage(systemName: "person.circle")
             self.isSomethingChanged = true
         }
         
         // if there is a profile photo then add a delete button
-        if profileImageView.image != UIImage(systemName: "person.circle") {
+        if customView.profileImageView.image != UIImage(systemName: "person.circle") {
             alertVC.addAction(deleteButton)
         }
         
@@ -347,54 +272,7 @@ final class ProfileViewController: UIViewController {
         present(alertVC, animated: true, completion: nil)
     }
 }
-// MARK: - Constraints
 
-extension ProfileViewController {
-    
-    private func setConstraints() {
-        var profileImageWidth: CGFloat = 220
-        var editPhotoButtonWidth: CGFloat = 50
-        
-        if !isLargeScreenDevice {
-            profileImageWidth = 150
-            editPhotoButtonWidth = 30
-        }
-        
-        profileImageView.layer.cornerRadius = profileImageWidth / 2
-        
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
-            stackView.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -60),
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -30),
-            
-            profileImageView.widthAnchor.constraint(equalToConstant: profileImageWidth),
-            profileImageView.heightAnchor.constraint(equalToConstant: profileImageWidth),
-            
-            fullNameTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            fullNameTextField.heightAnchor.constraint(equalToConstant: 24),
-            
-            occupationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            occupationTextField.heightAnchor.constraint(equalToConstant: 24),
-            
-            locationTextField.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            locationTextField.heightAnchor.constraint(equalToConstant: 24),
-            
-            editButton.widthAnchor.constraint(equalToConstant: 40),
-            editButton.heightAnchor.constraint(equalToConstant: 40),
-            
-            saveGCDButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            
-            cancelButton.widthAnchor.constraint(equalTo: stackView.widthAnchor, constant: -10),
-            
-            editPhotoButton.widthAnchor.constraint(equalToConstant: editPhotoButtonWidth),
-            editPhotoButton.heightAnchor.constraint(equalToConstant: editPhotoButtonWidth),
-            editPhotoButton.trailingAnchor.constraint(equalTo: profileImageView.trailingAnchor),
-            editPhotoButton.bottomAnchor.constraint(equalTo: profileImageView.bottomAnchor)
-        ])
-    }
-    
-}
 // MARK: - Delegates
 
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -410,7 +288,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.editedImage] as? UIImage {
-            profileImageView.image = selectedImage
+            customView.profileImageView.image = selectedImage
             isSomethingChanged = true
         }
         picker.dismiss(animated: true)

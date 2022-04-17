@@ -6,51 +6,21 @@
 //
 
 import Foundation
-import CoreData
-import UIKit
 
-protocol ConversationListPresenterProtocol: AnyObject {
+final class ConversationListPresenter: ConversationListPresenting {
     
-    var coreDataManager: ChatObjectsFetchable { get set }
-    var firestoreManager: FirestoreManager { get set }
-    
-    init(view: ConversationListViewProtocol,
-         coreDataManager: ChatObjectsFetchable,
-         firestoreManager: FirestoreManager,
-         router: RouterProtocol)
-    
-    func viewDidLoad()
-    
-    func viewDidAppear()
-    
-    func newChannelCreationDidConfirm(with title: String)
-    
-    func channelDeleteDidConfirm(_ channel: DBChannel)
-    
-    func settingsButtonTapped()
-    
-    func myProfileButtonTapped()
-    
-    func channelCellTapped(_ indexPath: IndexPath)
-    
-}
+    weak var view: ConversationListPresentable?
 
-protocol ConversationListViewProtocol: NSFetchedResultsControllerDelegate {}
-
-final class ConversationListPresenter: ConversationListPresenterProtocol {
+    var coreDataManager: ChatObjectsFetching
     
-    weak var view: ConversationListViewProtocol?
-
-    var coreDataManager: ChatObjectsFetchable
+    var firestoreManager: FirestoreChatHandling
     
-    var firestoreManager: FirestoreManager
+    var router: Routing
     
-    var router: RouterProtocol
-    
-    required init(view: ConversationListViewProtocol,
-                  coreDataManager: ChatObjectsFetchable,
-                  firestoreManager: FirestoreManager,
-                  router: RouterProtocol) {
+    required init(view: ConversationListPresentable,
+                  coreDataManager: ChatObjectsFetching,
+                  firestoreManager: FirestoreChatHandling,
+                  router: Routing) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager

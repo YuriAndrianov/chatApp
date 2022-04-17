@@ -5,24 +5,11 @@
 //  Created by Юрий Андрианов on 16.04.2022.
 //
 
-import Foundation
 import UIKit
 
-protocol BuilderProtocol {
+class ModuleBuilder: Building {
 
-    func createConversationListModule(router: RouterProtocol) -> UIViewController
-
-    func createConversationModule(channel: Channel, router: RouterProtocol) -> UIViewController
-    
-    func createSettingsModule(router: RouterProtocol) -> UIViewController
-    
-    func createMyProfileModule(router: RouterProtocol) -> UIViewController
-
-}
-
-class ModuleBuilder: BuilderProtocol {
-
-    func createConversationListModule(router: RouterProtocol) -> UIViewController {
+    func createConversationListModule(router: Routing) -> UIViewController {
         let view = ConversationsListViewController()
         let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
@@ -35,7 +22,7 @@ class ModuleBuilder: BuilderProtocol {
         return view
     }
 
-    func createConversationModule(channel: Channel, router: RouterProtocol) -> UIViewController {
+    func createConversationModule(channel: Channel, router: Routing) -> UIViewController {
         let view = ConversationViewController()
         let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
@@ -52,14 +39,19 @@ class ModuleBuilder: BuilderProtocol {
         
     }
     
-    func createSettingsModule(router: RouterProtocol) -> UIViewController {
-        let settingsVC = ThemesViewController()
-        return settingsVC
+    func createSettingsModule(router: Routing) -> UIViewController {
+        let themePicker = ThemePicker.shared
+        return ThemesViewController(with: themePicker)
     }
     
-    func createMyProfileModule(router: RouterProtocol) -> UIViewController {
-        let myProfileVC = ProfileViewController()
-        return myProfileVC
+    func createMyProfileModule(router: Routing) -> UIViewController {
+        let fileManager = DataManagerGCD.shared
+        let imageManager = ImageManager.shared
+        let themePicker = ThemePicker.shared
+        
+        return ProfileViewController(with: fileManager,
+                                              imageManager: imageManager,
+                                              themePicker: themePicker)
     }
 
 }

@@ -7,19 +7,13 @@
 
 import UIKit
 
-final class ThemePicker {
+final class ThemePicker: ThemeHandling {
     
-    static let shared = ThemePicker()
+    static let shared: ThemeHandling = ThemePicker()
     
-    private(set) var currentTheme: ThemeProtocol?
+    var currentTheme: ThemeProtocol?
 
     private init() {}
-    
-    enum ThemeType {
-        case classic
-        case day
-        case night
-    }
     
     func applySavedTheme() {
         DataManagerGCD.shared.readFromFile { [weak self] user in
@@ -41,7 +35,7 @@ final class ThemePicker {
         }
     }
 
-    func apply(_ theme: ThemePicker.ThemeType, completion: ((ThemeProtocol) -> Void)?) {
+    func apply(_ theme: ThemeType, completion: ((ThemeProtocol) -> Void)?) {
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
             

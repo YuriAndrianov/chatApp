@@ -7,24 +7,12 @@
 
 import UIKit
 
-protocol RouterProtocol {
-
-    var navigationController: UINavigationController? { get set }
-    var builder: BuilderProtocol? { get set }
-
-    func showConversationList()
-    func showConversation(channel: Channel)
-    func showSettings()
-    func showMyProfile()
-
-}
-
-class Router: RouterProtocol {
+class Router: Routing {
 
     var navigationController: UINavigationController?
-    var builder: BuilderProtocol?
+    var builder: Building?
 
-    init(navigationController: UINavigationController, builder: BuilderProtocol) {
+    init(navigationController: UINavigationController, builder: Building) {
         self.navigationController = navigationController
         self.builder = builder
     }

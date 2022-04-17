@@ -8,9 +8,9 @@
 import UIKit
 import CoreData
 
-final class ConversationsListViewController: UIViewController, ConversationListViewProtocol {
+final class ConversationsListViewController: UIViewController, ConversationListPresentable {
     
-    var presenter: ConversationListPresenterProtocol?
+    var presenter: ConversationListPresenting?
 
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme

@@ -7,22 +7,17 @@
 
 import FirebaseFirestore
 
-final class FirestoreManager {
+final class FirestoreManager: FirestoreChatHandling {
     
     var channel: Channel?
     
-    private lazy var db = Firestore.firestore()
-    private lazy var channelsCollectionReference = db.collection("channels")
-    private lazy var messagesCollectionReference: CollectionReference? = {
+    lazy var db = Firestore.firestore()
+    lazy var channelsCollectionReference = db.collection("channels")
+    lazy var messagesCollectionReference: CollectionReference? = {
         guard let id = channel?.identifier else { return nil }
         return channelsCollectionReference.document(id).collection("messages")
     }()
    
-    enum ObjectType {
-        case channels
-        case messages
-    }
-    
     func fetch(_ objects: ObjectType, completion: @escaping (QuerySnapshot?) -> Void) {
         var reference: CollectionReference?
         

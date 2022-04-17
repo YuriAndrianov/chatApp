@@ -14,7 +14,7 @@ final class CustomThemeView: UIView {
     @IBOutlet weak var label: UILabel?
     
     let tapGesture = UITapGestureRecognizer()
-    var theme: ThemePicker.ThemeType?
+    var theme: ThemeType?
 
     var isButtonHighlited: Bool = false {
         didSet {
@@ -53,7 +53,7 @@ final class CustomThemeView: UIView {
         label?.textColor = ThemePicker.shared.currentTheme?.fontColor
     }
     
-    func configurate(with theme: ThemePicker.ThemeType) {
+    func configurate(with theme: ThemeType) {
         self.theme = theme
         
         switch theme {

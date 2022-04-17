@@ -8,9 +8,9 @@
 import UIKit
 import CoreData
 
-final class ConversationViewController: UIViewController, ConversationViewProtocol {
+final class ConversationViewController: UIViewController, ConversationPresentable {
     
-    var presenter: ConversationPresenterProtocol?
+    var presenter: ConversationPresenting?
     
     private var currentTheme: ThemeProtocol? {
         return ThemePicker.shared.currentTheme
@@ -125,9 +125,7 @@ final class ConversationViewController: UIViewController, ConversationViewProtoc
         
         let goToProfileVCAction = UIAlertAction(title: "Go to \"My profile\"",
                                                 style: .default) { [weak self] _ in
-            let profileVC = ProfileViewController()
-            let navigationController = CustomNavigationController(rootViewController: profileVC)
-            self?.present(navigationController, animated: true, completion: nil)
+            self?.presenter?.sendButtonTappedWithoutUsername()
         }
         
         alert.addAction(goToProfileVCAction)

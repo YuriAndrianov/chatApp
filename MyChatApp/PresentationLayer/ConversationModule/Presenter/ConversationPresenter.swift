@@ -6,44 +6,14 @@
 //
 
 import Foundation
-import CoreData
 
-protocol ConversationPresenterProtocol: AnyObject {
+final class ConversationPresenter: ConversationPresenting {
     
-    var channel: Channel { get set }
-    var coreDataManager: ChatObjectsFetchable { get set }
-    var firestoreManager: FirestoreManager { get set }
-    var messageText: String? { get set }
-    
-    init(view: ConversationViewProtocol,
-         coreDataManager: ChatObjectsFetchable,
-         firestoreManager: FirestoreManager,
-         router: RouterProtocol,
-         channel: Channel)
-    
-    func viewDidLoad()
-    
-    func viewDidAppear()
-    
-    func sendButtonTapped()
-    
-}
+    weak var view: ConversationPresentable?
 
-protocol ConversationViewProtocol: NSFetchedResultsControllerDelegate {
-    
-    var containerView: CustomInputView { get set }
-    
-    func showNoUserAlert()
-    
-}
-
-final class ConversationPresenter: ConversationPresenterProtocol {
-    
-    weak var view: ConversationViewProtocol?
-
-    var coreDataManager: ChatObjectsFetchable
+    var coreDataManager: ChatObjectsFetching
     var firestoreManager: FirestoreManager
-    var router: RouterProtocol
+    var router: Routing
     var channel: Channel
     var messageText: String? {
         didSet {
@@ -51,10 +21,10 @@ final class ConversationPresenter: ConversationPresenterProtocol {
         }
     }
     
-    required init(view: ConversationViewProtocol,
-                  coreDataManager: ChatObjectsFetchable,
+    required init(view: ConversationPresentable,
+                  coreDataManager: ChatObjectsFetching,
                   firestoreManager: FirestoreManager,
-                  router: RouterProtocol,
+                  router: Routing,
                   channel: Channel) {
         self.view = view
         self.coreDataManager = coreDataManager
@@ -77,6 +47,10 @@ final class ConversationPresenter: ConversationPresenterProtocol {
         guard let messageText = messageText else { return }
         createNewMessage(with: messageText)
         view?.containerView.textView.text = nil
+    }
+    
+    func sendButtonTappedWithoutUsername() {
+        router.showMyProfile()
     }
     
     private func saveMessageToDB(message: Message) {

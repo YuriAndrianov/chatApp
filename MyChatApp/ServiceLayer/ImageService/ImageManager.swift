@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class ImageManager {
+final class ImageManager: ImageHandling {
     
-    static let shared = ImageManager()
+    static let shared: ImageHandling = ImageManager()
     
     private init() {}
     

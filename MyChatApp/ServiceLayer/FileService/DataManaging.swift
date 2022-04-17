@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DataManagerProtocol: AnyObject {
+protocol DataManaging: AnyObject {
     
     func writeToFile(_ user: User, completion: @escaping ((Bool) -> Void))
     func readFromFile(completion: @escaping ((User?) -> Void))

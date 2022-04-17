@@ -9,6 +9,11 @@ import UIKit
 
 final class ThemesViewController: UIViewController {
     
+    private let themePicker: ThemeHandling
+    private let classicThemeView = CustomThemeView()
+    private let dayThemeView = CustomThemeView()
+    private let nightThemeView = CustomThemeView()
+    
     private let stackView: UIStackView = {
         let stack = UIStackView()
         stack.alignment = .fill
@@ -18,26 +23,31 @@ final class ThemesViewController: UIViewController {
         return stack
     }()
     
-    private let classicThemeView = CustomThemeView()
-    private let dayThemeView = CustomThemeView()
-    private let nightThemeView = CustomThemeView()
+    init(with themePicker: ThemeHandling) {
+        self.themePicker = themePicker
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.themePicker = ThemePicker.shared
+        super.init(coder: coder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
         highlightButton()
         setupStackView()
     }
     
     private func setupUI() {
-        view.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
+        view.backgroundColor = themePicker.currentTheme?.backgroundColor
         title = "Settings"
     }
     
     private func highlightButton() {
         // highlight button depending on current theme
-        switch ThemePicker.shared.currentTheme {
+        switch themePicker.currentTheme {
         case is ClassicTheme: classicThemeView.isButtonHighlited = true
         case is DayTheme: dayThemeView.isButtonHighlited = true
         case is NightTheme: nightThemeView.isButtonHighlited = true
@@ -71,7 +81,7 @@ final class ThemesViewController: UIViewController {
     }
     
     @objc private func themeChosen(_ sender: Any) {
-        var chosenTheme: ThemePicker.ThemeType
+        var chosenTheme: ThemeType
         
         if sender is UIButton {
             switch sender {
@@ -94,8 +104,7 @@ final class ThemesViewController: UIViewController {
             $0.isButtonHighlited = ($0.theme == chosenTheme) ? true : false
         }
         
-        // applying the chosen theme via delegate or completion handler
-        let themePicker = ThemePicker.shared
+        // applying the chosen theme
         themePicker.apply(chosenTheme) { [weak self] theme in
             self?.updateUI(with: theme)
         }
