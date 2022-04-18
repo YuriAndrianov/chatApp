@@ -13,6 +13,7 @@ final class ConversationPresenter: ConversationPresenting {
 
     var coreDataManager: DataBaseService
     var firestoreManager: FirestoreManager
+    var themePicker: ThemeService
     var router: Routing
     var channel: Channel
     var messageText: String? {
@@ -24,11 +25,13 @@ final class ConversationPresenter: ConversationPresenting {
     required init(view: ConversationPresentable,
                   coreDataManager: DataBaseService,
                   firestoreManager: FirestoreManager,
+                  themePicker: ThemeService,
                   router: Routing,
                   channel: Channel) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
+        self.themePicker = themePicker
         self.router = router
         self.channel = channel
     }

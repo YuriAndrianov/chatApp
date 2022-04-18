@@ -163,8 +163,4 @@ final class MyProfileView: UIView {
         }
     }
     
-    func blockButtons() {
-        
-    }
-    
 }

@@ -13,7 +13,7 @@ final class ConversationsListViewController: UIViewController, ConversationListP
     var presenter: ConversationListPresenting?
 
     private var currentTheme: Theme? {
-        return ThemePicker.shared.currentTheme
+        return presenter?.themePicker.currentTheme
     }
     
     private lazy var chatTableView: UITableView = {
@@ -157,7 +157,8 @@ extension ConversationsListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, _ in
+        let deleteAction = UIContextualAction(style: .destructive,
+                                              title: "Delete") { [weak self] _, _, _ in
             guard let dbChannel = self?.presenter?
                     .coreDataManager
                     .channelsFetchedResultsController.object(at: indexPath) else { return }

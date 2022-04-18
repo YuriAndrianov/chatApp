@@ -11,13 +11,15 @@ import CoreData
 protocol ConversationPresenting: AnyObject {
     
     var channel: Channel { get set }
-    var coreDataManager: DataBaseService { get set }
-    var firestoreManager: FirestoreManager { get set }
+    var coreDataManager: DataBaseService { get }
+    var firestoreManager: FirestoreManager { get }
+    var themePicker: ThemeService { get }
     var messageText: String? { get set }
     
     init(view: ConversationPresentable,
          coreDataManager: DataBaseService,
          firestoreManager: FirestoreManager,
+         themePicker: ThemeService,
          router: Routing,
          channel: Channel)
     

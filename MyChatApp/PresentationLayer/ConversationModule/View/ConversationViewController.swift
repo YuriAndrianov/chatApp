@@ -13,7 +13,7 @@ final class ConversationViewController: UIViewController, ConversationPresentabl
     var presenter: ConversationPresenting?
     
     private var currentTheme: Theme? {
-        return ThemePicker.shared.currentTheme
+        return presenter?.themePicker.currentTheme
     }
     
     private lazy var tableView: UITableView = {

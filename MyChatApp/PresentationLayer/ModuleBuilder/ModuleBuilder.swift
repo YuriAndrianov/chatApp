@@ -13,9 +13,11 @@ class ModuleBuilder: Building {
         let view = ConversationsListViewController()
         let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
+        let themePicker = ThemePicker.shared
         let presenter = ConversationListPresenter(view: view,
                                                   coreDataManager: coreDataManager,
                                                   firestoreManager: firestoreManager,
+                                                  themePicker: themePicker,
                                                   router: router)
         view.presenter = presenter
 
@@ -27,10 +29,12 @@ class ModuleBuilder: Building {
         let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
         firestoreManager.channel = channel
+        let themePicker = ThemePicker.shared
         
         let presenter = ConversationPresenter(view: view,
                                               coreDataManager: coreDataManager,
                                               firestoreManager: firestoreManager,
+                                              themePicker: themePicker,
                                               router: router,
                                               channel: channel)
         view.presenter = presenter

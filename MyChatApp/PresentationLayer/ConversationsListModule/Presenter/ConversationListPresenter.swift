@@ -12,18 +12,19 @@ final class ConversationListPresenter: ConversationListPresenting {
     weak var view: ConversationListPresentable?
 
     var coreDataManager: DataBaseService
-    
     var firestoreManager: FirestoreService
-    
+    var themePicker: ThemeService
     var router: Routing
     
     required init(view: ConversationListPresentable,
                   coreDataManager: DataBaseService,
                   firestoreManager: FirestoreService,
+                  themePicker: ThemeService,
                   router: Routing) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
+        self.themePicker = themePicker
         self.router = router
     }
     

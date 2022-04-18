@@ -10,12 +10,14 @@ import CoreData
 
 protocol ConversationListPresenting: AnyObject {
     
-    var coreDataManager: DataBaseService { get set }
-    var firestoreManager: FirestoreService { get set }
+    var coreDataManager: DataBaseService { get }
+    var firestoreManager: FirestoreService { get }
+    var themePicker: ThemeService { get }
     
     init(view: ConversationListPresentable,
          coreDataManager: DataBaseService,
          firestoreManager: FirestoreService,
+         themePicker: ThemeService,
          router: Routing)
     
     func viewDidLoad()
