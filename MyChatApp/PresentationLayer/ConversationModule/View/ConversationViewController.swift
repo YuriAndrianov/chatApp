@@ -8,24 +8,13 @@
 import UIKit
 import CoreData
 
-final class ConversationViewController: UIViewController, ConversationPresentable {
+final class ConversationViewController: BaseChatViewController, ConversationPresentable {
     
     var presenter: ConversationPresenting?
     
     private var currentTheme: Theme? {
         return presenter?.themePicker.currentTheme
     }
-    
-    private lazy var tableView: UITableView = {
-        let table = UITableView(frame: .zero, style: .grouped)
-        table.register(MessageTableViewCell.nib,
-                       forCellReuseIdentifier: MessageTableViewCell.identifier)
-        table.separatorStyle = .none
-        table.backgroundColor = currentTheme?.backgroundColor
-        table.transform = CGAffineTransform(scaleX: 1, y: -1)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        return table
-    }()
     
     lazy var containerView: CustomInputView = {
         let view = CustomInputView()
@@ -93,6 +82,12 @@ final class ConversationViewController: UIViewController, ConversationPresentabl
     
     private func setupTableView() {
         view.addSubview(tableView)
+        tableView.register(MessageTableViewCell.nib,
+                       forCellReuseIdentifier: MessageTableViewCell.identifier)
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = currentTheme?.backgroundColor
+        tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
         tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
@@ -223,43 +218,6 @@ extension ConversationViewController: UITextViewDelegate {
         presenter?.messageText = result
         textView.text = result
         return false
-    }
-    
-}
-
-extension ConversationViewController: NSFetchedResultsControllerDelegate {
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.beginUpdates()
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        tableView.endUpdates()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange anObject: Any,
-                    at indexPath: IndexPath?,
-                    for type: NSFetchedResultsChangeType,
-                    newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath = newIndexPath else { return }
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-        case .delete:
-            guard let indexPath = indexPath else { return }
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-        case .move:
-            guard let indexPath = indexPath,
-                  let newIndexPath = newIndexPath else { return }
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-        case .update:
-            guard let indexPath = indexPath else { return }
-            tableView.reloadRows(at: [indexPath], with: .automatic)
-        @unknown default:
-            return
-        }
     }
     
 }

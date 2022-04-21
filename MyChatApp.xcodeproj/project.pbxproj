@@ -31,6 +31,7 @@
 		E25CF559280C3A93002D166F /* DataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF558280C3A93002D166F /* DataBaseService.swift */; };
 		E25CF55B280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55A280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift */; };
 		E25CF55D280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55C280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift */; };
+		E25CF5612811CEE8002D166F /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5602811CEE8002D166F /* BaseChatViewController.swift */; };
 		E25D36AE27D644D900E6A746 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36AD27D644D900E6A746 /* Message.swift */; };
 		E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */; };
 		E25D36B627D67B3900E6A746 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */; };
@@ -98,6 +99,7 @@
 		E25CF558280C3A93002D166F /* DataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseService.swift; sourceTree = "<group>"; };
 		E25CF55A280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationListPresenting+ConversationListPresentable.swift"; sourceTree = "<group>"; };
 		E25CF55C280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationPresenting+ConversationPresentable.swift"; sourceTree = "<group>"; };
+		E25CF5602811CEE8002D166F /* BaseChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
 		E25D36AD27D644D900E6A746 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
@@ -230,8 +232,6 @@
 		E25CF52D28089DFE002D166F /* DataBaseSevice */ = {
 			isa = PBXGroup;
 			children = (
-				E25E7A8827F9A4B00039144D /* CoreDataManager */,
-				E25CF53028089EBB002D166F /* CoreDataStack */,
 				E25CF52E28089E43002D166F /* DataBaseChatManager.swift */,
 				E25CF558280C3A93002D166F /* DataBaseService.swift */,
 			);
@@ -294,8 +294,8 @@
 		E25CF541280C07BD002D166F /* CoreLayer */ = {
 			isa = PBXGroup;
 			children = (
-				E2561C8627D60D0A00EBD365 /* Extensions */,
-				E25D373427DF5DB300E6A746 /* Helpers */,
+				E25CF53028089EBB002D166F /* CoreDataStack */,
+				E25E7A8827F9A4B00039144D /* CoreDataManager */,
 			);
 			path = CoreLayer;
 			sourceTree = "<group>";
@@ -415,6 +415,7 @@
 		E25D373427DF5DB300E6A746 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
 				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
 				E25CF52B28089B33002D166F /* DebugOptions.swift */,
 			);
@@ -487,6 +488,8 @@
 			isa = PBXGroup;
 			children = (
 				FAC70C6A27C61143000417F5 /* AppDelegate.swift */,
+				E25D373427DF5DB300E6A746 /* Helpers */,
+				E2561C8627D60D0A00EBD365 /* Extensions */,
 				E25CF541280C07BD002D166F /* CoreLayer */,
 				E25CF540280C07AC002D166F /* ServiceLayer */,
 				E25CF53F280C079B002D166F /* PresentationLayer */,
@@ -667,6 +670,7 @@
 				E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */,
 				E25CF557280C3A4E002D166F /* FirestoreService.swift in Sources */,
 				E25CF53E280BF293002D166F /* ConversationPresenter.swift in Sources */,
+				E25CF5612811CEE8002D166F /* BaseChatViewController.swift in Sources */,
 				E25CF559280C3A93002D166F /* DataBaseService.swift in Sources */,
 				E28DE38F27E793FD009D9300 /* WriteToFileOperation.swift in Sources */,
 				E25CF54C280C22DD002D166F /* MyProfileView.swift in Sources */,

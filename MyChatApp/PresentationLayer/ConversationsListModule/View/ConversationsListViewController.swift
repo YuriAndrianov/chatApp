@@ -8,21 +8,13 @@
 import UIKit
 import CoreData
 
-final class ConversationsListViewController: UIViewController, ConversationListPresentable {
+final class ConversationsListViewController: BaseChatViewController, ConversationListPresentable {
     
     var presenter: ConversationListPresenting?
 
     private var currentTheme: Theme? {
         return presenter?.themePicker.currentTheme
     }
-    
-    private lazy var chatTableView: UITableView = {
-        let table = UITableView()
-        table.backgroundColor = currentTheme?.backgroundColor
-        table.register(ConversationTableViewCell.nib,
-                       forCellReuseIdentifier: ConversationTableViewCell.identifier)
-        return table
-    }()
     
     // MARK: - Lifecycle
 
@@ -35,14 +27,13 @@ final class ConversationsListViewController: UIViewController, ConversationListP
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        chatTableView.backgroundColor = currentTheme?.backgroundColor
-        chatTableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
-        chatTableView.reloadData() // updates color of table if currentTheme has changed
+        tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        tableView.reloadData() // updates color of table if currentTheme has changed
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        chatTableView.frame = view.bounds
+        tableView.frame = view.bounds
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -75,10 +66,12 @@ final class ConversationsListViewController: UIViewController, ConversationListP
     }
     
     private func setupTableView() {
-        chatTableView.delegate = self
-        chatTableView.dataSource = self
-        chatTableView.backgroundColor = currentTheme?.backgroundColor
-        view.addSubview(chatTableView)
+        tableView.backgroundColor = currentTheme?.backgroundColor
+        tableView.register(ConversationTableViewCell.nib,
+                       forCellReuseIdentifier: ConversationTableViewCell.identifier)
+        tableView.delegate = self
+        tableView.dataSource = self
+        view.addSubview(tableView)
     }
     
     // MARK: - Actions
@@ -183,7 +176,7 @@ extension ConversationsListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = chatTableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
                                                            for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
         guard let dbChannel = presenter?
                 .coreDataManager
@@ -191,45 +184,6 @@ extension ConversationsListViewController: UITableViewDataSource {
         let channel = Channel(dbChannel: dbChannel)
         cell.configurate(with: channel)
         return cell
-    }
-    
-}
-
-// MARK: - NSFetchedResultsControllerDelegate
-
-extension ConversationsListViewController: NSFetchedResultsControllerDelegate {
-    
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        chatTableView.beginUpdates()
-    }
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        chatTableView.endUpdates()
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange anObject: Any,
-                    at indexPath: IndexPath?,
-                    for type: NSFetchedResultsChangeType,
-                    newIndexPath: IndexPath?) {
-        switch type {
-        case .insert:
-            guard let newIndexPath = newIndexPath else { return }
-            chatTableView.insertRows(at: [newIndexPath], with: .automatic)
-        case .delete:
-            guard let indexPath = indexPath else { return }
-            chatTableView.deleteRows(at: [indexPath], with: .automatic)
-        case .move:
-            guard let indexPath = indexPath,
-                  let newIndexPath = newIndexPath else { return }
-            chatTableView.deleteRows(at: [indexPath], with: .automatic)
-            chatTableView.insertRows(at: [newIndexPath], with: .automatic)
-        case .update:
-            guard let indexPath = indexPath else { return }
-            chatTableView.reloadRows(at: [indexPath], with: .automatic)
-        @unknown default:
-            return
-        }
     }
     
 }
