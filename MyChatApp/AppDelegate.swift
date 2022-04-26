@@ -16,18 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
-        let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
-        let firestoreManager = FirestoreManager()
-        
-        let conversationsVC = ConversationsListViewController(coreDataManager: coreDataManager,
-                                                              firestoreManager: firestoreManager)
-        
-        let navigationController = CustomNavigationController(rootViewController: conversationsVC)
+        let navController = CustomNavigationController()
+        let builder = ModuleBuilder()
+        let router = Router(navigationController: navController, builder: builder)
+        router.showConversationList()
        
         ThemePicker.shared.applySavedTheme()
         FirebaseApp.configure()
         
-        self.window?.rootViewController = navigationController
+        self.window?.rootViewController = navController
         self.window?.makeKeyAndVisible()
         
         return true
