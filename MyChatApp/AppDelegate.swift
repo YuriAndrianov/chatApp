@@ -17,8 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         let navController = CustomNavigationController()
-        let builder = ModuleBuilder()
-        let router = Router(navigationController: navController, builder: builder)
+        let assembly = Assembly()
+        let router = Router(navigationController: navController, assembly: assembly)
         router.showConversationList()
        
         ThemePicker.shared.applySavedTheme()

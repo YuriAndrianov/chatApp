@@ -8,11 +8,11 @@
 import UIKit
 import CoreData
 
-final class ConversationViewController: BaseChatViewController, ConversationPresentable {
+final class ConversationViewController: BaseChatViewController, IConversationView {
     
-    var presenter: ConversationPresenting?
+    var presenter: IConversationPresenter?
     
-    private var currentTheme: Theme? {
+    private var currentTheme: ITheme? {
         return presenter?.themePicker.currentTheme
     }
     
@@ -41,7 +41,7 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
         setupUI()
         setupContainerView()
         setupTableView()
-        presenter?.viewDidLoad()
+        presenter?.onViewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,7 +51,7 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter?.viewDidAppear()
+        presenter?.onViewDidAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

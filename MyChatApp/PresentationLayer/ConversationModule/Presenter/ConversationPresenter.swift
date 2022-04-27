@@ -7,14 +7,14 @@
 
 import Foundation
 
-final class ConversationPresenter: ConversationPresenting {
+final class ConversationPresenter: IConversationPresenter {
     
-    weak var view: ConversationPresentable?
-
-    var coreDataManager: DataBaseService
+    weak var view: IConversationView?
+    
+    var coreDataManager: IDataBaseService
     var firestoreManager: FirestoreManager
     var themePicker: ThemeService
-    var router: Routing
+    var router: IRouter
     var channel: Channel
     var messageText: String? {
         didSet {
@@ -22,12 +22,14 @@ final class ConversationPresenter: ConversationPresenting {
         }
     }
     
-    required init(view: ConversationPresentable,
-                  coreDataManager: DataBaseService,
-                  firestoreManager: FirestoreManager,
-                  themePicker: ThemeService,
-                  router: Routing,
-                  channel: Channel) {
+    init(
+        view: IConversationView,
+        coreDataManager: IDataBaseService,
+        firestoreManager: FirestoreManager,
+        themePicker: ThemeService,
+        router: IRouter,
+        channel: Channel
+    ) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
@@ -36,13 +38,13 @@ final class ConversationPresenter: ConversationPresenting {
         self.channel = channel
     }
     
-    func viewDidLoad() {
+    func onViewDidLoad() {
         coreDataManager.messagePredicate = NSPredicate(format: "channel.identifier == %@", channel.identifier)
         guard let view = self.view else { return }
         coreDataManager.messagesFetchedResultsController.delegate = view
     }
     
-    func viewDidAppear() {
+    func onViewDidAppear() {
         fetchMessagesFromFirestore()
     }
     

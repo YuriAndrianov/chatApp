@@ -11,7 +11,7 @@ final class ThemePicker: ThemeService {
     
     static let shared: ThemeService = ThemePicker()
     
-    var currentTheme: Theme?
+    var currentTheme: ITheme?
 
     private init() {}
     
@@ -35,7 +35,7 @@ final class ThemePicker: ThemeService {
         }
     }
 
-    func apply(_ theme: ThemeType, completion: ((Theme) -> Void)?) {
+    func apply(_ theme: ThemeType, completion: ((ITheme) -> Void)?) {
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
             

@@ -8,11 +8,11 @@
 import UIKit
 import CoreData
 
-final class ConversationsListViewController: BaseChatViewController, ConversationListPresentable {
+final class ConversationsListViewController: BaseChatViewController, IConversationListView {
     
-    var presenter: ConversationListPresenting?
+    var presenter: IConversationListPresenter?
 
-    private var currentTheme: Theme? {
+    private var currentTheme: ITheme? {
         return presenter?.themePicker.currentTheme
     }
     
@@ -22,7 +22,7 @@ final class ConversationsListViewController: BaseChatViewController, Conversatio
         super.viewDidLoad()
         setupNavBar()
         setupTableView()
-        presenter?.viewDidLoad()
+        presenter?.onViewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -38,7 +38,7 @@ final class ConversationsListViewController: BaseChatViewController, Conversatio
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter?.viewDidAppear()
+        presenter?.onViewDidAppear()
     }
     
     // MARK: - Setup UI
@@ -100,7 +100,7 @@ final class ConversationsListViewController: BaseChatViewController, Conversatio
         addChannelAlertVC.addAction(confirmAction)
         addChannelAlertVC.addTextField { [weak self] field in
             field.placeholder = "Enter channel's name"
-            field.addTarget(self, action: #selector(self?.textChanged(_:)), for: .editingChanged)
+            field.addTarget(self, action: #selector(self?.textChanged), for: .editingChanged)
             field.keyboardAppearance = self?.currentTheme is NightTheme ? .dark : .default
         }
         

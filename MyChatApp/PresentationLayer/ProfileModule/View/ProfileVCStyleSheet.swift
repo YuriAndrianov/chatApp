@@ -9,7 +9,7 @@ import UIKit
 
 final class ProfileVCStyleSheet {
     
-    private var currentTheme: Theme? {
+    private var currentTheme: ITheme? {
         return ThemePicker.shared.currentTheme
     }
     
