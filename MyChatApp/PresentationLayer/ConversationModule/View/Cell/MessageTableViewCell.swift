@@ -63,6 +63,10 @@ final class MessageTableViewCell: UITableViewCell {
         nameLabel?.text = message?.senderName
         dateLabel?.text = message?.created.lastMessageDateFormat()
         
+        fillWithContentFrom(message)
+    }
+    
+    private func fillWithContentFrom(_ message: Message?) {
         if let text = message?.content {
             if let url = URL(string: text) {
                 let networkService = NetworkService()
@@ -75,16 +79,13 @@ final class MessageTableViewCell: UITableViewCell {
                                 self?.messageImageView.image = image
                             }
                         case .failure(let error):
-//                            self?.messageTextLabel?.isHidden = false
                             self?.messageImageView.isHidden = true
                             self?.messageTextLabel?.text = "API is not supporting\n" + text
                             print(error.localizedDescription)
                         }
                     }
                 }
-            } else {
-                messageTextLabel?.text = text
-            }
+            } else { messageTextLabel?.text = text }
         }
     }
     

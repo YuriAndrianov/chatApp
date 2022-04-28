@@ -31,7 +31,6 @@ final class ProfileViewController: UIViewController, IProfileView {
         super.viewDidLoad()
         setupNavBar()
         presenter?.onViewDidLoad()
-        customView.saveGCDButton.isEnabled = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,6 +79,10 @@ final class ProfileViewController: UIViewController, IProfileView {
         presenter?.setNewPhoto(url)
     }
     
+    func disableSaveButton() {
+        customView.saveGCDButton.isEnabled = false
+    }
+    
     private func setupNavBar() {
         title = "My Profile"
         view.backgroundColor = presenter?.themePicker.currentTheme?.backgroundColor
@@ -126,7 +129,6 @@ final class ProfileViewController: UIViewController, IProfileView {
     
     @objc private func cancelButtonTapped() {
         presenter?.onViewDidLoad()
-        customView.saveGCDButton.isEnabled = false
         customView.setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }

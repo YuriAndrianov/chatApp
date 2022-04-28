@@ -44,4 +44,6 @@ protocol IProfileView: AnyObject {
     
     func setNewPhoto(_ url: String)
     
+    func disableSaveButton()
+    
 }

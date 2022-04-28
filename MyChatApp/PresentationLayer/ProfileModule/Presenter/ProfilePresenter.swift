@@ -42,7 +42,11 @@ final class ProfilePresenter: IProfilePresenter {
         
         imageManager.loadImageFromDiskWith(fileName: "User") { [weak self] image in
             guard let self = self else { return }
-            self.view?.setUserImage(image)
+            
+            DispatchQueue.main.async {
+                self.view?.setUserImage(image)
+                self.view?.disableSaveButton()
+            }
         }
     }
     
