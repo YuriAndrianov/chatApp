@@ -8,7 +8,7 @@
 import UIKit
 
 final class PhotoImageView: UIImageView {
-
+    
     private let spinner = UIActivityIndicatorView()
     
     override init(frame: CGRect) {
@@ -32,9 +32,11 @@ final class PhotoImageView: UIImageView {
         spinner.center = center
     }
     
-    func setImage(_ image: UIImage) {
+    func setImage(_ image: UIImage?) {
         self.image = image
-        self.spinner.stopAnimating()
+        if image != nil {
+            spinner.stopAnimating()
+        }
     }
     
     func setImage(from url: String) {

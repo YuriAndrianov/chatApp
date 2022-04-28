@@ -8,7 +8,7 @@
 import UIKit
 
 final class ProfileViewController: UIViewController, IProfileView {
-
+    
     var presenter: IProfilePresenter?
     
     private lazy var customView: MyProfileView = {
@@ -26,7 +26,7 @@ final class ProfileViewController: UIViewController, IProfileView {
     override func loadView() {
         view = customView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
@@ -68,10 +68,12 @@ final class ProfileViewController: UIViewController, IProfileView {
     func setUserImage(_ image: UIImage?) {
         if let image = image {
             customView.profileImageView.image = image
+            customView.saveGCDButton.isEnabled = true
         } else {
             customView.profileImageView.image = UIImage(systemName: "person.circle")
+            customView.saveGCDButton.isEnabled = true
         }
-        customView.saveGCDButton.isEnabled = true
+        
     }
     
     func setNewPhoto(_ url: String) {
@@ -132,7 +134,7 @@ final class ProfileViewController: UIViewController, IProfileView {
     @objc private func saveGCDButtonTapped() {
         // saving image
         if let image = customView.profileImageView.image,
-            customView.profileImageView.image != UIImage(systemName: "person.circle") {
+           customView.profileImageView.image != UIImage(systemName: "person.circle") {
             presenter?.saveImage(imageName: "User", image: image)
         } else {
             presenter?.deleteImage(imageName: "User")
@@ -141,7 +143,7 @@ final class ProfileViewController: UIViewController, IProfileView {
         presenter?.user.fullname = customView.fullNameTextField.text
         presenter?.user.occupation = customView.occupationTextField.text
         presenter?.user.location = customView.locationTextField.text
-
+        
         tryToSaveData()
     }
     

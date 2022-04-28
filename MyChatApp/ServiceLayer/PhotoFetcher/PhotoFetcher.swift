@@ -23,7 +23,7 @@ final class PhotoFetcher: PhotoFetching {
     
     func getPhotoItems(_ completion: @escaping (Result<[PhotoItem]?, Error>) -> Void) {
         guard let url = URL(
-            string: "https://pixabay.com/api/?key=27030980-c7535c65d84b7a9bcae7e1ad1&q=face&image_type=photo"
+            string: "https://pixabay.com/api/?key=27030980-c7535c65d84b7a9bcae7e1ad1&q=face&image_type=photo&per_page=200"
         ) else { return }
         
         networkService?.request(from: url, completion: { result in

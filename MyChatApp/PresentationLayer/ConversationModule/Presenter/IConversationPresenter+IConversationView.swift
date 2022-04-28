@@ -29,6 +29,8 @@ protocol IConversationPresenter: AnyObject {
     
     func sendButtonTapped()
     
+    func attachButtonTapped()
+    
     func sendButtonTappedWithoutUsername()
     
 }
@@ -38,5 +40,9 @@ protocol IConversationView: NSFetchedResultsControllerDelegate {
     var containerView: CustomInputView { get set }
     
     func showNoUserAlert()
+    
+    func deleteText()
+    
+    func sendPhoto(_ url: String)
     
 }

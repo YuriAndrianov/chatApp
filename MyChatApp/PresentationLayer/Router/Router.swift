@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Router: IRouter {
+final class Router: IRouter {
     
     var navigationController: UINavigationController?
     var assembly: IAssembly?
@@ -59,6 +59,8 @@ class Router: IRouter {
             navigationController.visibleViewController?.dismiss(animated: true, completion: {
                 if let profileVC = navigationController.visibleViewController as? IProfileView {
                     profileVC.setNewPhoto(newPhotoURL)
+                } else if let conversationVC = navigationController.visibleViewController as? IConversationView {
+                    conversationVC.sendPhoto(newPhotoURL)
                 }
             })
         }

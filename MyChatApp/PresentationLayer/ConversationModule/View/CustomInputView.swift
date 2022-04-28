@@ -58,6 +58,16 @@ final class CustomInputView: UIView {
         return button
     }()
     
+    lazy var attachButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.link, for: .normal)
+        button.setTitleColor(.systemGray, for: .disabled)
+        button.setTitle("📎", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUp()
@@ -72,6 +82,7 @@ final class CustomInputView: UIView {
         addSubview(contentView)
         contentView.addSubview(textView)
         contentView.addSubview(sendButton)
+        contentView.addSubview(attachButton)
         
         if currentTheme is NightTheme {
             textView.backgroundColor = UIColor(named: "textViewBGColor") ?? .darkGray
@@ -83,7 +94,11 @@ final class CustomInputView: UIView {
             contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            textView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            attachButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+            attachButton.widthAnchor.constraint(equalToConstant: 30),
+            attachButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            
+            textView.leadingAnchor.constraint(equalTo: attachButton.trailingAnchor, constant: 10),
             textView.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -5),
             textView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
             textView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),

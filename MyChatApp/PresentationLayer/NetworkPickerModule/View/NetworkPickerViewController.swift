@@ -49,12 +49,21 @@ class NetworkPickerViewController: UIViewController, INetworkPickerView {
     
     func failure() {
         print("error")
+        showErrorAlert()
     }
     
-    func photoHasChosen() {
+    private func showErrorAlert() {
+        let alertVC = UIAlertController(title: "Error",
+                                        message: "Something went wrong. Try again later",
+                                        preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Ok", style: .default) { [weak self] _ in
+            self?.dismiss(animated: true, completion: nil)
+        }
+        alertVC.addAction(okAction)
         
+        present(alertVC, animated: true, completion: nil)
     }
-
+    
 }
 
 // MARK: - collectionView datasource
@@ -97,7 +106,7 @@ extension NetworkPickerViewController: UICollectionViewDelegateFlowLayout {
 
 extension NetworkPickerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let urlString = presenter?.photoURLs[indexPath.item].userImageURL else { return }
+        guard let urlString = presenter?.photoURLs[indexPath.item].webformatURL else { return }
         presenter?.photoHasChosen(urlString)
     }
 }

@@ -14,12 +14,12 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var imageView: PhotoImageView?
     
     override func prepareForReuse() {
-        imageView?.setImage(from: "https://cdn.pixabay.com/user/2017/07/18/13-46-18-393_250x250.jpg")
+        imageView?.setImage(nil)
         super.prepareForReuse()
     }
     
     func configure(with item: PhotoItem, isSelected: Bool) {
-        guard let urlString = item.userImageURL else { return }
+        guard let urlString = item.webformatURL else { return }
         imageView?.setImage(from: urlString)
     }
     

@@ -20,12 +20,6 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="emh-gE-QKI">
                         <rect key="frame" x="20" y="10" width="280" height="186"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4a4-rv-yNA">
-                                <rect key="frame" x="10" y="40" width="260" height="121"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="dateLabel" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VbS-Sy-M8i">
                                 <rect key="frame" x="150" y="166" width="120" height="14.5"/>
                                 <constraints>
@@ -44,17 +38,31 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="v9H-Cq-DDf">
+                                <rect key="frame" x="10" y="40" width="260" height="121"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="justified" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4a4-rv-yNA">
+                                        <rect key="frame" x="0.0" y="0.0" width="37.5" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="btF-v2-VBt">
+                                        <rect key="frame" x="0.0" y="18" width="260" height="103"/>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="VbS-Sy-M8i" firstAttribute="top" secondItem="4a4-rv-yNA" secondAttribute="bottom" constant="5" id="417-ch-elH"/>
-                            <constraint firstAttribute="bottom" secondItem="4a4-rv-yNA" secondAttribute="bottom" constant="25" id="5OT-7g-zCg"/>
+                            <constraint firstItem="v9H-Cq-DDf" firstAttribute="leading" secondItem="emh-gE-QKI" secondAttribute="leading" constant="10" id="08F-4g-32H"/>
+                            <constraint firstAttribute="bottom" secondItem="v9H-Cq-DDf" secondAttribute="bottom" constant="25" id="3ff-TE-ypR"/>
                             <constraint firstAttribute="trailing" secondItem="Q7t-A3-j61" secondAttribute="trailing" constant="10" id="Bkf-XD-6Qa"/>
-                            <constraint firstItem="VbS-Sy-M8i" firstAttribute="trailing" secondItem="4a4-rv-yNA" secondAttribute="trailing" id="FXC-hK-5Zx"/>
+                            <constraint firstAttribute="trailing" secondItem="v9H-Cq-DDf" secondAttribute="trailing" constant="10" id="PkS-2q-L8m"/>
                             <constraint firstItem="Q7t-A3-j61" firstAttribute="top" secondItem="emh-gE-QKI" secondAttribute="top" constant="10" id="PvA-Ds-q7S"/>
-                            <constraint firstItem="4a4-rv-yNA" firstAttribute="top" secondItem="emh-gE-QKI" secondAttribute="top" constant="40" id="XJY-Fy-whw"/>
-                            <constraint firstAttribute="trailing" secondItem="4a4-rv-yNA" secondAttribute="trailing" constant="10" id="Xv3-a1-OTN"/>
-                            <constraint firstItem="4a4-rv-yNA" firstAttribute="leading" secondItem="emh-gE-QKI" secondAttribute="leading" constant="10" id="nAo-Ih-hPz"/>
+                            <constraint firstItem="VbS-Sy-M8i" firstAttribute="trailing" secondItem="v9H-Cq-DDf" secondAttribute="trailing" id="fqh-GY-pYr"/>
+                            <constraint firstItem="VbS-Sy-M8i" firstAttribute="top" secondItem="v9H-Cq-DDf" secondAttribute="bottom" constant="5" id="nam-zD-U0K"/>
                             <constraint firstItem="Q7t-A3-j61" firstAttribute="leading" secondItem="emh-gE-QKI" secondAttribute="leading" constant="10" id="vp1-VN-W9s"/>
+                            <constraint firstItem="v9H-Cq-DDf" firstAttribute="top" secondItem="emh-gE-QKI" secondAttribute="top" constant="40" id="xR9-nz-oK7"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -75,12 +83,12 @@
                 <outlet property="bubbleView" destination="emh-gE-QKI" id="Ak4-UC-e0h"/>
                 <outlet property="dateLabel" destination="VbS-Sy-M8i" id="2Pt-C4-ga8"/>
                 <outlet property="leadingConstraint" destination="E5h-c4-1Gx" id="aut-oO-8ai"/>
+                <outlet property="messageImageView" destination="btF-v2-VBt" id="Bd3-yd-Qkm"/>
                 <outlet property="messageTextLabel" destination="4a4-rv-yNA" id="bWU-LR-dnr"/>
                 <outlet property="nameLabel" destination="Q7t-A3-j61" id="Z1O-ym-7Bb"/>
-                <outlet property="textLabelTopConstraint" destination="XJY-Fy-whw" id="2kD-57-eiY"/>
                 <outlet property="trailingConstraint" destination="IVR-Cz-trd" id="RWK-dn-VXn"/>
             </connections>
-            <point key="canvasLocation" x="-39.130434782608695" y="-12.723214285714285"/>
+            <point key="canvasLocation" x="-184" y="-27"/>
         </tableViewCell>
     </objects>
 </document>

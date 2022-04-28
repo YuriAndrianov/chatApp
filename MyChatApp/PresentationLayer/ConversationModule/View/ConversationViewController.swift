@@ -20,6 +20,7 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
         let view = CustomInputView()
         view.sendButton.isEnabled = false
         view.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+        view.attachButton.addTarget(self, action: #selector(attachButtonTapped), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -107,11 +108,20 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
         presenter?.sendButtonTapped()
     }
     
+    @objc private func attachButtonTapped() {
+        presenter?.attachButtonTapped()
+    }
+    
     @objc func tapToDismiss(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
     
     // MARK: - Helpers
+    
+    func sendPhoto(_ url: String) {
+        containerView.textView.text = url
+        presenter?.messageText = url
+    }
     
     func showNoUserAlert() {
         let alert = UIAlertController(title: "Error",
@@ -126,6 +136,10 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
         alert.addAction(goToProfileVCAction)
         
         present(alert, animated: true)
+    }
+    
+    func deleteText() {
+        containerView.textView.text = nil
     }
     
     private func registerObservers() {

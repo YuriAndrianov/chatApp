@@ -18,7 +18,9 @@ final class ConversationPresenter: IConversationPresenter {
     var channel: Channel
     var messageText: String? {
         didSet {
-            view?.containerView.sendButton.isEnabled = (messageText == "" || messageText == nil) ? false : true
+            view?.containerView.sendButton.isEnabled =
+            (messageText == "" || messageText == nil) ?
+            false : true
         }
     }
     
@@ -51,11 +53,20 @@ final class ConversationPresenter: IConversationPresenter {
     func sendButtonTapped() {
         guard let messageText = messageText else { return }
         createNewMessage(with: messageText)
-        view?.containerView.textView.text = nil
+        deleteText()
+    }
+    
+    func attachButtonTapped() {
+        router.showNetworkPicker()
     }
     
     func sendButtonTappedWithoutUsername() {
         router.showMyProfile()
+    }
+    
+    private func deleteText() {
+        self.messageText = nil
+        view?.deleteText()
     }
     
     private func saveMessageToDB(message: Message) {
