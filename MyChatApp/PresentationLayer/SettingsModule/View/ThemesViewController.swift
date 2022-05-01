@@ -111,7 +111,7 @@ final class ThemesViewController: UIViewController {
         
     }
     
-    func updateUI(with theme: Theme?) {
+    func updateUI(with theme: ITheme?) {
         guard let theme = theme else { return }
         
         UIView.animate(withDuration: 0.05) {

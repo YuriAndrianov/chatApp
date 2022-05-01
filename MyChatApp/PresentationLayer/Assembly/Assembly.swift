@@ -7,11 +7,11 @@
 
 import UIKit
 
-class ModuleBuilder: Building {
-
-    func createConversationListModule(router: Routing) -> UIViewController {
+final class Assembly: IAssembly {
+    
+    func createConversationListModule(router: IRouter) -> UIViewController {
         let view = ConversationsListViewController()
-        let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
+        let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
         let themePicker = ThemePicker.shared
         let presenter = ConversationListPresenter(view: view,
@@ -24,9 +24,9 @@ class ModuleBuilder: Building {
         return view
     }
 
-    func createConversationModule(channel: Channel, router: Routing) -> UIViewController {
+    func createConversationModule(channel: Channel, router: IRouter) -> UIViewController {
         let view = ConversationViewController()
-        let coreDataManager = DataBaseChatManager(coreDataStack: NewCoreDataStack())
+        let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
         firestoreManager.channel = channel
         let themePicker = ThemePicker.shared
@@ -43,19 +43,35 @@ class ModuleBuilder: Building {
         
     }
     
-    func createSettingsModule(router: Routing) -> UIViewController {
+    func createSettingsModule(router: IRouter) -> UIViewController {
         let themePicker = ThemePicker.shared
         return ThemesViewController(with: themePicker)
     }
     
-    func createMyProfileModule(router: Routing) -> UIViewController {
+    func createMyProfileModule(router: IRouter) -> UIViewController {
+        let view = ProfileViewController()
+        
         let fileManager = DataManagerGCD.shared
         let imageManager = ImageManager.shared
         let themePicker = ThemePicker.shared
+        let presenter = ProfilePresenter(view: view,
+                                         fileManager: fileManager,
+                                         imageManager: imageManager,
+                                         themePicker: themePicker,
+                                         router: router)
+        view.presenter = presenter
         
-        return ProfileViewController(with: fileManager,
-                                              imageManager: imageManager,
-                                              themePicker: themePicker)
+        return view
     }
-
+    
+    func createNetworkPickerModule(router: IRouter) -> UIViewController {
+        let view = NetworkPickerViewController()
+        let photoFetcher = PhotoFetcher(networkService: NetworkService())
+        let presenter = NetworkPickerPresenter(view: view,
+                                               photoFetcher: photoFetcher,
+                                               router: router)
+        view.presenter = presenter
+        return view
+    }
+    
 }

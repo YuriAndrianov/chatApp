@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, IProfileView {
+    
+    var presenter: IProfilePresenter?
     
     private lazy var customView: MyProfileView = {
         let view = MyProfileView()
@@ -21,39 +23,14 @@ final class ProfileViewController: UIViewController {
         return view
     }()
     
-    private var fileManager: DataService
-    private var imageManager: ImageService
-    private var themePicker: ThemeService
-    private var user = User()
-    
-    private lazy var isSomethingChanged = false {
-        didSet {
-            customView.saveGCDButton.isEnabled = isSomethingChanged ? true : false
-        }
-    }
-    
-    init(with fileManager: DataService, imageManager: ImageService, themePicker: ThemeService) {
-        self.fileManager = fileManager
-        self.imageManager = imageManager
-        self.themePicker = themePicker
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        self.fileManager = DataManagerGCD.shared
-        self.imageManager = ImageManager.shared
-        self.themePicker = ThemePicker.shared
-        super.init(coder: coder)
-    }
-    
     override func loadView() {
         view = customView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
-        restoreUserData()
+        presenter?.onViewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,36 +58,34 @@ final class ProfileViewController: UIViewController {
                                                object: nil)
     }
     
-    private func restoreUserData() {
-        fileManager.readFromFile { [weak self] user in
-            guard let self = self else { return }
-            if let user = user {
-                self.user = user
-                self.customView.fullNameTextField.text = user.fullname
-                self.customView.occupationTextField.text = user.occupation
-                self.customView.locationTextField.text = user.location
-            }
-        }
-        
-        imageManager.loadImageFromDiskWith(fileName: "User") { [weak self] image in
-            guard let self = self else { return }
-            if let image = image {
-                self.customView.profileImageView.image = image
-            } else {
-                self.customView.profileImageView.image = UIImage(systemName: "person.circle")
-            }
-        }
-        
-        isSomethingChanged = false
+    func configureUIWith(_ user: User) {
+        customView.fullNameTextField.text = user.fullname
+        customView.occupationTextField.text = user.occupation
+        customView.locationTextField.text = user.location
     }
     
-    private func setupUIIfEditingAllowedIs(_ bool: Bool) {
-        customView.setupUIIfEditingAllowedIs(bool)
+    func setUserImage(_ image: UIImage?) {
+        if let image = image {
+            customView.profileImageView.image = image
+            customView.saveGCDButton.isEnabled = true
+        } else {
+            customView.profileImageView.image = UIImage(systemName: "person.circle")
+            customView.saveGCDButton.isEnabled = true
+        }
+        
+    }
+    
+    func setNewPhoto(_ url: String) {
+        presenter?.setNewPhoto(url)
+    }
+    
+    func disableSaveButton() {
+        customView.saveGCDButton.isEnabled = false
     }
     
     private func setupNavBar() {
         title = "My Profile"
-        view.backgroundColor = themePicker.currentTheme?.backgroundColor
+        view.backgroundColor = presenter?.themePicker.currentTheme?.backgroundColor
         
         self.navigationController?.navigationBar.prefersLargeTitles = customView.isLargeScreenDevice
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
@@ -145,7 +120,7 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func editButtonTapped() {
-        setupUIIfEditingAllowedIs(true)
+        customView.setupUIIfEditingAllowedIs(true)
     }
     
     @objc private func doneButtonTapped() {
@@ -153,25 +128,24 @@ final class ProfileViewController: UIViewController {
     }
     
     @objc private func cancelButtonTapped() {
-        restoreUserData()
-        setupUIIfEditingAllowedIs(false)
+        presenter?.onViewDidLoad()
+        customView.setupUIIfEditingAllowedIs(false)
         view.endEditing(true)
     }
     
     @objc private func saveGCDButtonTapped() {
         // saving image
         if let image = customView.profileImageView.image,
-            customView.profileImageView.image != UIImage(systemName: "person.circle") {
-            imageManager.saveImage(imageName: "User", image: image)
+           customView.profileImageView.image != UIImage(systemName: "person.circle") {
+            presenter?.saveImage(imageName: "User", image: image)
         } else {
-            imageManager.deleteImage(imageName: "User")
+            presenter?.deleteImage(imageName: "User")
         }
         
-        // adding properties to self.user from textfields
-        user.fullname = customView.fullNameTextField.text
-        user.occupation = customView.occupationTextField.text
-        user.location = customView.locationTextField.text
-
+        presenter?.user.fullname = customView.fullNameTextField.text
+        presenter?.user.occupation = customView.occupationTextField.text
+        presenter?.user.location = customView.locationTextField.text
+        
         tryToSaveData()
     }
     
@@ -183,14 +157,14 @@ final class ProfileViewController: UIViewController {
         spinner.startAnimating()
         
         // block buttons and fields
-        isSomethingChanged = false
+        customView.saveGCDButton.isEnabled = false
         customView.cancelButton.isEnabled = false
         customView.fullNameTextField.isEnabled = false
         customView.occupationTextField.isEnabled = false
         customView.locationTextField.isEnabled = false
         
         // saving to file
-        fileManager.writeToFile(user) { [weak self] success in
+        presenter?.saveUser { [weak self] success in
             guard let self = self else { return }
             // remove activity indicator
             spinner.stopAnimating()
@@ -212,7 +186,7 @@ final class ProfileViewController: UIViewController {
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.setupUIIfEditingAllowedIs(false)
+            self.customView.setupUIIfEditingAllowedIs(false)
             self.customView.cancelButton.isEnabled = true
         }))
         
@@ -224,8 +198,9 @@ final class ProfileViewController: UIViewController {
         
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
             guard let self = self else { return }
-            self.restoreUserData()
-            self.setupUIIfEditingAllowedIs(false)
+            self.presenter?.onViewDidLoad()
+            self.customView.saveGCDButton.isEnabled = false
+            self.customView.setupUIIfEditingAllowedIs(false)
             self.customView.cancelButton.isEnabled = true
         }))
         
@@ -255,10 +230,16 @@ final class ProfileViewController: UIViewController {
         }
         alertVC.addAction(libraryButton)
         
+        let networkButton = UIAlertAction(title: "Find in network...", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.networkPickerButtonTapped()
+        }
+        alertVC.addAction(networkButton)
+        
         let deleteButton = UIAlertAction(title: "Delete photo", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
             self.customView.profileImageView.image = UIImage(systemName: "person.circle")
-            self.isSomethingChanged = true
+            self.customView.saveGCDButton.isEnabled = true
         }
         
         // if there is a profile photo then add a delete button
@@ -271,6 +252,11 @@ final class ProfileViewController: UIViewController {
         
         present(alertVC, animated: true, completion: nil)
     }
+    
+    func networkPickerButtonTapped() {
+        presenter?.networkPickerButtonTapped()
+    }
+    
 }
 
 // MARK: - Delegates
@@ -289,7 +275,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         if let selectedImage = info[.editedImage] as? UIImage {
             customView.profileImageView.image = selectedImage
-            isSomethingChanged = true
+            customView.saveGCDButton.isEnabled = true
         }
         picker.dismiss(animated: true)
     }
@@ -304,7 +290,7 @@ extension ProfileViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        isSomethingChanged = true
+        customView.saveGCDButton.isEnabled = true
         let text = (textField.text ?? "") + string
         
         let result: String

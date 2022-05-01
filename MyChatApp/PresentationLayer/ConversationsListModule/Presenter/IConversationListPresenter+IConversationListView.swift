@@ -1,5 +1,5 @@
 //
-//  ConversationListPresenting+ConversationListPresentable.swift
+//  IConversationListPresenter+IConversationListView.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -8,21 +8,21 @@
 import Foundation
 import CoreData
 
-protocol ConversationListPresenting: AnyObject {
+protocol IConversationListPresenter: AnyObject {
     
-    var coreDataManager: DataBaseService { get }
+    var coreDataManager: IDataBaseService { get }
     var firestoreManager: FirestoreService { get }
     var themePicker: ThemeService { get }
     
-    init(view: ConversationListPresentable,
-         coreDataManager: DataBaseService,
+    init(view: IConversationListView,
+         coreDataManager: IDataBaseService,
          firestoreManager: FirestoreService,
          themePicker: ThemeService,
-         router: Routing)
+         router: IRouter)
     
-    func viewDidLoad()
+    func onViewDidLoad()
     
-    func viewDidAppear()
+    func onViewDidAppear()
     
     func newChannelCreationDidConfirm(with title: String)
     
@@ -36,4 +36,4 @@ protocol ConversationListPresenting: AnyObject {
     
 }
 
-protocol ConversationListPresentable: NSFetchedResultsControllerDelegate {}
+protocol IConversationListView: NSFetchedResultsControllerDelegate {}

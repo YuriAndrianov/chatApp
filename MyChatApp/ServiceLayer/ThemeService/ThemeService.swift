@@ -9,11 +9,11 @@ import Foundation
 
 protocol ThemeService: AnyObject {
     
-    var currentTheme: Theme? { get }
+    var currentTheme: ITheme? { get }
     
     func applySavedTheme()
     
-    func apply(_ theme: ThemeType, completion: ((Theme) -> Void)?)
+    func apply(_ theme: ThemeType, completion: ((ITheme) -> Void)?)
     
 }
 

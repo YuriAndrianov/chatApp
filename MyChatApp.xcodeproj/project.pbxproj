@@ -15,23 +15,35 @@
 		E2561C8B27D63D0D00EBD365 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C8A27D63D0D00EBD365 /* ConversationViewController.swift */; };
 		E25CF52A28089119002D166F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E25CF52928089118002D166F /* GoogleService-Info.plist */; };
 		E25CF52C28089B33002D166F /* DebugOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF52B28089B33002D166F /* DebugOptions.swift */; };
-		E25CF52F28089E43002D166F /* DataBaseChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF52E28089E43002D166F /* DataBaseChatManager.swift */; };
+		E25CF52F28089E43002D166F /* DataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF52E28089E43002D166F /* DataBaseService.swift */; };
 		E25CF53228089EDC002D166F /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF53128089EDC002D166F /* CoreDataStack.swift */; };
 		E25CF53428089FD4002D166F /* NewCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF53328089FD4002D166F /* NewCoreDataStack.swift */; };
-		E25CF537280B4436002D166F /* ModuleBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF536280B4436002D166F /* ModuleBuilder.swift */; };
+		E25CF537280B4436002D166F /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF536280B4436002D166F /* Assembly.swift */; };
 		E25CF53A280B44C3002D166F /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF539280B44C3002D166F /* Router.swift */; };
 		E25CF53C280B4851002D166F /* ConversationListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF53B280B4851002D166F /* ConversationListPresenter.swift */; };
 		E25CF53E280BF293002D166F /* ConversationPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF53D280BF293002D166F /* ConversationPresenter.swift */; };
 		E25CF54C280C22DD002D166F /* MyProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF54B280C22DD002D166F /* MyProfileView.swift */; };
-		E25CF54F280C3986002D166F /* Building.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF54E280C3986002D166F /* Building.swift */; };
-		E25CF551280C39B8002D166F /* Routing.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF550280C39B8002D166F /* Routing.swift */; };
+		E25CF54F280C3986002D166F /* IAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF54E280C3986002D166F /* IAssembly.swift */; };
+		E25CF551280C39B8002D166F /* IRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF550280C39B8002D166F /* IRouter.swift */; };
 		E25CF553280C39E6002D166F /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF552280C39E6002D166F /* ThemeService.swift */; };
 		E25CF555280C3A28002D166F /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF554280C3A28002D166F /* ImageService.swift */; };
 		E25CF557280C3A4E002D166F /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF556280C3A4E002D166F /* FirestoreService.swift */; };
-		E25CF559280C3A93002D166F /* DataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF558280C3A93002D166F /* DataBaseService.swift */; };
-		E25CF55B280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55A280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift */; };
-		E25CF55D280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55C280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift */; };
+		E25CF559280C3A93002D166F /* IDataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF558280C3A93002D166F /* IDataBaseService.swift */; };
+		E25CF55B280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55A280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift */; };
+		E25CF55D280C3B51002D166F /* IConversationPresenter+IConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55C280C3B51002D166F /* IConversationPresenter+IConversationView.swift */; };
 		E25CF5612811CEE8002D166F /* BaseChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5602811CEE8002D166F /* BaseChatViewController.swift */; };
+		E25CF56428186779002D166F /* IProfilePresenter+IProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF56328186779002D166F /* IProfilePresenter+IProfileView.swift */; };
+		E25CF56628186AD5002D166F /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF56528186AD5002D166F /* ProfilePresenter.swift */; };
+		E25CF56928187EB8002D166F /* NetworkPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF56828187EB8002D166F /* NetworkPickerViewController.swift */; };
+		E25CF56E2818808A002D166F /* PhotoImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF56D2818808A002D166F /* PhotoImageView.swift */; };
+		E25CF5732818877C002D166F /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5712818877C002D166F /* PhotoCollectionViewCell.swift */; };
+		E25CF5742818877C002D166F /* PhotoCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25CF5722818877C002D166F /* PhotoCollectionViewCell.xib */; };
+		E25CF5782819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5772819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift */; };
+		E25CF57B28199144002D166F /* INetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF57A28199144002D166F /* INetworkService.swift */; };
+		E25CF57E281994C7002D166F /* PhotoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF57D281994C7002D166F /* PhotoFetcher.swift */; };
+		E25CF5832819C292002D166F /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5822819C292002D166F /* CustomError.swift */; };
+		E25CF5862819C3EC002D166F /* PhotoResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5852819C3EC002D166F /* PhotoResponse.swift */; };
+		E25CF5882819C6B7002D166F /* NetworkPickerPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF5872819C6B7002D166F /* NetworkPickerPresenter.swift */; };
 		E25D36AE27D644D900E6A746 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36AD27D644D900E6A746 /* Message.swift */; };
 		E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */; };
 		E25D36B627D67B3900E6A746 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */; };
@@ -40,7 +52,7 @@
 		E25D371727DCBF0700E6A746 /* CustomThemeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D371627DCBF0700E6A746 /* CustomThemeView.swift */; };
 		E25D371927DCBF5F00E6A746 /* CustomThemeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E25D371827DCBF5E00E6A746 /* CustomThemeView.xib */; };
 		E25D371C27DCC00500E6A746 /* Themes.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E25D371B27DCC00500E6A746 /* Themes.xcassets */; };
-		E25D372427DCD50E00E6A746 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372327DCD50E00E6A746 /* Theme.swift */; };
+		E25D372427DCD50E00E6A746 /* ITheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372327DCD50E00E6A746 /* ITheme.swift */; };
 		E25D372627DCD70300E6A746 /* ClassicTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372527DCD70300E6A746 /* ClassicTheme.swift */; };
 		E25D372827DCD71000E6A746 /* DayTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372727DCD71000E6A746 /* DayTheme.swift */; };
 		E25D372A27DCD71C00E6A746 /* NightTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D372927DCD71C00E6A746 /* NightTheme.swift */; };
@@ -83,23 +95,35 @@
 		E2561C8A27D63D0D00EBD365 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		E25CF52928089118002D166F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E25CF52B28089B33002D166F /* DebugOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugOptions.swift; sourceTree = "<group>"; };
-		E25CF52E28089E43002D166F /* DataBaseChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseChatManager.swift; sourceTree = "<group>"; };
+		E25CF52E28089E43002D166F /* DataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseService.swift; sourceTree = "<group>"; };
 		E25CF53128089EDC002D166F /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		E25CF53328089FD4002D166F /* NewCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCoreDataStack.swift; sourceTree = "<group>"; };
-		E25CF536280B4436002D166F /* ModuleBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModuleBuilder.swift; sourceTree = "<group>"; };
+		E25CF536280B4436002D166F /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
 		E25CF539280B44C3002D166F /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		E25CF53B280B4851002D166F /* ConversationListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListPresenter.swift; sourceTree = "<group>"; };
 		E25CF53D280BF293002D166F /* ConversationPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationPresenter.swift; sourceTree = "<group>"; };
 		E25CF54B280C22DD002D166F /* MyProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileView.swift; sourceTree = "<group>"; };
-		E25CF54E280C3986002D166F /* Building.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Building.swift; sourceTree = "<group>"; };
-		E25CF550280C39B8002D166F /* Routing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routing.swift; sourceTree = "<group>"; };
+		E25CF54E280C3986002D166F /* IAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAssembly.swift; sourceTree = "<group>"; };
+		E25CF550280C39B8002D166F /* IRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRouter.swift; sourceTree = "<group>"; };
 		E25CF552280C39E6002D166F /* ThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeService.swift; sourceTree = "<group>"; };
 		E25CF554280C3A28002D166F /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		E25CF556280C3A4E002D166F /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
-		E25CF558280C3A93002D166F /* DataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseService.swift; sourceTree = "<group>"; };
-		E25CF55A280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationListPresenting+ConversationListPresentable.swift"; sourceTree = "<group>"; };
-		E25CF55C280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConversationPresenting+ConversationPresentable.swift"; sourceTree = "<group>"; };
+		E25CF558280C3A93002D166F /* IDataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDataBaseService.swift; sourceTree = "<group>"; };
+		E25CF55A280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IConversationListPresenter+IConversationListView.swift"; sourceTree = "<group>"; };
+		E25CF55C280C3B51002D166F /* IConversationPresenter+IConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IConversationPresenter+IConversationView.swift"; sourceTree = "<group>"; };
 		E25CF5602811CEE8002D166F /* BaseChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseChatViewController.swift; sourceTree = "<group>"; };
+		E25CF56328186779002D166F /* IProfilePresenter+IProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IProfilePresenter+IProfileView.swift"; sourceTree = "<group>"; };
+		E25CF56528186AD5002D166F /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		E25CF56828187EB8002D166F /* NetworkPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPickerViewController.swift; sourceTree = "<group>"; };
+		E25CF56D2818808A002D166F /* PhotoImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoImageView.swift; sourceTree = "<group>"; };
+		E25CF5712818877C002D166F /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		E25CF5722818877C002D166F /* PhotoCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotoCollectionViewCell.xib; sourceTree = "<group>"; };
+		E25CF5772819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INetworkPickerPresenter+INetworkPickerView.swift"; sourceTree = "<group>"; };
+		E25CF57A28199144002D166F /* INetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = INetworkService.swift; sourceTree = "<group>"; };
+		E25CF57D281994C7002D166F /* PhotoFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFetcher.swift; sourceTree = "<group>"; };
+		E25CF5822819C292002D166F /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
+		E25CF5852819C3EC002D166F /* PhotoResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoResponse.swift; sourceTree = "<group>"; };
+		E25CF5872819C6B7002D166F /* NetworkPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkPickerPresenter.swift; sourceTree = "<group>"; };
 		E25D36AD27D644D900E6A746 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		E25D36B327D67B3900E6A746 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		E25D36B427D67B3900E6A746 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
@@ -108,7 +132,7 @@
 		E25D371627DCBF0700E6A746 /* CustomThemeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomThemeView.swift; sourceTree = "<group>"; };
 		E25D371827DCBF5E00E6A746 /* CustomThemeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomThemeView.xib; sourceTree = "<group>"; };
 		E25D371B27DCC00500E6A746 /* Themes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Themes.xcassets; sourceTree = "<group>"; };
-		E25D372327DCD50E00E6A746 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		E25D372327DCD50E00E6A746 /* ITheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITheme.swift; sourceTree = "<group>"; };
 		E25D372527DCD70300E6A746 /* ClassicTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassicTheme.swift; sourceTree = "<group>"; };
 		E25D372727DCD71000E6A746 /* DayTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayTheme.swift; sourceTree = "<group>"; };
 		E25D372927DCD71C00E6A746 /* NightTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightTheme.swift; sourceTree = "<group>"; };
@@ -186,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				E25CF548280C093F002D166F /* View */,
+				E25CF562281866A9002D166F /* Presenter */,
 			);
 			path = ProfileModule;
 			sourceTree = "<group>";
@@ -216,6 +241,7 @@
 				E2E756BE27F06C2D0041279A /* Channel.swift */,
 				E25D36AD27D644D900E6A746 /* Message.swift */,
 				E28DE38727E644E3009D9300 /* User.swift */,
+				E25CF5852819C3EC002D166F /* PhotoResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -232,8 +258,8 @@
 		E25CF52D28089DFE002D166F /* DataBaseSevice */ = {
 			isa = PBXGroup;
 			children = (
-				E25CF52E28089E43002D166F /* DataBaseChatManager.swift */,
-				E25CF558280C3A93002D166F /* DataBaseService.swift */,
+				E25CF52E28089E43002D166F /* DataBaseService.swift */,
+				E25CF558280C3A93002D166F /* IDataBaseService.swift */,
 			);
 			path = DataBaseSevice;
 			sourceTree = "<group>";
@@ -247,20 +273,20 @@
 			path = CoreDataStack;
 			sourceTree = "<group>";
 		};
-		E25CF535280B441F002D166F /* ModuleBuilder */ = {
+		E25CF535280B441F002D166F /* Assembly */ = {
 			isa = PBXGroup;
 			children = (
-				E25CF536280B4436002D166F /* ModuleBuilder.swift */,
-				E25CF54E280C3986002D166F /* Building.swift */,
+				E25CF536280B4436002D166F /* Assembly.swift */,
+				E25CF54E280C3986002D166F /* IAssembly.swift */,
 			);
-			path = ModuleBuilder;
+			path = Assembly;
 			sourceTree = "<group>";
 		};
 		E25CF538280B44B4002D166F /* Router */ = {
 			isa = PBXGroup;
 			children = (
 				E25CF539280B44C3002D166F /* Router.swift */,
-				E25CF550280C39B8002D166F /* Routing.swift */,
+				E25CF550280C39B8002D166F /* IRouter.swift */,
 			);
 			path = Router;
 			sourceTree = "<group>";
@@ -268,11 +294,13 @@
 		E25CF53F280C079B002D166F /* PresentationLayer */ = {
 			isa = PBXGroup;
 			children = (
-				E25CF535280B441F002D166F /* ModuleBuilder */,
+				E25CF5842819C2AD002D166F /* Common */,
+				E25CF535280B441F002D166F /* Assembly */,
 				E25CF538280B44B4002D166F /* Router */,
 				E2561C8327D60CDC00EBD365 /* ConversationsListModule */,
 				E2561C8C27D63D1100EBD365 /* ConversationModule */,
 				E2561C8427D60CEE00EBD365 /* ProfileModule */,
+				E25CF56728187E7E002D166F /* NetworkPickerModule */,
 				E25D371327DBBCA500E6A746 /* SettingsModule */,
 				E2561C8727D60D6200EBD365 /* Models */,
 			);
@@ -282,6 +310,7 @@
 		E25CF540280C07AC002D166F /* ServiceLayer */ = {
 			isa = PBXGroup;
 			children = (
+				E25CF57C281994B0002D166F /* PhotoFetcher */,
 				E25CF543280C0871002D166F /* ThemeService */,
 				E25CF542280C0865002D166F /* ImageService */,
 				E25E7A8F27FDF3C80039144D /* FirestoreService */,
@@ -296,6 +325,7 @@
 			children = (
 				E25CF53028089EBB002D166F /* CoreDataStack */,
 				E25E7A8827F9A4B00039144D /* CoreDataManager */,
+				E25CF579281990DD002D166F /* NetworkService */,
 			);
 			path = CoreLayer;
 			sourceTree = "<group>";
@@ -331,7 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				E25CF53B280B4851002D166F /* ConversationListPresenter.swift */,
-				E25CF55A280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift */,
+				E25CF55A280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -350,7 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				E25CF53D280BF293002D166F /* ConversationPresenter.swift */,
-				E25CF55C280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift */,
+				E25CF55C280C3B51002D166F /* IConversationPresenter+IConversationView.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -372,6 +402,77 @@
 				E2E756B227EE2F2C0041279A /* CustomViews */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		E25CF562281866A9002D166F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF56528186AD5002D166F /* ProfilePresenter.swift */,
+				E25CF56328186779002D166F /* IProfilePresenter+IProfileView.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E25CF56728187E7E002D166F /* NetworkPickerModule */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF57528198F78002D166F /* View */,
+				E25CF57628198FFB002D166F /* Presenter */,
+			);
+			path = NetworkPickerModule;
+			sourceTree = "<group>";
+		};
+		E25CF56A28187F83002D166F /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF5712818877C002D166F /* PhotoCollectionViewCell.swift */,
+				E25CF5722818877C002D166F /* PhotoCollectionViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		E25CF57528198F78002D166F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF56A28187F83002D166F /* Cell */,
+				E25CF56828187EB8002D166F /* NetworkPickerViewController.swift */,
+				E25CF56D2818808A002D166F /* PhotoImageView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E25CF57628198FFB002D166F /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF5772819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift */,
+				E25CF5872819C6B7002D166F /* NetworkPickerPresenter.swift */,
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		E25CF579281990DD002D166F /* NetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF57A28199144002D166F /* INetworkService.swift */,
+			);
+			path = NetworkService;
+			sourceTree = "<group>";
+		};
+		E25CF57C281994B0002D166F /* PhotoFetcher */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF57D281994C7002D166F /* PhotoFetcher.swift */,
+			);
+			path = PhotoFetcher;
+			sourceTree = "<group>";
+		};
+		E25CF5842819C2AD002D166F /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
+				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		E25D36AC27D642CE00E6A746 /* Cell */ = {
@@ -396,7 +497,7 @@
 			children = (
 				FAC70C7327C61149000417F5 /* Assets.xcassets */,
 				E25D371B27DCC00500E6A746 /* Themes.xcassets */,
-				E25D372327DCD50E00E6A746 /* Theme.swift */,
+				E25D372327DCD50E00E6A746 /* ITheme.swift */,
 				E25D372527DCD70300E6A746 /* ClassicTheme.swift */,
 				E25D372727DCD71000E6A746 /* DayTheme.swift */,
 				E25D372927DCD71C00E6A746 /* NightTheme.swift */,
@@ -415,9 +516,8 @@
 		E25D373427DF5DB300E6A746 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
-				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
 				E25CF52B28089B33002D166F /* DebugOptions.swift */,
+				E25CF5822819C292002D166F /* CustomError.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -572,6 +672,7 @@
 				FAC70C7427C61149000417F5 /* Assets.xcassets in Resources */,
 				E25CF52A28089119002D166F /* GoogleService-Info.plist in Resources */,
 				E2E7568527EB8C9F0041279A /* ThemeButton.xib in Resources */,
+				E25CF5742818877C002D166F /* PhotoCollectionViewCell.xib in Resources */,
 				E2E756BB27EE32D60041279A /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -642,23 +743,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E25CF55D280C3B51002D166F /* ConversationPresenting+ConversationPresentable.swift in Sources */,
+				E25CF55D280C3B51002D166F /* IConversationPresenter+IConversationView.swift in Sources */,
 				E25CF53A280B44C3002D166F /* Router.swift in Sources */,
 				E25D372A27DCD71C00E6A746 /* NightTheme.swift in Sources */,
 				E2561C7B27D5EA5F00EBD365 /* ConversationTableViewCell.swift in Sources */,
 				E25D371727DCBF0700E6A746 /* CustomThemeView.swift in Sources */,
+				E25CF56E2818808A002D166F /* PhotoImageView.swift in Sources */,
 				E25E7A8E27FB848B0039144D /* CoreDataManager.swift in Sources */,
-				E25D372427DCD50E00E6A746 /* Theme.swift in Sources */,
-				E25CF551280C39B8002D166F /* Routing.swift in Sources */,
+				E25D372427DCD50E00E6A746 /* ITheme.swift in Sources */,
+				E25CF551280C39B8002D166F /* IRouter.swift in Sources */,
+				E25CF5862819C3EC002D166F /* PhotoResponse.swift in Sources */,
 				E25E7A8527F9A49A0039144D /* OldCoreDataManager.swift in Sources */,
 				E28DE38827E644E3009D9300 /* User.swift in Sources */,
+				E25CF56428186779002D166F /* IProfilePresenter+IProfileView.swift in Sources */,
 				E25E7A9127FE16B70039144D /* FirestoreManager.swift in Sources */,
 				E25D372827DCD71000E6A746 /* DayTheme.swift in Sources */,
 				FAC70C6F27C61143000417F5 /* ProfileViewController.swift in Sources */,
 				E25E7A8727F9A4A80039144D /* NewCoreDataManager.swift in Sources */,
 				E28DE39327E79665009D9300 /* DataManagerOperation.swift in Sources */,
 				E2561C8B27D63D0D00EBD365 /* ConversationViewController.swift in Sources */,
-				E25CF55B280C3ADD002D166F /* ConversationListPresenting+ConversationListPresentable.swift in Sources */,
+				E25CF56928187EB8002D166F /* NetworkPickerViewController.swift in Sources */,
+				E25CF55B280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift in Sources */,
+				E25CF57B28199144002D166F /* INetworkService.swift in Sources */,
 				E25E7A9327FF6F470039144D /* CustomInputView.swift in Sources */,
 				E28DE38027E5FEB9009D9300 /* ImageManager.swift in Sources */,
 				E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */,
@@ -666,14 +772,16 @@
 				E28DE38227E64236009D9300 /* DataService.swift in Sources */,
 				E25E7A8C27F9E7670039144D /* NSManagedObject+init.swift in Sources */,
 				E25CF553280C39E6002D166F /* ThemeService.swift in Sources */,
+				E25CF5782819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift in Sources */,
 				E28DE38B27E76CB3009D9300 /* ProfileVCStyleSheet.swift in Sources */,
 				E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */,
 				E25CF557280C3A4E002D166F /* FirestoreService.swift in Sources */,
 				E25CF53E280BF293002D166F /* ConversationPresenter.swift in Sources */,
 				E25CF5612811CEE8002D166F /* BaseChatViewController.swift in Sources */,
-				E25CF559280C3A93002D166F /* DataBaseService.swift in Sources */,
+				E25CF559280C3A93002D166F /* IDataBaseService.swift in Sources */,
 				E28DE38F27E793FD009D9300 /* WriteToFileOperation.swift in Sources */,
 				E25CF54C280C22DD002D166F /* MyProfileView.swift in Sources */,
+				E25CF56628186AD5002D166F /* ProfilePresenter.swift in Sources */,
 				E28DE39127E795F1009D9300 /* ReadFromFileOperation.swift in Sources */,
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
 				E25D373327DF585C00E6A746 /* CustomNavigationController.swift in Sources */,
@@ -681,18 +789,22 @@
 				E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */,
 				E25CF53228089EDC002D166F /* CoreDataStack.swift in Sources */,
 				E25CF53428089FD4002D166F /* NewCoreDataStack.swift in Sources */,
-				E25CF537280B4436002D166F /* ModuleBuilder.swift in Sources */,
+				E25CF537280B4436002D166F /* Assembly.swift in Sources */,
 				E2E756BF27F06C2D0041279A /* Channel.swift in Sources */,
 				E25D36AE27D644D900E6A746 /* Message.swift in Sources */,
 				E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */,
+				E25CF5732818877C002D166F /* PhotoCollectionViewCell.swift in Sources */,
 				E25CF555280C3A28002D166F /* ImageService.swift in Sources */,
+				E25CF57E281994C7002D166F /* PhotoFetcher.swift in Sources */,
 				E25D372627DCD70300E6A746 /* ClassicTheme.swift in Sources */,
-				E25CF54F280C3986002D166F /* Building.swift in Sources */,
+				E25CF54F280C3986002D166F /* IAssembly.swift in Sources */,
+				E25CF5882819C6B7002D166F /* NetworkPickerPresenter.swift in Sources */,
 				E25CF53C280B4851002D166F /* ConversationListPresenter.swift in Sources */,
 				E25D371527DBBCDB00E6A746 /* ThemesViewController.swift in Sources */,
 				E25D372C27DCDE0500E6A746 /* ThemePicker.swift in Sources */,
+				E25CF5832819C292002D166F /* CustomError.swift in Sources */,
 				FAC70C6B27C61143000417F5 /* AppDelegate.swift in Sources */,
-				E25CF52F28089E43002D166F /* DataBaseChatManager.swift in Sources */,
+				E25CF52F28089E43002D166F /* DataBaseService.swift in Sources */,
 				E2561C8027D5FE8600EBD365 /* Date+Extensions.swift in Sources */,
 				E25E7A8327F98DCC0039144D /* MyChatApp.xcdatamodeld in Sources */,
 			);

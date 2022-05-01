@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ClassicTheme: Theme {
+final class ClassicTheme: ITheme {
     
     var backgroundColor: UIColor = UIColor(named: "classicThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "classicFontColor") ?? .label

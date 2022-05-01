@@ -7,20 +7,20 @@
 
 import Foundation
 
-final class ConversationListPresenter: ConversationListPresenting {
+final class ConversationListPresenter: IConversationListPresenter {
     
-    weak var view: ConversationListPresentable?
+    weak var view: IConversationListView?
 
-    var coreDataManager: DataBaseService
+    var coreDataManager: IDataBaseService
     var firestoreManager: FirestoreService
     var themePicker: ThemeService
-    var router: Routing
+    var router: IRouter
     
-    required init(view: ConversationListPresentable,
-                  coreDataManager: DataBaseService,
+    required init(view: IConversationListView,
+                  coreDataManager: IDataBaseService,
                   firestoreManager: FirestoreService,
                   themePicker: ThemeService,
-                  router: Routing) {
+                  router: IRouter) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
@@ -28,12 +28,12 @@ final class ConversationListPresenter: ConversationListPresenting {
         self.router = router
     }
     
-    func viewDidLoad() {
+    func onViewDidLoad() {
         guard let view = self.view else { return }
         coreDataManager.channelsFetchedResultsController.delegate = view
     }
     
-    func viewDidAppear() {
+    func onViewDidAppear() {
         fetchChannelsFromFirestore()
     }
     

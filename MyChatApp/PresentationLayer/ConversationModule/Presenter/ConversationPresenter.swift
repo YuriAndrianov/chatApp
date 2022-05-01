@@ -7,27 +7,31 @@
 
 import Foundation
 
-final class ConversationPresenter: ConversationPresenting {
+final class ConversationPresenter: IConversationPresenter {
     
-    weak var view: ConversationPresentable?
-
-    var coreDataManager: DataBaseService
+    weak var view: IConversationView?
+    
+    var coreDataManager: IDataBaseService
     var firestoreManager: FirestoreManager
     var themePicker: ThemeService
-    var router: Routing
+    var router: IRouter
     var channel: Channel
     var messageText: String? {
         didSet {
-            view?.containerView.sendButton.isEnabled = (messageText == "" || messageText == nil) ? false : true
+            view?.containerView.sendButton.isEnabled =
+            (messageText == "" || messageText == nil) ?
+            false : true
         }
     }
     
-    required init(view: ConversationPresentable,
-                  coreDataManager: DataBaseService,
-                  firestoreManager: FirestoreManager,
-                  themePicker: ThemeService,
-                  router: Routing,
-                  channel: Channel) {
+    init(
+        view: IConversationView,
+        coreDataManager: IDataBaseService,
+        firestoreManager: FirestoreManager,
+        themePicker: ThemeService,
+        router: IRouter,
+        channel: Channel
+    ) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
@@ -36,24 +40,33 @@ final class ConversationPresenter: ConversationPresenting {
         self.channel = channel
     }
     
-    func viewDidLoad() {
+    func onViewDidLoad() {
         coreDataManager.messagePredicate = NSPredicate(format: "channel.identifier == %@", channel.identifier)
         guard let view = self.view else { return }
         coreDataManager.messagesFetchedResultsController.delegate = view
     }
     
-    func viewDidAppear() {
+    func onViewDidAppear() {
         fetchMessagesFromFirestore()
     }
     
     func sendButtonTapped() {
         guard let messageText = messageText else { return }
         createNewMessage(with: messageText)
-        view?.containerView.textView.text = nil
+        deleteText()
+    }
+    
+    func attachButtonTapped() {
+        router.showNetworkPicker()
     }
     
     func sendButtonTappedWithoutUsername() {
         router.showMyProfile()
+    }
+    
+    private func deleteText() {
+        self.messageText = nil
+        view?.deleteText()
     }
     
     private func saveMessageToDB(message: Message) {

@@ -1,5 +1,5 @@
 //
-//  ConversationPresenting+ConversationPresentable.swift
+//  IConversationPresenter+IConversationView.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -8,35 +8,41 @@
 import Foundation
 import CoreData
 
-protocol ConversationPresenting: AnyObject {
+protocol IConversationPresenter: AnyObject {
     
     var channel: Channel { get set }
-    var coreDataManager: DataBaseService { get }
+    var coreDataManager: IDataBaseService { get }
     var firestoreManager: FirestoreManager { get }
     var themePicker: ThemeService { get }
     var messageText: String? { get set }
     
-    init(view: ConversationPresentable,
-         coreDataManager: DataBaseService,
+    init(view: IConversationView,
+         coreDataManager: IDataBaseService,
          firestoreManager: FirestoreManager,
          themePicker: ThemeService,
-         router: Routing,
+         router: IRouter,
          channel: Channel)
     
-    func viewDidLoad()
+    func onViewDidLoad()
     
-    func viewDidAppear()
+    func onViewDidAppear()
     
     func sendButtonTapped()
+    
+    func attachButtonTapped()
     
     func sendButtonTappedWithoutUsername()
     
 }
 
-protocol ConversationPresentable: NSFetchedResultsControllerDelegate {
+protocol IConversationView: NSFetchedResultsControllerDelegate {
     
     var containerView: CustomInputView { get set }
     
     func showNoUserAlert()
+    
+    func deleteText()
+    
+    func sendPhoto(_ url: String)
     
 }

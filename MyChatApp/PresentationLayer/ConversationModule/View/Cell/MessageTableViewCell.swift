@@ -12,7 +12,7 @@ final class MessageTableViewCell: UITableViewCell {
     static let identifier = "messageCell"
     static let nib = UINib(nibName: "MessageTableViewCell", bundle: .main)
     
-    private var currentTheme: Theme? {
+    private var currentTheme: ITheme? {
         return ThemePicker.shared.currentTheme
     }
 
@@ -23,10 +23,13 @@ final class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var bubbleView: UIView?
     @IBOutlet weak var dateLabel: UILabel?
     @IBOutlet weak var nameLabel: UILabel?
+    @IBOutlet weak var messageImageView: UIImageView!
     
     override func prepareForReuse() {
         super.prepareForReuse()
         nameLabel?.isHidden = false
+        messageTextLabel?.isHidden = false
+        messageImageView.isHidden = false
         textLabelTopConstraint?.constant = 40
         nameLabel?.text = nil
         messageTextLabel?.text = nil
@@ -58,8 +61,32 @@ final class MessageTableViewCell: UITableViewCell {
         dateLabel?.textColor = currentTheme?.fontColor
         
         nameLabel?.text = message?.senderName
-        messageTextLabel?.text = message?.content
         dateLabel?.text = message?.created.lastMessageDateFormat()
+        
+        fillWithContentFrom(message)
+    }
+    
+    private func fillWithContentFrom(_ message: Message?) {
+        if let text = message?.content {
+            if let url = URL(string: text) {
+                let networkService = NetworkService()
+                networkService.request(from: url) { [weak self] result in
+                    DispatchQueue.main.async {
+                        switch result {
+                        case .success(let data):
+                            if let image = UIImage(data: data) {
+                                self?.messageTextLabel?.isHidden = true
+                                self?.messageImageView.image = image
+                            }
+                        case .failure(let error):
+                            self?.messageImageView.isHidden = true
+                            self?.messageTextLabel?.text = "API is not supporting\n" + text
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+            } else { messageTextLabel?.text = text }
+        }
     }
     
 }

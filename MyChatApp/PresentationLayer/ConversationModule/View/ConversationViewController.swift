@@ -8,11 +8,11 @@
 import UIKit
 import CoreData
 
-final class ConversationViewController: BaseChatViewController, ConversationPresentable {
+final class ConversationViewController: BaseChatViewController, IConversationView {
     
-    var presenter: ConversationPresenting?
+    var presenter: IConversationPresenter?
     
-    private var currentTheme: Theme? {
+    private var currentTheme: ITheme? {
         return presenter?.themePicker.currentTheme
     }
     
@@ -20,6 +20,7 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
         let view = CustomInputView()
         view.sendButton.isEnabled = false
         view.sendButton.addTarget(self, action: #selector(sendButtonTapped), for: .touchUpInside)
+        view.attachButton.addTarget(self, action: #selector(attachButtonTapped), for: .touchUpInside)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -41,7 +42,7 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
         setupUI()
         setupContainerView()
         setupTableView()
-        presenter?.viewDidLoad()
+        presenter?.onViewDidLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,7 +52,7 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        presenter?.viewDidAppear()
+        presenter?.onViewDidAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,11 +108,20 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
         presenter?.sendButtonTapped()
     }
     
+    @objc private func attachButtonTapped() {
+        presenter?.attachButtonTapped()
+    }
+    
     @objc func tapToDismiss(_ sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
     
     // MARK: - Helpers
+    
+    func sendPhoto(_ url: String) {
+        containerView.textView.text = url
+        presenter?.messageText = url
+    }
     
     func showNoUserAlert() {
         let alert = UIAlertController(title: "Error",
@@ -126,6 +136,10 @@ final class ConversationViewController: BaseChatViewController, ConversationPres
         alert.addAction(goToProfileVCAction)
         
         present(alert, animated: true)
+    }
+    
+    func deleteText() {
+        containerView.textView.text = nil
     }
     
     private func registerObservers() {
