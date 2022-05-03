@@ -52,7 +52,7 @@ final class MyProfileView: UIView {
     lazy var saveGCDButton: UIButton = {
         return styleSheet.createSaveButton(withTitle: "Save")
     }()
-
+    
     lazy var editPhotoButton: UIButton = {
         return styleSheet.createEditPhotoButton()
     }()

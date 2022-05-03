@@ -8,10 +8,11 @@
 import UIKit
 
 protocol IRouter {
-
-    var navigationController: UINavigationController { get set }
+    
+    var navigationController: CustomNavigationController { get set }
+    
     var assembly: IAssembly { get set }
-
+    
     func showConversationList()
     
     func showConversation(channel: Channel)
@@ -23,5 +24,5 @@ protocol IRouter {
     func showNetworkPicker()
     
     func showMyProfileWithNewPhoto(_ newPhotoURL: String)
-
+    
 }

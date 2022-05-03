@@ -20,7 +20,7 @@ final class ConversationTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel?
     @IBOutlet weak var dateLabel: UILabel?
     @IBOutlet weak var messageLabel: UILabel?
-   
+    
     func configurate(with channel: Channel) {
         nameLabel?.text = channel.name
         dateLabel?.text = channel.lastActivity?.lastMessageDateFormat()

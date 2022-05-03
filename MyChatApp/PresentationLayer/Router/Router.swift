@@ -9,10 +9,10 @@ import UIKit
 
 final class Router: IRouter {
     
-    var navigationController: UINavigationController
+    var navigationController: CustomNavigationController
     var assembly: IAssembly
     
-    init(navigationController: UINavigationController, assembly: IAssembly) {
+    init(navigationController: CustomNavigationController, assembly: IAssembly) {
         self.navigationController = navigationController
         self.assembly = assembly
     }
@@ -35,6 +35,8 @@ final class Router: IRouter {
     func showMyProfile() {
         let profileVC = assembly.createMyProfileModule(router: self)
         let newNavVC = CustomNavigationController(rootViewController: profileVC)
+        newNavVC.modalPresentationStyle = .fullScreen
+        newNavVC.transitioningDelegate = navigationController
         navigationController.visibleViewController?.present(newNavVC, animated: true, completion: nil)
     }
     
@@ -45,13 +47,13 @@ final class Router: IRouter {
     }
     
     func showMyProfileWithNewPhoto(_ newPhotoURL: String) {
-        navigationController.visibleViewController?.dismiss(animated: true, completion: { [weak self] in
+        navigationController.visibleViewController?.dismiss(animated: true) { [weak self] in
             if let profileVC = self?.navigationController.visibleViewController as? IProfileView {
                 profileVC.setNewPhoto(newPhotoURL)
             } else if let conversationVC = self?.navigationController.visibleViewController as? IConversationView {
                 conversationVC.sendPhoto(newPhotoURL)
             }
-        })
+        }
     }
     
 }

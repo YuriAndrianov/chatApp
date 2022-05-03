@@ -42,7 +42,7 @@ final class NewCoreDataManager: CoreDataManager {
             return []
         }
     }
-
+    
     func performSave(_ block: @escaping (NSManagedObjectContext) -> Void) {
         let context = container.newBackgroundContext()
         context.perform {

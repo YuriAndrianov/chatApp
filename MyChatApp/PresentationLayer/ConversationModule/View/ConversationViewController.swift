@@ -93,7 +93,7 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.register(MessageTableViewCell.nib,
-                       forCellReuseIdentifier: MessageTableViewCell.identifier)
+                           forCellReuseIdentifier: MessageTableViewCell.identifier)
         tableView.separatorStyle = .none
         tableView.backgroundColor = currentTheme?.backgroundColor
         tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -199,7 +199,7 @@ extension ConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView
                 .dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
-                                                       for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
+                                     for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
         
         guard let dbMessage = presenter?.getMessageAtIndexPath(indexPath),
               let message = Message(dbMessage: dbMessage) else { return UITableViewCell() }

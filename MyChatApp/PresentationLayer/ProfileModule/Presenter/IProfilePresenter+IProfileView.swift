@@ -29,11 +29,11 @@ protocol IProfilePresenter: AnyObject {
     func saveImage(imageName: String, image: UIImage)
     
     func deleteImage(imageName: String)
-
+    
     func saveUser(completion: @escaping ((Bool) -> Void))
     
     func setNewPhoto(_ url: String)
-
+    
 }
 
 protocol IProfileView: AnyObject {

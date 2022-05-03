@@ -25,7 +25,7 @@ class NetworkPickerViewController: LogoAnimatableViewController, INetworkPickerV
         )
         return cv
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()

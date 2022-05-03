@@ -1,5 +1,5 @@
 //
-//  ChatTableViewController.swift
+//  BaseChatViewController.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 21.04.2022.

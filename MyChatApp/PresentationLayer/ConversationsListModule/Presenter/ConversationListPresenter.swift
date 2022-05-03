@@ -11,7 +11,7 @@ import CoreData
 final class ConversationListPresenter: IConversationListPresenter {
     
     weak var view: IConversationListView?
-
+    
     var sections: [NSFetchedResultsSectionInfo]? {
         return coreDataManager.channelsFetchedResultsController.sections
     }

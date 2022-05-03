@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AF46E55D1A64B13C449FCA02 /* Pods_MyChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */; };
 		E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E241643028217BB800072B0D /* LogoAnimatableViewController.swift */; };
+		E24164332821A86D00072B0D /* MyCustomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164322821A86D00072B0D /* MyCustomTransition.swift */; };
 		E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */; };
 		E2561C7B27D5EA5F00EBD365 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */; };
 		E2561C7C27D5EA6000EBD365 /* ConversationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */; };
@@ -27,7 +28,7 @@
 		E25CF54F280C3986002D166F /* IAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF54E280C3986002D166F /* IAssembly.swift */; };
 		E25CF551280C39B8002D166F /* IRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF550280C39B8002D166F /* IRouter.swift */; };
 		E25CF553280C39E6002D166F /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF552280C39E6002D166F /* ThemeService.swift */; };
-		E25CF555280C3A28002D166F /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF554280C3A28002D166F /* ImageService.swift */; };
+		E25CF555280C3A28002D166F /* IImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF554280C3A28002D166F /* IImageService.swift */; };
 		E25CF557280C3A4E002D166F /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF556280C3A4E002D166F /* FirestoreService.swift */; };
 		E25CF559280C3A93002D166F /* IDataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF558280C3A93002D166F /* IDataBaseService.swift */; };
 		E25CF55B280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF55A280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift */; };
@@ -67,7 +68,7 @@
 		E25E7A8E27FB848B0039144D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A8D27FB848B0039144D /* CoreDataManager.swift */; };
 		E25E7A9127FE16B70039144D /* FirestoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A9027FE16B70039144D /* FirestoreManager.swift */; };
 		E25E7A9327FF6F470039144D /* CustomInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25E7A9227FF6F460039144D /* CustomInputView.swift */; };
-		E28DE38027E5FEB9009D9300 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE37F27E5FEB9009D9300 /* ImageManager.swift */; };
+		E28DE38027E5FEB9009D9300 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE37F27E5FEB9009D9300 /* ImageService.swift */; };
 		E28DE38227E64236009D9300 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38127E64236009D9300 /* DataService.swift */; };
 		E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38327E642AB009D9300 /* DataManagerGCD.swift */; };
 		E28DE38827E644E3009D9300 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28DE38727E644E3009D9300 /* User.swift */; };
@@ -90,6 +91,7 @@
 		2653342538C497B9B081412B /* Pods-MyChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyChatApp.debug.xcconfig"; path = "Target Support Files/Pods-MyChatApp/Pods-MyChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E241643028217BB800072B0D /* LogoAnimatableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoAnimatableViewController.swift; sourceTree = "<group>"; };
+		E24164322821A86D00072B0D /* MyCustomTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCustomTransition.swift; sourceTree = "<group>"; };
 		E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
@@ -108,7 +110,7 @@
 		E25CF54E280C3986002D166F /* IAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAssembly.swift; sourceTree = "<group>"; };
 		E25CF550280C39B8002D166F /* IRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRouter.swift; sourceTree = "<group>"; };
 		E25CF552280C39E6002D166F /* ThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeService.swift; sourceTree = "<group>"; };
-		E25CF554280C3A28002D166F /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		E25CF554280C3A28002D166F /* IImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IImageService.swift; sourceTree = "<group>"; };
 		E25CF556280C3A4E002D166F /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E25CF558280C3A93002D166F /* IDataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDataBaseService.swift; sourceTree = "<group>"; };
 		E25CF55A280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IConversationListPresenter+IConversationListView.swift"; sourceTree = "<group>"; };
@@ -148,7 +150,7 @@
 		E25E7A8D27FB848B0039144D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		E25E7A9027FE16B70039144D /* FirestoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreManager.swift; sourceTree = "<group>"; };
 		E25E7A9227FF6F460039144D /* CustomInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomInputView.swift; sourceTree = "<group>"; };
-		E28DE37F27E5FEB9009D9300 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		E28DE37F27E5FEB9009D9300 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		E28DE38127E64236009D9300 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		E28DE38327E642AB009D9300 /* DataManagerGCD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManagerGCD.swift; sourceTree = "<group>"; };
 		E28DE38727E644E3009D9300 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -335,8 +337,8 @@
 		E25CF542280C0865002D166F /* ImageService */ = {
 			isa = PBXGroup;
 			children = (
-				E28DE37F27E5FEB9009D9300 /* ImageManager.swift */,
-				E25CF554280C3A28002D166F /* ImageService.swift */,
+				E28DE37F27E5FEB9009D9300 /* ImageService.swift */,
+				E25CF554280C3A28002D166F /* IImageService.swift */,
 			);
 			path = ImageService;
 			sourceTree = "<group>";
@@ -474,6 +476,7 @@
 				E241643028217BB800072B0D /* LogoAnimatableViewController.swift */,
 				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
 				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
+				E24164322821A86D00072B0D /* MyCustomTransition.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -758,6 +761,7 @@
 				E25CF5862819C3EC002D166F /* PhotoResponse.swift in Sources */,
 				E25E7A8527F9A49A0039144D /* OldCoreDataManager.swift in Sources */,
 				E28DE38827E644E3009D9300 /* User.swift in Sources */,
+				E24164332821A86D00072B0D /* MyCustomTransition.swift in Sources */,
 				E25CF56428186779002D166F /* IProfilePresenter+IProfileView.swift in Sources */,
 				E25E7A9127FE16B70039144D /* FirestoreManager.swift in Sources */,
 				E25D372827DCD71000E6A746 /* DayTheme.swift in Sources */,
@@ -769,7 +773,7 @@
 				E25CF55B280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift in Sources */,
 				E25CF57B28199144002D166F /* INetworkService.swift in Sources */,
 				E25E7A9327FF6F470039144D /* CustomInputView.swift in Sources */,
-				E28DE38027E5FEB9009D9300 /* ImageManager.swift in Sources */,
+				E28DE38027E5FEB9009D9300 /* ImageService.swift in Sources */,
 				E25D36B527D67B3900E6A746 /* MessageTableViewCell.swift in Sources */,
 				E25CF52C28089B33002D166F /* DebugOptions.swift in Sources */,
 				E28DE38227E64236009D9300 /* DataService.swift in Sources */,
@@ -798,7 +802,7 @@
 				E25D36AE27D644D900E6A746 /* Message.swift in Sources */,
 				E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */,
 				E25CF5732818877C002D166F /* PhotoCollectionViewCell.swift in Sources */,
-				E25CF555280C3A28002D166F /* ImageService.swift in Sources */,
+				E25CF555280C3A28002D166F /* IImageService.swift in Sources */,
 				E25CF57E281994C7002D166F /* PhotoFetcher.swift in Sources */,
 				E25D372627DCD70300E6A746 /* ClassicTheme.swift in Sources */,
 				E25CF54F280C3986002D166F /* IAssembly.swift in Sources */,

@@ -14,7 +14,7 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     
     private var tableView: UITableView
     private var themePicker: ThemeService
-
+    
     private var currentTheme: ITheme? {
         return themePicker.currentTheme
     }
@@ -26,7 +26,7 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     }
     
     // MARK: - Lifecycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavBar()
@@ -77,7 +77,7 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     private func setupTableView() {
         tableView.backgroundColor = currentTheme?.backgroundColor
         tableView.register(ConversationTableViewCell.nib,
-                       forCellReuseIdentifier: ConversationTableViewCell.identifier)
+                           forCellReuseIdentifier: ConversationTableViewCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
         view.addSubview(tableView)

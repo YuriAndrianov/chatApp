@@ -69,7 +69,7 @@ final class ThemesViewController: UIViewController {
         [classicThemeView.tapGesture, dayThemeView.tapGesture, nightThemeView.tapGesture].forEach {
             $0?.addTarget(self, action: #selector(themeChosen(_:)))
         }
-
+        
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([

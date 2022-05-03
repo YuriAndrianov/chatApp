@@ -41,7 +41,7 @@ class LogoAnimatableViewController: UIViewController {
         return cell
     }()
     
-    @objc func animate(_ sender: UILongPressGestureRecognizer) {
+    @objc private func animate(_ sender: UILongPressGestureRecognizer) {
         switch sender.state {
         case .began:
             let position = sender.location(in: view)

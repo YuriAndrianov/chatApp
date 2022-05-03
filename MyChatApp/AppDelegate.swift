@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let assembly = Assembly()
         let router = Router(navigationController: navController, assembly: assembly)
         router.showConversationList()
-       
+        
         ThemePicker.shared.applySavedTheme()
         FirebaseApp.configure()
         

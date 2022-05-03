@@ -19,10 +19,10 @@ final class Assembly: IAssembly {
                                                   firestoreManager: firestoreManager,
                                                   router: router)
         view.presenter = presenter
-
+        
         return view
     }
-
+    
     func createConversationModule(channel: Channel, router: IRouter) -> UIViewController {
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
@@ -36,7 +36,7 @@ final class Assembly: IAssembly {
                                               router: router,
                                               channel: channel)
         view.presenter = presenter
-
+        
         return view
         
     }
@@ -50,7 +50,7 @@ final class Assembly: IAssembly {
         let view = ProfileViewController()
         
         let fileManager = DataManagerGCD.shared
-        let imageManager = ImageManager.shared
+        let imageManager = ImageService.shared
         let themePicker = ThemePicker.shared
         let presenter = ProfilePresenter(view: view,
                                          fileManager: fileManager,
