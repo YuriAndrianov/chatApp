@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class BaseChatViewController: UIViewController {
+class BaseChatViewController: LogoAnimatableViewController {
     
     private var tableView: UITableView
     private var themePicker: ThemeService

@@ -12,6 +12,10 @@ final class MyProfileView: UIView {
     private let styleSheet = ProfileVCStyleSheet()
     let scrollView = UIScrollView()
     
+    var shouldAnimateEditPhotoButton = false {
+        didSet { shouldAnimateEditPhotoButton ? startAnimation() : stopAnimation() }
+    }
+    
     var isLargeScreenDevice: Bool {
         // check if current device is not iPhone SE (1 gen)
         return UIScreen.main.bounds.width > 375
@@ -131,36 +135,78 @@ final class MyProfileView: UIView {
         return styleSheet.createSpinner()
     }
     
-    func setupUIIfEditingAllowedIs(_ bool: Bool) {
+    func blockButtonsAndFields() {
+        saveGCDButton.isEnabled = false
+        cancelButton.isEnabled = false
+        fullNameTextField.isEnabled = false
+        occupationTextField.isEnabled = false
+        locationTextField.isEnabled = false
+    }
+    
+    func setup(editingAllowed bool: Bool) {
         // Turns true when edit button tapped and false when save button tapped
-        if bool {
-            fullNameTextField.isEnabled = true
-            occupationTextField.isEnabled = true
-            locationTextField.isEnabled = true
-            fullNameTextField.becomeFirstResponder()
-            UIView.animate(withDuration: 0.2) {
-                self.editButton.alpha = 0
-                self.cancelButton.alpha = 1
-                self.editPhotoButton.alpha = 1
-                self.saveGCDButton.alpha = 1
-                self.fullNameTextField.layer.borderWidth = 1
-                self.occupationTextField.layer.borderWidth = 1
-                self.locationTextField.layer.borderWidth = 1
-            }
-        } else {
-            fullNameTextField.isEnabled = false
-            occupationTextField.isEnabled = false
-            locationTextField.isEnabled = false
-            UIView.animate(withDuration: 0.2) {
-                self.editButton.alpha = 1
-                self.cancelButton.alpha = 0
-                self.editPhotoButton.alpha = 0
-                self.saveGCDButton.alpha = 0
-                self.fullNameTextField.layer.borderWidth = 0
-                self.occupationTextField.layer.borderWidth = 0
-                self.locationTextField.layer.borderWidth = 0
-            }
+        let isOn: CGFloat = bool ? 1 : 0
+        let isOff: CGFloat = bool ? 0 : 1
+        
+        fullNameTextField.isEnabled = bool
+        occupationTextField.isEnabled = bool
+        locationTextField.isEnabled = bool
+        fullNameTextField.becomeFirstResponder()
+        
+        UIView.animate(withDuration: 0.2) {
+            self.editButton.alpha = isOff
+            self.cancelButton.alpha = isOn
+            self.editPhotoButton.alpha = isOn
+            self.saveGCDButton.alpha = isOn
+            self.fullNameTextField.layer.borderWidth = isOn
+            self.occupationTextField.layer.borderWidth = isOn
+            self.locationTextField.layer.borderWidth = isOn
         }
+    }
+    
+    private func startAnimation() {
+        let rotate = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotate.toValue = NSNumber(value: Double.pi / 10)
+        rotate.fromValue = NSNumber(value: -Double.pi / 10)
+        
+        let shakeX = CABasicAnimation(keyPath: "position.x")
+        shakeX.toValue = editPhotoButton.layer.position.x + 5
+        shakeX.fromValue = editPhotoButton.layer.position.x - 5
+        
+        let shakeY = CABasicAnimation(keyPath: "position.y")
+        shakeY.toValue = editPhotoButton.layer.position.y - 5
+        shakeY.fromValue = editPhotoButton.layer.position.y + 5
+        
+        let group = CAAnimationGroup()
+        group.duration = 0.3
+        group.repeatCount = .infinity
+        group.autoreverses = true
+        group.isRemovedOnCompletion = true
+        group.animations = [rotate, shakeX, shakeY]
+        
+        editPhotoButton.layer.add(group, forKey: nil)
+    }
+    
+    private func stopAnimation() {
+        let stopRotate = CABasicAnimation(keyPath: "transform.rotation.z")
+        stopRotate.toValue = NSNumber(value: 0)
+        stopRotate.fromValue = editPhotoButton.layer.zPosition
+        
+        let stopShakeX = CABasicAnimation(keyPath: "position.x")
+        stopShakeX.toValue = editPhotoButton.center.x
+        stopShakeX.fromValue = editPhotoButton.layer.position.x
+        
+        let stopShakeY = CABasicAnimation(keyPath: "position.y")
+        stopShakeY.toValue = editPhotoButton.center.y
+        stopShakeY.fromValue = editPhotoButton.layer.position.y
+        
+        let stopGroup = CAAnimationGroup()
+        stopGroup.duration = 5
+        stopGroup.repeatCount = .infinity
+        stopGroup.isRemovedOnCompletion = true
+        stopGroup.animations = [stopRotate, stopShakeX, stopShakeY]
+        
+        editPhotoButton.layer.add(stopGroup, forKey: nil)
     }
     
 }

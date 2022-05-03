@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AF46E55D1A64B13C449FCA02 /* Pods_MyChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */; };
+		E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E241643028217BB800072B0D /* LogoAnimatableViewController.swift */; };
 		E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */; };
 		E2561C7B27D5EA5F00EBD365 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */; };
 		E2561C7C27D5EA6000EBD365 /* ConversationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */; };
@@ -88,6 +89,7 @@
 /* Begin PBXFileReference section */
 		2653342538C497B9B081412B /* Pods-MyChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyChatApp.debug.xcconfig"; path = "Target Support Files/Pods-MyChatApp/Pods-MyChatApp.debug.xcconfig"; sourceTree = "<group>"; };
 		49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E241643028217BB800072B0D /* LogoAnimatableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoAnimatableViewController.swift; sourceTree = "<group>"; };
 		E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 		E25CF5842819C2AD002D166F /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				E241643028217BB800072B0D /* LogoAnimatableViewController.swift */,
 				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
 				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
 			);
@@ -784,6 +787,7 @@
 				E25CF56628186AD5002D166F /* ProfilePresenter.swift in Sources */,
 				E28DE39127E795F1009D9300 /* ReadFromFileOperation.swift in Sources */,
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
+				E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */,
 				E25D373327DF585C00E6A746 /* CustomNavigationController.swift in Sources */,
 				E25D373127DE2BA700E6A746 /* UIWindow+reload.swift in Sources */,
 				E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */,
