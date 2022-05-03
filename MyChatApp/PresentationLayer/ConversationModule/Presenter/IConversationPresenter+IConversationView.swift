@@ -11,15 +11,12 @@ import CoreData
 protocol IConversationPresenter: AnyObject {
     
     var channel: Channel { get set }
-    var coreDataManager: IDataBaseService { get }
-    var firestoreManager: FirestoreManager { get }
-    var themePicker: ThemeService { get }
     var messageText: String? { get set }
+    var sections: [NSFetchedResultsSectionInfo]? { get }
     
     init(view: IConversationView,
          coreDataManager: IDataBaseService,
          firestoreManager: FirestoreManager,
-         themePicker: ThemeService,
          router: IRouter,
          channel: Channel)
     
@@ -33,6 +30,8 @@ protocol IConversationPresenter: AnyObject {
     
     func sendButtonTappedWithoutUsername()
     
+    func getMessageAtIndexPath(_ indexPath: IndexPath) -> DBMessage
+    
 }
 
 protocol IConversationView: NSFetchedResultsControllerDelegate {
@@ -44,5 +43,7 @@ protocol IConversationView: NSFetchedResultsControllerDelegate {
     func deleteText()
     
     func sendPhoto(_ url: String)
+    
+    func enableSendButton(_ bool: Bool)
     
 }

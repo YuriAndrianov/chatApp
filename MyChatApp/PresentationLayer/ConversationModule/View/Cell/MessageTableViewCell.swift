@@ -15,7 +15,7 @@ final class MessageTableViewCell: UITableViewCell {
     private var currentTheme: ITheme? {
         return ThemePicker.shared.currentTheme
     }
-
+    
     @IBOutlet weak var leadingConstraint: NSLayoutConstraint?
     @IBOutlet weak var trailingConstraint: NSLayoutConstraint?
     @IBOutlet weak var textLabelTopConstraint: NSLayoutConstraint?
@@ -77,11 +77,14 @@ final class MessageTableViewCell: UITableViewCell {
                             if let image = UIImage(data: data) {
                                 self?.messageTextLabel?.isHidden = true
                                 self?.messageImageView.image = image
+                                self?.updateConstraints()
+                            } else {
+                                self?.messageImageView.isHidden = true
+                                self?.messageTextLabel?.text = "API is not supporting\n" + text
                             }
                         case .failure(let error):
-                            self?.messageImageView.isHidden = true
-                            self?.messageTextLabel?.text = "API is not supporting\n" + text
                             print(error.localizedDescription)
+                            self?.messageTextLabel?.text = text
                         }
                     }
                 }

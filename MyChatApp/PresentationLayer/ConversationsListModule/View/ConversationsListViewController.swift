@@ -11,9 +11,18 @@ import CoreData
 final class ConversationsListViewController: BaseChatViewController, IConversationListView {
     
     var presenter: IConversationListPresenter?
+    
+    private var tableView: UITableView
+    private var themePicker: ThemeService
 
     private var currentTheme: ITheme? {
-        return presenter?.themePicker.currentTheme
+        return themePicker.currentTheme
+    }
+    
+    required override init(themePicker: ThemeService, tableView: UITableView) {
+        self.themePicker = themePicker
+        self.tableView = tableView
+        super.init(themePicker: themePicker, tableView: tableView)
     }
     
     // MARK: - Lifecycle
@@ -27,7 +36,7 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        self.tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
         tableView.reloadData() // updates color of table if currentTheme has changed
     }
     
@@ -152,9 +161,7 @@ extension ConversationsListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive,
                                               title: "Delete") { [weak self] _, _, _ in
-            guard let dbChannel = self?.presenter?
-                    .coreDataManager
-                    .channelsFetchedResultsController.object(at: indexPath) else { return }
+            guard let dbChannel = self?.presenter?.getChannelAtIndexPath(indexPath) else { return }
             self?.showAlertDelete(dbChannel)
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
@@ -171,18 +178,18 @@ extension ConversationsListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let sections = presenter?.coreDataManager.channelsFetchedResultsController.sections else { return 0 }
-        return sections[section].numberOfObjects
+        guard let sections = presenter?.sections else { return 0 }
+        return sections[safeIndex: section]?.numberOfObjects ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier,
-                                                           for: indexPath) as? ConversationTableViewCell else { return UITableViewCell() }
-        guard let dbChannel = presenter?
-                .coreDataManager
-                .channelsFetchedResultsController.object(at: indexPath) else { return UITableViewCell() }
-        let channel = Channel(dbChannel: dbChannel)
-        cell.configurate(with: channel)
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: ConversationTableViewCell.identifier,
+            for: indexPath
+        ) as? ConversationTableViewCell else { return UITableViewCell() }
+        
+        guard let dbChannel = presenter?.getChannelAtIndexPath(indexPath) else { return UITableViewCell() }
+        cell.configurate(with: Channel(dbChannel: dbChannel))
         return cell
     }
     

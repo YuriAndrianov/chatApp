@@ -6,36 +6,38 @@
 //
 
 import Foundation
+import CoreData
 
 final class ConversationPresenter: IConversationPresenter {
     
     weak var view: IConversationView?
     
-    var coreDataManager: IDataBaseService
-    var firestoreManager: FirestoreManager
-    var themePicker: ThemeService
-    var router: IRouter
+    var sections: [NSFetchedResultsSectionInfo]? {
+        return coreDataManager.messagesFetchedResultsController.sections
+    }
+    
     var channel: Channel
     var messageText: String? {
         didSet {
-            view?.containerView.sendButton.isEnabled =
             (messageText == "" || messageText == nil) ?
-            false : true
+            view?.enableSendButton(false) :  view?.enableSendButton(true)
         }
     }
+    
+    private var coreDataManager: IDataBaseService
+    private var firestoreManager: FirestoreManager
+    private var router: IRouter
     
     init(
         view: IConversationView,
         coreDataManager: IDataBaseService,
         firestoreManager: FirestoreManager,
-        themePicker: ThemeService,
         router: IRouter,
         channel: Channel
     ) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
-        self.themePicker = themePicker
         self.router = router
         self.channel = channel
     }
@@ -149,6 +151,10 @@ final class ConversationPresenter: IConversationPresenter {
                                   senderName: user.fullname ?? "")
             self.firestoreManager.addDocument(.messages, data: message.toDict)
         }
+    }
+    
+    func getMessageAtIndexPath(_ indexPath: IndexPath) -> DBMessage {
+        return coreDataManager.messagesFetchedResultsController.object(at: indexPath)
     }
     
 }

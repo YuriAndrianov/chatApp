@@ -10,14 +10,13 @@ import UIKit
 final class Assembly: IAssembly {
     
     func createConversationListModule(router: IRouter) -> UIViewController {
-        let view = ConversationsListViewController()
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
         let themePicker = ThemePicker.shared
+        let view = ConversationsListViewController(themePicker: themePicker, tableView: UITableView())
         let presenter = ConversationListPresenter(view: view,
                                                   coreDataManager: coreDataManager,
                                                   firestoreManager: firestoreManager,
-                                                  themePicker: themePicker,
                                                   router: router)
         view.presenter = presenter
 
@@ -25,16 +24,15 @@ final class Assembly: IAssembly {
     }
 
     func createConversationModule(channel: Channel, router: IRouter) -> UIViewController {
-        let view = ConversationViewController()
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
         let firestoreManager = FirestoreManager()
         firestoreManager.channel = channel
         let themePicker = ThemePicker.shared
+        let view = ConversationViewController(themePicker: themePicker, tableView: UITableView())
         
         let presenter = ConversationPresenter(view: view,
                                               coreDataManager: coreDataManager,
                                               firestoreManager: firestoreManager,
-                                              themePicker: themePicker,
                                               router: router,
                                               channel: channel)
         view.presenter = presenter

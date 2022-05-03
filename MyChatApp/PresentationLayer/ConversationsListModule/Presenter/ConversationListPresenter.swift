@@ -6,25 +6,27 @@
 //
 
 import Foundation
+import CoreData
 
 final class ConversationListPresenter: IConversationListPresenter {
     
     weak var view: IConversationListView?
 
-    var coreDataManager: IDataBaseService
-    var firestoreManager: FirestoreService
-    var themePicker: ThemeService
-    var router: IRouter
+    var sections: [NSFetchedResultsSectionInfo]? {
+        return coreDataManager.channelsFetchedResultsController.sections
+    }
+    
+    private var coreDataManager: IDataBaseService
+    private var firestoreManager: FirestoreService
+    private var router: IRouter
     
     required init(view: IConversationListView,
                   coreDataManager: IDataBaseService,
                   firestoreManager: FirestoreService,
-                  themePicker: ThemeService,
                   router: IRouter) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
-        self.themePicker = themePicker
         self.router = router
     }
     
@@ -57,6 +59,10 @@ final class ConversationListPresenter: IConversationListPresenter {
     
     func myProfileButtonTapped() {
         router.showMyProfile()
+    }
+    
+    func getChannelAtIndexPath(_ indexPath: IndexPath) -> DBChannel {
+        return coreDataManager.channelsFetchedResultsController.object(at: indexPath)
     }
     
     private func fetchChannelsFromFirestore() {

@@ -10,13 +10,16 @@ import CoreData
 
 class BaseChatViewController: UIViewController {
     
-    var tableView: UITableView
+    private var tableView: UITableView
+    private var themePicker: ThemeService
     
-    init() {
-        self.tableView = UITableView()
+    init(themePicker: ThemeService, tableView: UITableView) {
+        self.themePicker = themePicker
+        self.tableView = tableView
         super.init(nibName: nil, bundle: nil)
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

@@ -9,8 +9,8 @@ import UIKit
 
 protocol IRouter {
 
-    var navigationController: UINavigationController? { get set }
-    var assembly: IAssembly? { get set }
+    var navigationController: UINavigationController { get set }
+    var assembly: IAssembly { get set }
 
     func showConversationList()
     

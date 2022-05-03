@@ -12,8 +12,11 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
     
     var presenter: IConversationPresenter?
     
+    private var tableView: UITableView
+    private var themePicker: ThemeService
+    
     private var currentTheme: ITheme? {
-        return presenter?.themePicker.currentTheme
+        return themePicker.currentTheme
     }
     
     lazy var containerView: CustomInputView = {
@@ -34,6 +37,12 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
                                    multiplier: 1,
                                    constant: 0)
     }()
+    
+    required override init(themePicker: ThemeService, tableView: UITableView) {
+        self.themePicker = themePicker
+        self.tableView = tableView
+        super.init(themePicker: themePicker, tableView: tableView)
+    }
     
     // MARK: - Lifecycle
     
@@ -142,6 +151,10 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
         containerView.textView.text = nil
     }
     
+    func enableSendButton(_ bool: Bool) {
+        containerView.sendButton.isEnabled = bool
+    }
+    
     private func registerObservers() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow),
@@ -179,8 +192,8 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
 extension ConversationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let sections = presenter?.coreDataManager.messagesFetchedResultsController.sections else { return 0 }
-        return sections[section].numberOfObjects
+        guard let sections = presenter?.sections else { return 0 }
+        return sections[safeIndex: section]?.numberOfObjects ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -188,10 +201,11 @@ extension ConversationViewController: UITableViewDataSource {
                 .dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
                                                        for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
         
-        guard let dbMessage = presenter?.coreDataManager.messagesFetchedResultsController.object(at: indexPath),
+        guard let dbMessage = presenter?.getMessageAtIndexPath(indexPath),
               let message = Message(dbMessage: dbMessage) else { return UITableViewCell() }
         
-        message.senderId == User.userId ? cell.configurateAsOutcoming(with: message) : cell.configurateAsIncoming(with: message)
+        message.senderId == User.userId ?
+        cell.configurateAsOutcoming(with: message) : cell.configurateAsIncoming(with: message)
         
         cell.selectionStyle = .none
         cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)

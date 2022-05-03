@@ -10,14 +10,11 @@ import CoreData
 
 protocol IConversationListPresenter: AnyObject {
     
-    var coreDataManager: IDataBaseService { get }
-    var firestoreManager: FirestoreService { get }
-    var themePicker: ThemeService { get }
+    var sections: [NSFetchedResultsSectionInfo]? { get }
     
     init(view: IConversationListView,
          coreDataManager: IDataBaseService,
          firestoreManager: FirestoreService,
-         themePicker: ThemeService,
          router: IRouter)
     
     func onViewDidLoad()
@@ -33,6 +30,8 @@ protocol IConversationListPresenter: AnyObject {
     func myProfileButtonTapped()
     
     func channelCellTapped(_ indexPath: IndexPath)
+    
+    func getChannelAtIndexPath(_ indexPath: IndexPath) -> DBChannel
     
 }
 
