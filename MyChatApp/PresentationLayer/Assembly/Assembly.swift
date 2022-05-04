@@ -33,6 +33,7 @@ final class Assembly: IAssembly {
         let presenter = ConversationPresenter(view: view,
                                               coreDataManager: coreDataManager,
                                               firestoreManager: firestoreManager,
+                                              dataService: DataManagerGCD.shared,
                                               router: router,
                                               channel: channel)
         view.presenter = presenter

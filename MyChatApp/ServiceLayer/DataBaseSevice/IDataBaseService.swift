@@ -17,14 +17,18 @@ protocol IDataBaseService {
     
     var messagesFetchedResultsController: NSFetchedResultsController<DBMessage> { get set }
     
-    func fetchChannel(with predicate: NSPredicate) -> DBChannel?
+    func setPredicate(with channel: Channel)
     
-    func fetchMessage(with predicate: NSPredicate) -> DBMessage?
+    func saveChannel(_ channel: Channel)
     
-    func saveObject(_ object: NSManagedObject)
+    func updateChannel(_ channel: Channel)
     
-    func refreshObject(_ object: NSManagedObject)
+    func deleteChannel(_ channel: Channel)
     
-    func deleteObject(_ object: NSManagedObject)
+    func addMessage(_ message: Message, to channel: Channel)
+    
+    func updateMessage(_ message: Message)
+    
+    func deleteMessage(_ message: Message)
     
 }

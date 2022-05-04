@@ -84,7 +84,7 @@ final class ProfileViewController: LogoAnimatableViewController, IProfileView {
         title = "My Profile"
         view.backgroundColor = presenter?.themePicker.currentTheme?.backgroundColor
         
-        navigationController?.navigationBar.prefersLargeTitles = customView.isLargeScreenDevice
+        navigationController?.navigationBar.prefersLargeTitles = UIScreen.main.isLargeScreenDevice
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
                                                             style: .plain,
                                                             target: self,
@@ -141,9 +141,9 @@ final class ProfileViewController: LogoAnimatableViewController, IProfileView {
             presenter?.deleteImage(imageName: "User")
         }
         
-        presenter?.user.fullname = customView.fullNameTextField.text
-        presenter?.user.occupation = customView.occupationTextField.text
-        presenter?.user.location = customView.locationTextField.text
+        presenter?.userInfoDidEnter(fullname: customView.fullNameTextField.text,
+                                    occupation: customView.occupationTextField.text,
+                                    location: customView.locationTextField.text)
         
         tryToSaveData()
     }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NetworkPickerViewController: LogoAnimatableViewController, INetworkPickerView {
+final class NetworkPickerViewController: LogoAnimatableViewController, INetworkPickerView {
     
     var presenter: INetworkPickerPresenter?
     

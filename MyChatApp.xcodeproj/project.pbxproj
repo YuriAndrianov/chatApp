@@ -10,6 +10,7 @@
 		AF46E55D1A64B13C449FCA02 /* Pods_MyChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */; };
 		E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E241643028217BB800072B0D /* LogoAnimatableViewController.swift */; };
 		E24164332821A86D00072B0D /* MyCustomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164322821A86D00072B0D /* MyCustomTransition.swift */; };
+		E24164362823096A00072B0D /* UIScreen+isLargeScreenDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */; };
 		E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */; };
 		E2561C7B27D5EA5F00EBD365 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */; };
 		E2561C7C27D5EA6000EBD365 /* ConversationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */; };
@@ -27,7 +28,7 @@
 		E25CF54C280C22DD002D166F /* MyProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF54B280C22DD002D166F /* MyProfileView.swift */; };
 		E25CF54F280C3986002D166F /* IAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF54E280C3986002D166F /* IAssembly.swift */; };
 		E25CF551280C39B8002D166F /* IRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF550280C39B8002D166F /* IRouter.swift */; };
-		E25CF553280C39E6002D166F /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF552280C39E6002D166F /* ThemeService.swift */; };
+		E25CF553280C39E6002D166F /* IThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF552280C39E6002D166F /* IThemeService.swift */; };
 		E25CF555280C3A28002D166F /* IImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF554280C3A28002D166F /* IImageService.swift */; };
 		E25CF557280C3A4E002D166F /* FirestoreService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF556280C3A4E002D166F /* FirestoreService.swift */; };
 		E25CF559280C3A93002D166F /* IDataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25CF558280C3A93002D166F /* IDataBaseService.swift */; };
@@ -92,6 +93,7 @@
 		49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E241643028217BB800072B0D /* LogoAnimatableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoAnimatableViewController.swift; sourceTree = "<group>"; };
 		E24164322821A86D00072B0D /* MyCustomTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCustomTransition.swift; sourceTree = "<group>"; };
+		E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+isLargeScreenDevice.swift"; sourceTree = "<group>"; };
 		E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
@@ -109,7 +111,7 @@
 		E25CF54B280C22DD002D166F /* MyProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyProfileView.swift; sourceTree = "<group>"; };
 		E25CF54E280C3986002D166F /* IAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAssembly.swift; sourceTree = "<group>"; };
 		E25CF550280C39B8002D166F /* IRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRouter.swift; sourceTree = "<group>"; };
-		E25CF552280C39E6002D166F /* ThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeService.swift; sourceTree = "<group>"; };
+		E25CF552280C39E6002D166F /* IThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IThemeService.swift; sourceTree = "<group>"; };
 		E25CF554280C3A28002D166F /* IImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IImageService.swift; sourceTree = "<group>"; };
 		E25CF556280C3A4E002D166F /* FirestoreService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreService.swift; sourceTree = "<group>"; };
 		E25CF558280C3A93002D166F /* IDataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDataBaseService.swift; sourceTree = "<group>"; };
@@ -199,6 +201,17 @@
 				FBAECB639948379A155FEC73 /* Pods-MyChatApp.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		E2416434282306BC00072B0D /* Themes */ = {
+			isa = PBXGroup;
+			children = (
+				E25D372327DCD50E00E6A746 /* ITheme.swift */,
+				E25D372527DCD70300E6A746 /* ClassicTheme.swift */,
+				E25D372727DCD71000E6A746 /* DayTheme.swift */,
+				E25D372927DCD71C00E6A746 /* NightTheme.swift */,
+			);
+			path = Themes;
 			sourceTree = "<group>";
 		};
 		E2561C8327D60CDC00EBD365 /* ConversationsListModule */ = {
@@ -347,7 +360,7 @@
 			isa = PBXGroup;
 			children = (
 				E25D372B27DCDE0400E6A746 /* ThemePicker.swift */,
-				E25CF552280C39E6002D166F /* ThemeService.swift */,
+				E25CF552280C39E6002D166F /* IThemeService.swift */,
 			);
 			path = ThemeService;
 			sourceTree = "<group>";
@@ -473,6 +486,7 @@
 		E25CF5842819C2AD002D166F /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				E2416434282306BC00072B0D /* Themes */,
 				E241643028217BB800072B0D /* LogoAnimatableViewController.swift */,
 				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
 				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
@@ -503,10 +517,6 @@
 			children = (
 				FAC70C7327C61149000417F5 /* Assets.xcassets */,
 				E25D371B27DCC00500E6A746 /* Themes.xcassets */,
-				E25D372327DCD50E00E6A746 /* ITheme.swift */,
-				E25D372527DCD70300E6A746 /* ClassicTheme.swift */,
-				E25D372727DCD71000E6A746 /* DayTheme.swift */,
-				E25D372927DCD71C00E6A746 /* NightTheme.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -515,6 +525,7 @@
 			isa = PBXGroup;
 			children = (
 				E25D373027DE2BA700E6A746 /* UIWindow+reload.swift */,
+				E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -778,7 +789,7 @@
 				E25CF52C28089B33002D166F /* DebugOptions.swift in Sources */,
 				E28DE38227E64236009D9300 /* DataService.swift in Sources */,
 				E25E7A8C27F9E7670039144D /* NSManagedObject+init.swift in Sources */,
-				E25CF553280C39E6002D166F /* ThemeService.swift in Sources */,
+				E25CF553280C39E6002D166F /* IThemeService.swift in Sources */,
 				E25CF5782819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift in Sources */,
 				E28DE38B27E76CB3009D9300 /* ProfileVCStyleSheet.swift in Sources */,
 				E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */,
@@ -793,6 +804,7 @@
 				E25D371227DB7C3400E6A746 /* Array+Subscript.swift in Sources */,
 				E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */,
 				E25D373327DF585C00E6A746 /* CustomNavigationController.swift in Sources */,
+				E24164362823096A00072B0D /* UIScreen+isLargeScreenDevice.swift in Sources */,
 				E25D373127DE2BA700E6A746 /* UIWindow+reload.swift in Sources */,
 				E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */,
 				E25CF53228089EDC002D166F /* CoreDataStack.swift in Sources */,

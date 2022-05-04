@@ -9,8 +9,8 @@ import UIKit
 
 final class Router: IRouter {
     
-    var navigationController: CustomNavigationController
-    var assembly: IAssembly
+    private var navigationController: CustomNavigationController
+    private var assembly: IAssembly
     
     init(navigationController: CustomNavigationController, assembly: IAssembly) {
         self.navigationController = navigationController

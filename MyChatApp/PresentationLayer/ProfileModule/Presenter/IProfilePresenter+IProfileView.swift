@@ -11,14 +11,14 @@ protocol IProfilePresenter: AnyObject {
     
     var fileManager: DataService { get }
     var imageManager: ImageService { get }
-    var themePicker: ThemeService { get }
+    var themePicker: IThemeService { get }
     var user: User { get }
     
     init(
         view: IProfileView,
         fileManager: DataService,
         imageManager: ImageService,
-        themePicker: ThemeService,
+        themePicker: IThemeService,
         router: IRouter
     )
     
@@ -33,6 +33,8 @@ protocol IProfilePresenter: AnyObject {
     func saveUser(completion: @escaping ((Bool) -> Void))
     
     func setNewPhoto(_ url: String)
+    
+    func userInfoDidEnter(fullname: String?, occupation: String?, location: String?)
     
 }
 

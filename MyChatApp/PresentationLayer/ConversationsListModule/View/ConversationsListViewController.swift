@@ -13,13 +13,13 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     var presenter: IConversationListPresenter?
     
     private var tableView: UITableView
-    private var themePicker: ThemeService
+    private var themePicker: IThemeService
     
     private var currentTheme: ITheme? {
         return themePicker.currentTheme
     }
     
-    required override init(themePicker: ThemeService, tableView: UITableView) {
+    required override init(themePicker: IThemeService, tableView: UITableView) {
         self.themePicker = themePicker
         self.tableView = tableView
         super.init(themePicker: themePicker, tableView: tableView)
@@ -36,7 +36,8 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        tableView.indicatorStyle = currentTheme is NightTheme ? .white : .black
+        tableView.backgroundColor = currentTheme?.backgroundColor
         tableView.reloadData() // updates color of table if currentTheme has changed
     }
     
@@ -75,7 +76,6 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
     }
     
     private func setupTableView() {
-        tableView.backgroundColor = currentTheme?.backgroundColor
         tableView.register(ConversationTableViewCell.nib,
                            forCellReuseIdentifier: ConversationTableViewCell.identifier)
         tableView.delegate = self
@@ -110,7 +110,7 @@ final class ConversationsListViewController: BaseChatViewController, IConversati
         addChannelAlertVC.addTextField { [weak self] field in
             field.placeholder = "Enter channel's name"
             field.addTarget(self, action: #selector(self?.textChanged), for: .editingChanged)
-            field.keyboardAppearance = self?.currentTheme is NightTheme ? .dark : .default
+            field.keyboardAppearance = self?.currentTheme?.keyboardAppearance ?? .default
         }
         
         present(addChannelAlertVC, animated: true)

@@ -11,9 +11,9 @@ import CoreData
 class BaseChatViewController: LogoAnimatableViewController {
     
     private var tableView: UITableView
-    private var themePicker: ThemeService
+    private var themePicker: IThemeService
     
-    init(themePicker: ThemeService, tableView: UITableView) {
+    init(themePicker: IThemeService, tableView: UITableView) {
         self.themePicker = themePicker
         self.tableView = tableView
         super.init(nibName: nil, bundle: nil)

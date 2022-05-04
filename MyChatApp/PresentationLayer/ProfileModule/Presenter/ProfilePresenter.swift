@@ -13,7 +13,7 @@ final class ProfilePresenter: IProfilePresenter {
     
     var fileManager: DataService
     var imageManager: ImageService
-    var themePicker: ThemeService
+    var themePicker: IThemeService
     var user: User = User()
     var router: IRouter
     
@@ -21,7 +21,7 @@ final class ProfilePresenter: IProfilePresenter {
         view: IProfileView,
         fileManager: DataService,
         imageManager: ImageService,
-        themePicker: ThemeService,
+        themePicker: IThemeService,
         router: IRouter
     ) {
         self.view = view
@@ -64,6 +64,12 @@ final class ProfilePresenter: IProfilePresenter {
     
     func saveUser(completion: @escaping ((Bool) -> Void)) {
         fileManager.writeToFile(user, completion: completion)
+    }
+    
+    func userInfoDidEnter(fullname: String?, occupation: String?, location: String?) {
+        user.fullname = fullname
+        user.occupation = occupation
+        user.location = location
     }
     
     func setNewPhoto(_ url: String) {

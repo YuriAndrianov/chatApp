@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MyCustomTransition: NSObject, UIViewControllerAnimatedTransitioning {
+final class MyCustomTransition: NSObject, UIViewControllerAnimatedTransitioning {
     
     private let animationDuration: Double
     private let animationType: AnimationType

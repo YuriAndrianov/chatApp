@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class ThemePicker: ThemeService {
+final class ThemePicker: IThemeService {
     
-    static let shared: ThemeService = ThemePicker()
+    static let shared: IThemeService = ThemePicker()
     
     var currentTheme: ITheme?
     

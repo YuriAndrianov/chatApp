@@ -85,41 +85,15 @@ final class ConversationListPresenter: IConversationListPresenter {
     }
     
     private func saveChannelToDB(channel: Channel) {
-        // checking uniqueness
-        let id = channel.identifier
-        let predicate = NSPredicate(format: "identifier == %@", id)
-        
-        guard coreDataManager.fetchChannel(with: predicate) == nil else { return }
-        
-        let dbChannel = DBChannel(context: coreDataManager.context)
-        dbChannel.identifier = channel.identifier
-        dbChannel.name = channel.name
-        dbChannel.lastMessage = channel.lastMessage
-        dbChannel.lastActivity = channel.lastActivity
-        
-        coreDataManager.saveObject(dbChannel)
-        print("Channel \"\(dbChannel.name ?? "")\" saved to DB")
+        coreDataManager.saveChannel(channel)
     }
     
     private func updateChannelInDB(channel: Channel) {
-        let id = channel.identifier
-        let predicate = NSPredicate(format: "identifier == %@", id)
-        
-        guard let dbChannel = coreDataManager.fetchChannel(with: predicate) else { return }
-        dbChannel.name = channel.name
-        dbChannel.lastMessage = channel.lastMessage
-        dbChannel.lastActivity = channel.lastActivity
-        coreDataManager.refreshObject(dbChannel)
-        print("Channel \"\(dbChannel.name ?? "")\" updated in DB")
+        coreDataManager.updateChannel(channel)
     }
     
     private func deleteChannelFromDB(channel: Channel) {
-        let id = channel.identifier
-        let predicate = NSPredicate(format: "identifier == %@", id)
-        
-        guard let dbChannel = coreDataManager.fetchChannel(with: predicate) else { return }
-        coreDataManager.deleteObject(dbChannel)
-        print("Channel \"\(dbChannel.name ?? "")\" deleted from DB")
+        coreDataManager.deleteChannel(channel)
     }
     
     private func createNewChannelInFirebase(with title: String) {

@@ -27,23 +27,26 @@ final class ConversationPresenter: IConversationPresenter {
     private var coreDataManager: IDataBaseService
     private var firestoreManager: FirestoreManager
     private var router: IRouter
+    private var dataService: DataService
     
     init(
         view: IConversationView,
         coreDataManager: IDataBaseService,
         firestoreManager: FirestoreManager,
+        dataService: DataService,
         router: IRouter,
         channel: Channel
     ) {
         self.view = view
         self.coreDataManager = coreDataManager
         self.firestoreManager = firestoreManager
+        self.dataService = dataService
         self.router = router
         self.channel = channel
     }
     
     func onViewDidLoad() {
-        coreDataManager.messagePredicate = NSPredicate(format: "channel.identifier == %@", channel.identifier)
+        coreDataManager.setPredicate(with: channel)
         guard let view = self.view else { return }
         coreDataManager.messagesFetchedResultsController.delegate = view
     }
@@ -72,45 +75,15 @@ final class ConversationPresenter: IConversationPresenter {
     }
     
     private func saveMessageToDB(message: Message) {
-        // checking uniqueness
-        let predicate = NSPredicate(format: "senderId == %@ && created == %@",
-                                    message.senderId,
-                                    message.created as CVarArg)
-        guard coreDataManager.fetchMessage(with: predicate) == nil else { return }
-        
-        let dbMessage = DBMessage(context: coreDataManager.context)
-        dbMessage.content = message.content
-        dbMessage.senderName = message.senderName
-        dbMessage.created = message.created
-        dbMessage.senderId = message.senderId
-        
-        guard let dbChannel = coreDataManager.fetchChannel(with: NSPredicate(format: "identifier == %@",
-                                                                             channel.identifier)) else { return }
-        dbChannel.addToMessages(dbMessage)
-        coreDataManager.saveObject(dbChannel)
-        print("Message: \"\(String(describing: message.content))\" saved to DB")
+        coreDataManager.addMessage(message, to: channel)
     }
     
     private func updateMessageInDB(message: Message) {
-        let predicate = NSPredicate(format: "senderId == %@ && created == %@",
-                                    message.senderId,
-                                    message.created as CVarArg)
-        guard let dbMessage = coreDataManager.fetchMessage(with: predicate) else { return }
-        dbMessage.content = message.content
-        dbMessage.senderName = message.senderName
-        
-        self.coreDataManager.refreshObject(dbMessage)
-        print("Message from \"\(String(describing: message.created))\" updated in DB")
+        coreDataManager.updateMessage(message)
     }
     
     private func deleteMessageFromDB(message: Message) {
-        let predicate = NSPredicate(format: "senderId == %@ && created == %@",
-                                    message.senderId,
-                                    message.created as CVarArg)
-        guard let dbMessage = coreDataManager.fetchMessage(with: predicate) else { return }
-        
-        coreDataManager.deleteObject(dbMessage)
-        print("Message from\"\(String(describing: message.created))\" deleted from DB")
+        coreDataManager.deleteMessage(message)
     }
     
     private func fetchMessagesFromFirestore() {
@@ -135,7 +108,7 @@ final class ConversationPresenter: IConversationPresenter {
     }
     
     private func createNewMessage(with text: String) {
-        DataManagerGCD.shared.readFromFile { [weak self] user in
+        dataService.readFromFile { [weak self] user in
             guard let self = self else { return }
             guard
                 let user = user,

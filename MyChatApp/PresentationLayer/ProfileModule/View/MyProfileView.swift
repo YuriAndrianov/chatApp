@@ -15,12 +15,7 @@ final class MyProfileView: UIView {
     var shouldAnimateEditPhotoButton = false {
         didSet { shouldAnimateEditPhotoButton ? startAnimation() : stopAnimation() }
     }
-    
-    var isLargeScreenDevice: Bool {
-        // check if current device is not iPhone SE (1 gen)
-        return UIScreen.main.bounds.width > 375
-    }
-    
+   
     lazy var profileImageView: UIImageView = {
         let imageView = styleSheet.createProfileImageView()
         return imageView
@@ -89,13 +84,8 @@ final class MyProfileView: UIView {
     }
     
     private func setConstraints() {
-        var profileImageWidth: CGFloat = 220
-        var editPhotoButtonWidth: CGFloat = 50
-        
-        if !isLargeScreenDevice {
-            profileImageWidth = 150
-            editPhotoButtonWidth = 30
-        }
+        let profileImageWidth: CGFloat = UIScreen.main.isLargeScreenDevice ? 220 : 150
+        let editPhotoButtonWidth: CGFloat = UIScreen.main.isLargeScreenDevice ? 50 : 30
         
         profileImageView.layer.cornerRadius = profileImageWidth / 2
         

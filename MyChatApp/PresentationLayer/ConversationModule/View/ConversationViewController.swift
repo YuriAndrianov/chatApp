@@ -13,8 +13,8 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
     var presenter: IConversationPresenter?
     
     private var tableView: UITableView
-    private var themePicker: ThemeService
-    
+    private var themePicker: IThemeService
+
     private var currentTheme: ITheme? {
         return themePicker.currentTheme
     }
@@ -38,7 +38,7 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
                                    constant: 0)
     }()
     
-    required override init(themePicker: ThemeService, tableView: UITableView) {
+    required override init(themePicker: IThemeService, tableView: UITableView) {
         self.themePicker = themePicker
         self.tableView = tableView
         super.init(themePicker: themePicker, tableView: tableView)
