@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-class DataBaseService: IDataBaseService {
+final class DataBaseService: IDataBaseService {
     
     var messagePredicate: NSPredicate?
     

@@ -33,11 +33,10 @@ final class ProfilePresenter: IProfilePresenter {
     
     func onViewDidLoad() {
         fileManager.readFromFile { [weak self] user in
-            guard let self = self else { return }
-            if let user = user {
-                self.user = user
-                self.view?.configureUIWith(user)
-            }
+            guard let self = self,
+                  let user = user else { return }
+            self.user = user
+            self.view?.configureUIWith(user)
         }
         
         imageManager.loadImageFromDiskWith(fileName: "User") { [weak self] image in

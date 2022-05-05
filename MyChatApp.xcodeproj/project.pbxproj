@@ -11,6 +11,7 @@
 		E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E241643028217BB800072B0D /* LogoAnimatableViewController.swift */; };
 		E24164332821A86D00072B0D /* MyCustomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164322821A86D00072B0D /* MyCustomTransition.swift */; };
 		E24164362823096A00072B0D /* UIScreen+isLargeScreenDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */; };
+		E241643828244A3200072B0D /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E241643728244A3200072B0D /* NetworkService.swift */; };
 		E2561C7427CE62B600EBD365 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */; };
 		E2561C7B27D5EA5F00EBD365 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */; };
 		E2561C7C27D5EA6000EBD365 /* ConversationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */; };
@@ -94,6 +95,7 @@
 		E241643028217BB800072B0D /* LogoAnimatableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoAnimatableViewController.swift; sourceTree = "<group>"; };
 		E24164322821A86D00072B0D /* MyCustomTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCustomTransition.swift; sourceTree = "<group>"; };
 		E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+isLargeScreenDevice.swift"; sourceTree = "<group>"; };
+		E241643728244A3200072B0D /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
@@ -453,7 +455,6 @@
 			children = (
 				E25CF56A28187F83002D166F /* Cell */,
 				E25CF56828187EB8002D166F /* NetworkPickerViewController.swift */,
-				E25CF56D2818808A002D166F /* PhotoImageView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -471,6 +472,7 @@
 			isa = PBXGroup;
 			children = (
 				E25CF57A28199144002D166F /* INetworkService.swift */,
+				E241643728244A3200072B0D /* NetworkService.swift */,
 			);
 			path = NetworkService;
 			sourceTree = "<group>";
@@ -491,6 +493,7 @@
 				E25CF5602811CEE8002D166F /* BaseChatViewController.swift */,
 				E25D373227DF585B00E6A746 /* CustomNavigationController.swift */,
 				E24164322821A86D00072B0D /* MyCustomTransition.swift */,
+				E25CF56D2818808A002D166F /* PhotoImageView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -782,6 +785,7 @@
 				E2561C8B27D63D0D00EBD365 /* ConversationViewController.swift in Sources */,
 				E25CF56928187EB8002D166F /* NetworkPickerViewController.swift in Sources */,
 				E25CF55B280C3ADD002D166F /* IConversationListPresenter+IConversationListView.swift in Sources */,
+				E241643828244A3200072B0D /* NetworkService.swift in Sources */,
 				E25CF57B28199144002D166F /* INetworkService.swift in Sources */,
 				E25E7A9327FF6F470039144D /* CustomInputView.swift in Sources */,
 				E28DE38027E5FEB9009D9300 /* ImageService.swift in Sources */,

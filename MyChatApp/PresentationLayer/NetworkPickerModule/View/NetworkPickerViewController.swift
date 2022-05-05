@@ -43,11 +43,11 @@ final class NetworkPickerViewController: LogoAnimatableViewController, INetworkP
         collectionView.delaysContentTouches = false
     }
     
-    func success() {
+    func getPhotoItemsSuccess() {
         collectionView.reloadData()
     }
     
-    func failure() {
+    func getPhotoItemsFailure() {
         print("error")
         showErrorAlert()
     }
@@ -93,7 +93,7 @@ extension NetworkPickerViewController: UICollectionViewDataSource {
 
 extension NetworkPickerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let spacing = CGFloat(1.0)
+        let spacing: CGFloat = 1.0
         let cellWidth = collectionView.frame.size.width / 3 - 4 * spacing
         let cellHeight = cellWidth
         
