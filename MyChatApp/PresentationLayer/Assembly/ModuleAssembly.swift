@@ -7,11 +7,11 @@
 
 import UIKit
 
-final class Assembly: IAssembly {
+final class ModuleAssembly: IModuleAssembly {
     
     func createConversationListModule(router: IRouter) -> UIViewController {
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
-        let firestoreManager = FirestoreManager()
+        let firestoreManager = FirestoreService()
         let themePicker = ThemePicker.shared
         let view = ConversationsListViewController(themePicker: themePicker, tableView: UITableView())
         let presenter = ConversationListPresenter(view: view,
@@ -25,7 +25,7 @@ final class Assembly: IAssembly {
     
     func createConversationModule(channel: Channel, router: IRouter) -> UIViewController {
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
-        let firestoreManager = FirestoreManager()
+        let firestoreManager = FirestoreService()
         firestoreManager.channel = channel
         let themePicker = ThemePicker.shared
         let view = ConversationViewController(themePicker: themePicker, tableView: UITableView())
@@ -65,11 +65,14 @@ final class Assembly: IAssembly {
     
     func createNetworkPickerModule(router: IRouter) -> UIViewController {
         let view = NetworkPickerViewController()
+        let themePicker = ThemePicker.shared
         let photoFetcher = PhotoFetcher(networkService: NetworkService())
         let presenter = NetworkPickerPresenter(view: view,
                                                photoFetcher: photoFetcher,
                                                router: router)
+        view.themePicker = themePicker
         view.presenter = presenter
+        
         return view
     }
     

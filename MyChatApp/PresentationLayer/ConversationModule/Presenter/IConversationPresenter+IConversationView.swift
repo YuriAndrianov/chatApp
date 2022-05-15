@@ -16,8 +16,8 @@ protocol IConversationPresenter: AnyObject {
     
     init(view: IConversationView,
          coreDataManager: IDataBaseService,
-         firestoreManager: FirestoreManager,
-         dataService: DataService,
+         firestoreManager: FirestoreService,
+         dataService: IDataService,
          router: IRouter,
          channel: Channel)
     

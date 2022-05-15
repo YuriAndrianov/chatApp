@@ -14,7 +14,7 @@ protocol IConversationListPresenter: AnyObject {
     
     init(view: IConversationListView,
          coreDataManager: IDataBaseService,
-         firestoreManager: FirestoreService,
+         firestoreManager: IFirestoreService,
          router: IRouter)
     
     func onViewDidLoad()

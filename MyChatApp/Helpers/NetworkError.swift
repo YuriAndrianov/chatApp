@@ -1,5 +1,5 @@
 //
-//  CustomError.swift
+//  NetworkError.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 27.04.2022.

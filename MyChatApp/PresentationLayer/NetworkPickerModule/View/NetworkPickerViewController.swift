@@ -10,13 +10,14 @@ import UIKit
 final class NetworkPickerViewController: LogoAnimatableViewController, INetworkPickerView {
     
     var presenter: INetworkPickerPresenter?
+    var themePicker: IThemeService?
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 6
         layout.minimumInteritemSpacing = 6
         layout.scrollDirection = .vertical
-        layout.collectionView?.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
+        layout.collectionView?.backgroundColor = themePicker?.currentTheme?.backgroundColor
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.register(
@@ -81,7 +82,7 @@ extension NetworkPickerViewController: UICollectionViewDataSource {
             for: indexPath
         ) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
         
-        guard let item = presenter?.photoURLs[indexPath.row] else { return UICollectionViewCell() }
+        guard let item = presenter?.photoURLs[safeIndex: indexPath.row] else { return UICollectionViewCell() }
         cell.configure(with: item, isSelected: false)
         
         return cell

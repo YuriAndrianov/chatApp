@@ -11,16 +11,16 @@ final class ProfilePresenter: IProfilePresenter {
     
     weak var view: IProfileView?
     
-    var fileManager: DataService
-    var imageManager: ImageService
+    var fileManager: IDataService
+    var imageManager: IImageService
     var themePicker: IThemeService
     var user: User = User()
     var router: IRouter
     
     init(
         view: IProfileView,
-        fileManager: DataService,
-        imageManager: ImageService,
+        fileManager: IDataService,
+        imageManager: IImageService,
         themePicker: IThemeService,
         router: IRouter
     ) {

@@ -9,7 +9,7 @@ import UIKit
 
 final class ImageService: IImageService {
     
-    static let shared: ImageService = ImageService()
+    static let shared: IImageService = ImageService()
     
     private init() {}
     

@@ -7,9 +7,9 @@
 
 import Foundation
 
-final class DataManagerGCD: DataService {
+final class DataManagerGCD: IDataService {
     
-    static let shared = DataManagerGCD()
+    static let shared: IDataService = DataManagerGCD()
     
     private init() {}
     

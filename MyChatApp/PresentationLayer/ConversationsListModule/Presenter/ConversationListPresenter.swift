@@ -17,12 +17,12 @@ final class ConversationListPresenter: IConversationListPresenter {
     }
     
     private var coreDataManager: IDataBaseService
-    private var firestoreManager: FirestoreService
+    private var firestoreManager: IFirestoreService
     private var router: IRouter
     
     required init(view: IConversationListView,
                   coreDataManager: IDataBaseService,
-                  firestoreManager: FirestoreService,
+                  firestoreManager: IFirestoreService,
                   router: IRouter) {
         self.view = view
         self.coreDataManager = coreDataManager

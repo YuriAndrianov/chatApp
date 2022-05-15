@@ -25,15 +25,15 @@ final class ConversationPresenter: IConversationPresenter {
     }
     
     private var coreDataManager: IDataBaseService
-    private var firestoreManager: FirestoreManager
+    private var firestoreManager: FirestoreService
     private var router: IRouter
-    private var dataService: DataService
+    private var dataService: IDataService
     
     init(
         view: IConversationView,
         coreDataManager: IDataBaseService,
-        firestoreManager: FirestoreManager,
-        dataService: DataService,
+        firestoreManager: FirestoreService,
+        dataService: IDataService,
         router: IRouter,
         channel: Channel
     ) {

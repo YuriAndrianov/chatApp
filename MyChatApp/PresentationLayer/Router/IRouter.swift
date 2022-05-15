@@ -9,7 +9,7 @@ import UIKit
 
 protocol IRouter {
     
-    init(navigationController: CustomNavigationController, assembly: IAssembly)
+    init(navigationController: CustomNavigationController, assembly: IModuleAssembly)
     
     func showConversationList()
     

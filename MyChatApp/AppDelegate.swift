@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         let navController = CustomNavigationController()
-        let moduleAssembly = Assembly()
+        let moduleAssembly = ModuleAssembly()
         let router = Router(navigationController: navController, assembly: moduleAssembly)
         router.showConversationList()
         
