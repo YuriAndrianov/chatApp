@@ -24,9 +24,9 @@ final class NetworkPickerPresenter: INetworkPickerPresenter {
     func onViewDidLoad() {
         getPhotoItems { [weak self] success in
             if success {
-                self?.view?.success()
+                self?.view?.getPhotoItemsSuccess()
             } else {
-                self?.view?.failure()
+                self?.view?.getPhotoItemsFailure()
             }
         }
     }
@@ -36,7 +36,7 @@ final class NetworkPickerPresenter: INetworkPickerPresenter {
     }
     
     private func getPhotoItems(completion: @escaping (Bool) -> Void) {
-        photoFetcher.getPhotoItems { [weak self] result in
+        photoFetcher.getPhotoItems(query: "cat", quantity: 200) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let items):

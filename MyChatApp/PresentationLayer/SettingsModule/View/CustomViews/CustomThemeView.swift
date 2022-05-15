@@ -8,14 +8,14 @@
 import UIKit
 
 final class CustomThemeView: UIView {
-
+    
     @IBOutlet weak var contentView: UIView?
     @IBOutlet weak var button: ThemeButton?
     @IBOutlet weak var label: UILabel?
     
     let tapGesture = UITapGestureRecognizer()
     var theme: ThemeType?
-
+    
     var isButtonHighlited: Bool = false {
         didSet {
             if isButtonHighlited {

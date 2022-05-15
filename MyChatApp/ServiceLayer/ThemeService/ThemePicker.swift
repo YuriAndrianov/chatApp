@@ -7,12 +7,12 @@
 
 import UIKit
 
-final class ThemePicker: ThemeService {
+final class ThemePicker: IThemeService {
     
-    static let shared: ThemeService = ThemePicker()
+    static let shared: IThemeService = ThemePicker()
     
     var currentTheme: ITheme?
-
+    
     private init() {}
     
     func applySavedTheme() {
@@ -34,7 +34,7 @@ final class ThemePicker: ThemeService {
             
         }
     }
-
+    
     func apply(_ theme: ThemeType, completion: ((ITheme) -> Void)?) {
         DataManagerGCD.shared.readFromFile { [weak self] user in
             guard let self = self else { return }
@@ -58,7 +58,7 @@ final class ThemePicker: ThemeService {
         UINavigationBar.appearance().tintColor = currentTheme?.barButtonColor
         
         UIApplication.shared.windows.first { $0.isKeyWindow }?.reload()
-
+        
         completion?(currentTheme ?? ClassicTheme())
     }
     

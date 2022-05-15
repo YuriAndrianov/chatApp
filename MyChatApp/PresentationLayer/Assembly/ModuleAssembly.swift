@@ -7,11 +7,11 @@
 
 import UIKit
 
-final class Assembly: IAssembly {
+final class ModuleAssembly: IModuleAssembly {
     
     func createConversationListModule(router: IRouter) -> UIViewController {
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
-        let firestoreManager = FirestoreManager()
+        let firestoreManager = FirestoreService()
         let themePicker = ThemePicker.shared
         let view = ConversationsListViewController(themePicker: themePicker, tableView: UITableView())
         let presenter = ConversationListPresenter(view: view,
@@ -19,13 +19,13 @@ final class Assembly: IAssembly {
                                                   firestoreManager: firestoreManager,
                                                   router: router)
         view.presenter = presenter
-
+        
         return view
     }
-
+    
     func createConversationModule(channel: Channel, router: IRouter) -> UIViewController {
         let coreDataManager = DataBaseService(coreDataStack: NewCoreDataStack())
-        let firestoreManager = FirestoreManager()
+        let firestoreManager = FirestoreService()
         firestoreManager.channel = channel
         let themePicker = ThemePicker.shared
         let view = ConversationViewController(themePicker: themePicker, tableView: UITableView())
@@ -33,10 +33,11 @@ final class Assembly: IAssembly {
         let presenter = ConversationPresenter(view: view,
                                               coreDataManager: coreDataManager,
                                               firestoreManager: firestoreManager,
+                                              dataService: DataManagerGCD.shared,
                                               router: router,
                                               channel: channel)
         view.presenter = presenter
-
+        
         return view
         
     }
@@ -50,7 +51,7 @@ final class Assembly: IAssembly {
         let view = ProfileViewController()
         
         let fileManager = DataManagerGCD.shared
-        let imageManager = ImageManager.shared
+        let imageManager = ImageService.shared
         let themePicker = ThemePicker.shared
         let presenter = ProfilePresenter(view: view,
                                          fileManager: fileManager,
@@ -64,11 +65,14 @@ final class Assembly: IAssembly {
     
     func createNetworkPickerModule(router: IRouter) -> UIViewController {
         let view = NetworkPickerViewController()
+        let themePicker = ThemePicker.shared
         let photoFetcher = PhotoFetcher(networkService: NetworkService())
         let presenter = NetworkPickerPresenter(view: view,
                                                photoFetcher: photoFetcher,
                                                router: router)
+        view.themePicker = themePicker
         view.presenter = presenter
+        
         return view
     }
     

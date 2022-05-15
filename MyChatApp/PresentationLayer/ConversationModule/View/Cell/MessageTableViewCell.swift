@@ -23,16 +23,16 @@ final class MessageTableViewCell: UITableViewCell {
     @IBOutlet weak var bubbleView: UIView?
     @IBOutlet weak var dateLabel: UILabel?
     @IBOutlet weak var nameLabel: UILabel?
-    @IBOutlet weak var messageImageView: UIImageView!
+    @IBOutlet weak var messageImageView: PhotoImageView?
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        nameLabel?.isHidden = false
-        messageTextLabel?.isHidden = false
-        messageImageView.isHidden = false
-        textLabelTopConstraint?.constant = 40
         nameLabel?.text = nil
+        nameLabel?.isHidden = true
+        messageTextLabel?.isHidden = false
         messageTextLabel?.text = nil
+        messageImageView?.isHidden = false
+        textLabelTopConstraint?.constant = 40
         dateLabel?.text = nil
     }
     
@@ -64,32 +64,21 @@ final class MessageTableViewCell: UITableViewCell {
         dateLabel?.text = message?.created.lastMessageDateFormat()
         
         fillWithContentFrom(message)
+        
+        if messageImageView?.image == nil {
+            messageTextLabel?.isHidden = false
+            messageImageView?.isHidden = true
+        } else {
+            messageTextLabel?.isHidden = true
+            messageImageView?.isHidden = false
+        }
     }
     
     private func fillWithContentFrom(_ message: Message?) {
-        if let text = message?.content {
-            if let url = URL(string: text) {
-                let networkService = NetworkService()
-                networkService.request(from: url) { [weak self] result in
-                    DispatchQueue.main.async {
-                        switch result {
-                        case .success(let data):
-                            if let image = UIImage(data: data) {
-                                self?.messageTextLabel?.isHidden = true
-                                self?.messageImageView.image = image
-                                self?.updateConstraints()
-                            } else {
-                                self?.messageImageView.isHidden = true
-                                self?.messageTextLabel?.text = "API is not supporting\n" + text
-                            }
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                            self?.messageTextLabel?.text = text
-                        }
-                    }
-                }
-            } else { messageTextLabel?.text = text }
-        }
+        guard let text = message?.content else { return }
+        
+        messageTextLabel?.text = text
+        messageImageView?.setImage(from: text)
     }
     
 }

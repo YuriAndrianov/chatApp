@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol IAssembly {
+protocol IModuleAssembly {
 
     func createConversationListModule(router: IRouter) -> UIViewController
 

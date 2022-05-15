@@ -14,8 +14,8 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var imageView: PhotoImageView?
     
     override func prepareForReuse() {
-        imageView?.setImage(nil)
         super.prepareForReuse()
+        imageView?.setImage(nil)
     }
     
     func configure(with item: PhotoItem, isSelected: Bool) {

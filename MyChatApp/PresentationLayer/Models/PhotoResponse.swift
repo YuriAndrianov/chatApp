@@ -9,12 +9,12 @@ import Foundation
 
 struct PhotoResponse: Decodable {
     
-    var hits: [PhotoItem]?
+    let hits: [PhotoItem]?
     
 }
 
 struct PhotoItem: Decodable {
     
-    var webformatURL: String?
+    let webformatURL: String?
     
 }

@@ -1,5 +1,5 @@
 //
-//  ChatTableViewController.swift
+//  BaseChatViewController.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 21.04.2022.
@@ -8,12 +8,12 @@
 import UIKit
 import CoreData
 
-class BaseChatViewController: UIViewController {
+class BaseChatViewController: LogoAnimatableViewController {
     
     private var tableView: UITableView
-    private var themePicker: ThemeService
+    private var themePicker: IThemeService
     
-    init(themePicker: ThemeService, tableView: UITableView) {
+    init(themePicker: IThemeService, tableView: UITableView) {
         self.themePicker = themePicker
         self.tableView = tableView
         super.init(nibName: nil, bundle: nil)

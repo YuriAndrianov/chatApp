@@ -58,7 +58,7 @@ extension Channel {
         let name = data["name"] as? String ?? ""
         let lastMessage = data["lastMessage"] as? String
         let lastActivity = data["lastActivity"] as? Timestamp
-
+        
         self.identifier = identifier
         self.name = name
         self.lastMessage = lastMessage

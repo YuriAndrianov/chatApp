@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ProfileViewController: UIViewController, IProfileView {
+final class ProfileViewController: LogoAnimatableViewController, IProfileView {
     
     var presenter: IProfilePresenter?
     
@@ -65,14 +65,11 @@ final class ProfileViewController: UIViewController, IProfileView {
     }
     
     func setUserImage(_ image: UIImage?) {
-        if let image = image {
-            customView.profileImageView.image = image
-            customView.saveGCDButton.isEnabled = true
-        } else {
-            customView.profileImageView.image = UIImage(systemName: "person.circle")
-            customView.saveGCDButton.isEnabled = true
-        }
-        
+        customView.saveGCDButton.isEnabled = true
+        customView.shouldAnimateEditPhotoButton = false
+        customView
+            .profileImageView
+            .image = image != nil ? image : UIImage(systemName: "person.circle")
     }
     
     func setNewPhoto(_ url: String) {
@@ -87,11 +84,11 @@ final class ProfileViewController: UIViewController, IProfileView {
         title = "My Profile"
         view.backgroundColor = presenter?.themePicker.currentTheme?.backgroundColor
         
-        self.navigationController?.navigationBar.prefersLargeTitles = customView.isLargeScreenDevice
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
-                                                                 style: .plain,
-                                                                 target: self,
-                                                                 action: #selector(closeButtonTapped))
+        navigationController?.navigationBar.prefersLargeTitles = UIScreen.main.isLargeScreenDevice
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
+                                                            style: .plain,
+                                                            target: self,
+                                                            action: #selector(closeButtonTapped))
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
@@ -112,15 +109,16 @@ final class ProfileViewController: UIViewController, IProfileView {
     
     // MARK: - Button's methods
     @objc private func closeButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     @objc private func editPhotoButtonTapped() {
+        customView.shouldAnimateEditPhotoButton = true
         showAddPhotoAlertVC()
     }
     
     @objc private func editButtonTapped() {
-        customView.setupUIIfEditingAllowedIs(true)
+        customView.setup(editingAllowed: true)
     }
     
     @objc private func doneButtonTapped() {
@@ -129,7 +127,8 @@ final class ProfileViewController: UIViewController, IProfileView {
     
     @objc private func cancelButtonTapped() {
         presenter?.onViewDidLoad()
-        customView.setupUIIfEditingAllowedIs(false)
+        customView.shouldAnimateEditPhotoButton = false
+        customView.setup(editingAllowed: false)
         view.endEditing(true)
     }
     
@@ -142,9 +141,9 @@ final class ProfileViewController: UIViewController, IProfileView {
             presenter?.deleteImage(imageName: "User")
         }
         
-        presenter?.user.fullname = customView.fullNameTextField.text
-        presenter?.user.occupation = customView.occupationTextField.text
-        presenter?.user.location = customView.locationTextField.text
+        presenter?.userInfoDidEnter(fullname: customView.fullNameTextField.text,
+                                    occupation: customView.occupationTextField.text,
+                                    location: customView.locationTextField.text)
         
         tryToSaveData()
     }
@@ -153,30 +152,19 @@ final class ProfileViewController: UIViewController, IProfileView {
         // make activity indicator
         let spinner = customView.createSpinner()
         spinner.center = view.center
-        view.addSubview(spinner)
         spinner.startAnimating()
+        view.addSubview(spinner)
         
         // block buttons and fields
-        customView.saveGCDButton.isEnabled = false
-        customView.cancelButton.isEnabled = false
-        customView.fullNameTextField.isEnabled = false
-        customView.occupationTextField.isEnabled = false
-        customView.locationTextField.isEnabled = false
+        customView.blockButtonsAndFields()
         
         // saving to file
         presenter?.saveUser { [weak self] success in
-            guard let self = self else { return }
             // remove activity indicator
             spinner.stopAnimating()
-            self.view.endEditing(true)
+            self?.view.endEditing(true)
             
-            if success {
-                // show success alert
-                self.showSaveSuccessAlert()
-            } else {
-                // show error alert
-                self.showSaveErrorAlert()
-            }
+            success ? self?.showSaveSuccessAlert() : self?.showSaveErrorAlert()
         }
     }
     // MARK: - Methods showing alert VC's
@@ -184,11 +172,10 @@ final class ProfileViewController: UIViewController, IProfileView {
     private func showSaveSuccessAlert() {
         let alertVC = UIAlertController(title: nil, message: "Successfully saved", preferredStyle: .alert)
         
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.customView.setupUIIfEditingAllowedIs(false)
-            self.customView.cancelButton.isEnabled = true
-        }))
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel) { [weak self] _ in
+            self?.customView.setup(editingAllowed: false)
+            self?.customView.cancelButton.isEnabled = true
+        })
         
         present(alertVC, animated: true, completion: nil)
     }
@@ -196,18 +183,16 @@ final class ProfileViewController: UIViewController, IProfileView {
     private func showSaveErrorAlert() {
         let alertVC = UIAlertController(title: "Error", message: "Failed to save data", preferredStyle: .alert)
         
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.presenter?.onViewDidLoad()
-            self.customView.saveGCDButton.isEnabled = false
-            self.customView.setupUIIfEditingAllowedIs(false)
-            self.customView.cancelButton.isEnabled = true
-        }))
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel) { [weak self] _ in
+            self?.presenter?.onViewDidLoad()
+            self?.customView.saveGCDButton.isEnabled = false
+            self?.customView.setup(editingAllowed: false)
+            self?.customView.cancelButton.isEnabled = true
+        })
         
-        alertVC.addAction(UIAlertAction(title: "Repeat", style: .default, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.tryToSaveData()
-        }))
+        alertVC.addAction(UIAlertAction(title: "Repeat", style: .default) { [weak self] _ in
+            self?.tryToSaveData()
+        })
         
         present(alertVC, animated: true, completion: nil)
     }
@@ -218,28 +203,25 @@ final class ProfileViewController: UIViewController, IProfileView {
         // check if camera is available
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let cameraButton = UIAlertAction(title: "Camera", style: .default) { [weak self] _ in
-                guard let self = self else { return }
-                self.showImagePicker(selectedSource: .camera)
+                self?.showImagePicker(selectedSource: .camera)
             }
             alertVC.addAction(cameraButton)
         }
         
         let libraryButton = UIAlertAction(title: "Gallery", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.showImagePicker(selectedSource: .photoLibrary)
+            self?.showImagePicker(selectedSource: .photoLibrary)
         }
         alertVC.addAction(libraryButton)
         
         let networkButton = UIAlertAction(title: "Find in network...", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.networkPickerButtonTapped()
+            self?.networkPickerButtonTapped()
         }
         alertVC.addAction(networkButton)
         
         let deleteButton = UIAlertAction(title: "Delete photo", style: .destructive) { [weak self] _ in
-            guard let self = self else { return }
-            self.customView.profileImageView.image = UIImage(systemName: "person.circle")
-            self.customView.saveGCDButton.isEnabled = true
+            self?.customView.profileImageView.image = UIImage(systemName: "person.circle")
+            self?.customView.saveGCDButton.isEnabled = true
+            self?.customView.shouldAnimateEditPhotoButton = false
         }
         
         // if there is a profile photo then add a delete button
@@ -247,7 +229,9 @@ final class ProfileViewController: UIViewController, IProfileView {
             alertVC.addAction(deleteButton)
         }
         
-        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelButton = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.customView.shouldAnimateEditPhotoButton = false
+        }
         alertVC.addAction(cancelButton)
         
         present(alertVC, animated: true, completion: nil)
@@ -269,14 +253,12 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         imagePickerController.delegate = self
         imagePickerController.sourceType = selectedSource
         imagePickerController.allowsEditing = true
-        self.present(imagePickerController, animated: true, completion: nil)
+        present(imagePickerController, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        if let selectedImage = info[.editedImage] as? UIImage {
-            customView.profileImageView.image = selectedImage
-            customView.saveGCDButton.isEnabled = true
-        }
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        if let selectedImage = info[.editedImage] as? UIImage { setUserImage(selectedImage) }
         picker.dismiss(animated: true)
     }
     
@@ -289,11 +271,14 @@ extension ProfileViewController: UITextFieldDelegate {
         return true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
         customView.saveGCDButton.isEnabled = true
-        let text = (textField.text ?? "") + string
         
+        let text = (textField.text ?? "") + string
         let result: String
+        
         if range.length == 1 {
             let end = text.index(text.startIndex, offsetBy: text.count - 1)
             result = String(text[text.startIndex..<end])

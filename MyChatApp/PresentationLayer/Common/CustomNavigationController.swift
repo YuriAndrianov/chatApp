@@ -8,10 +8,24 @@
 import UIKit
 
 final class CustomNavigationController: UINavigationController {
-
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
-        let style: UIStatusBarStyle = ThemePicker.shared.currentTheme is NightTheme ? .lightContent : .darkContent
+        let style: UIStatusBarStyle = ThemePicker.shared.currentTheme?.statusBarStyle ?? .default
         return style
     }
+    
+}
 
+extension CustomNavigationController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(forPresented presented: UIViewController,
+                             presenting: UIViewController,
+                             source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return MyCustomTransition(animationDuration: 1, animationType: .present)
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return MyCustomTransition(animationDuration: 0.6, animationType: .dismiss)
+    }
+    
 }

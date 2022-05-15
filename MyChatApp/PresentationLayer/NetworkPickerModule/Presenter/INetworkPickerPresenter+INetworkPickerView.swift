@@ -25,7 +25,7 @@ protocol INetworkPickerPresenter: AnyObject {
 
 protocol INetworkPickerView: AnyObject {
     
-    func success()
-    func failure()
+    func getPhotoItemsSuccess()
+    func getPhotoItemsFailure()
     
 }

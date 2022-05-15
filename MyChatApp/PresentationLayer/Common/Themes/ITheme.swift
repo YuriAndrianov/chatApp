@@ -9,6 +9,8 @@ import UIKit
 
 protocol ITheme: AnyObject {
     
+    var statusBarStyle: UIStatusBarStyle { get }
+    var keyboardAppearance: UIKeyboardAppearance { get }
     var backgroundColor: UIColor { get }
     var fontColor: UIColor { get }
     var incomingMessageColor: UIColor { get }

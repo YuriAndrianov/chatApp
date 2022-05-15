@@ -44,7 +44,7 @@ final class CustomInputView: UIView {
         tv.layer.borderColor = UIColor.label.cgColor
         tv.layer.borderWidth = 0.5
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.keyboardAppearance = currentTheme is NightTheme ? .dark : .default
+        tv.keyboardAppearance = currentTheme?.keyboardAppearance ?? .default
         return tv
     }()
     
@@ -108,5 +108,5 @@ final class CustomInputView: UIView {
             sendButton.widthAnchor.constraint(equalToConstant: 60)
         ])
     }
-
+    
 }

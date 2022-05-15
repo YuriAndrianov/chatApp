@@ -1,5 +1,5 @@
 //
-//  ThemeService.swift
+//  IThemeService.swift
 //  MyChatApp
 //
 //  Created by Юрий Андрианов on 17.04.2022.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol ThemeService: AnyObject {
+protocol IThemeService: AnyObject {
     
     var currentTheme: ITheme? { get }
     

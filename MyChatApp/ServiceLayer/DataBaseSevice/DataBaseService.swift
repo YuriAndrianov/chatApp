@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-class DataBaseService: IDataBaseService {
+final class DataBaseService: IDataBaseService {
     
     var messagePredicate: NSPredicate?
     
@@ -57,7 +57,91 @@ class DataBaseService: IDataBaseService {
         self.coreDataStack = coreDataStack
     }
     
-    func fetchChannel(with predicate: NSPredicate) -> DBChannel? {
+    func setPredicate(with channel: Channel) {
+        messagePredicate = NSPredicate(format: "channel.identifier == %@", channel.identifier)
+    }
+    
+    func saveChannel(_ channel: Channel) {
+        // checking uniqueness
+        let id = channel.identifier
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        
+        guard fetchChannel(with: predicate) == nil else { return }
+        
+        let dbChannel = DBChannel(context: context)
+        dbChannel.identifier = channel.identifier
+        dbChannel.name = channel.name
+        dbChannel.lastMessage = channel.lastMessage
+        dbChannel.lastActivity = channel.lastActivity
+        
+        saveObject(dbChannel)
+        print("Channel \"\(dbChannel.name ?? "")\" saved to DB")
+    }
+    
+    func updateChannel(_ channel: Channel) {
+        let id = channel.identifier
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        
+        guard let dbChannel = fetchChannel(with: predicate) else { return }
+        dbChannel.name = channel.name
+        dbChannel.lastMessage = channel.lastMessage
+        dbChannel.lastActivity = channel.lastActivity
+        refreshObject(dbChannel)
+        print("Channel \"\(dbChannel.name ?? "")\" updated in DB")
+    }
+    
+    func deleteChannel(_ channel: Channel) {
+        let id = channel.identifier
+        let predicate = NSPredicate(format: "identifier == %@", id)
+        
+        guard let dbChannel = fetchChannel(with: predicate) else { return }
+        deleteObject(dbChannel)
+        print("Channel \"\(dbChannel.name ?? "")\" deleted from DB")
+    }
+    
+    func addMessage(_ message: Message, to channel: Channel) {
+        // checking uniqueness
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@",
+                                    message.senderId,
+                                    message.created as CVarArg)
+        guard fetchMessage(with: predicate) == nil else { return }
+        
+        let dbMessage = DBMessage(context: context)
+        dbMessage.content = message.content
+        dbMessage.senderName = message.senderName
+        dbMessage.created = message.created
+        dbMessage.senderId = message.senderId
+        
+        guard let dbChannel = fetchChannel(with: NSPredicate(format: "identifier == %@",
+                                                                             channel.identifier)) else { return }
+        dbChannel.addToMessages(dbMessage)
+        saveObject(dbChannel)
+        print("Message: \"\(String(describing: message.content))\" saved to DB")
+    }
+    
+    func updateMessage(_ message: Message) {
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@",
+                                    message.senderId,
+                                    message.created as CVarArg)
+        guard let dbMessage = fetchMessage(with: predicate) else { return }
+        dbMessage.content = message.content
+        dbMessage.senderName = message.senderName
+        
+        refreshObject(dbMessage)
+        print("Message from \"\(String(describing: message.created))\" updated in DB")
+    }
+    
+    func deleteMessage(_ message: Message) {
+        let predicate = NSPredicate(format: "senderId == %@ && created == %@",
+                                    message.senderId,
+                                    message.created as CVarArg)
+        guard let dbMessage = fetchMessage(with: predicate) else { return }
+        
+        deleteObject(dbMessage)
+        print("Message from\"\(String(describing: message.created))\" deleted from DB")
+    }
+    
+    private func fetchChannel(with predicate: NSPredicate) -> DBChannel? {
         let fetchRequest: NSFetchRequest<DBChannel> = DBChannel.fetchRequest()
         fetchRequest.predicate = predicate
         
@@ -69,7 +153,7 @@ class DataBaseService: IDataBaseService {
         }
     }
     
-    func fetchMessage(with predicate: NSPredicate) -> DBMessage? {
+    private func fetchMessage(with predicate: NSPredicate) -> DBMessage? {
         let fetchRequest: NSFetchRequest<DBMessage> = DBMessage.fetchRequest()
         fetchRequest.predicate = predicate
         
@@ -81,15 +165,15 @@ class DataBaseService: IDataBaseService {
         }
     }
     
-    func saveObject(_ object: NSManagedObject) {
+    private func saveObject(_ object: NSManagedObject) {
         coreDataStack.saveObject(object)
     }
     
-    func refreshObject(_ object: NSManagedObject) {
+    private func refreshObject(_ object: NSManagedObject) {
         coreDataStack.refreshObject(object)
     }
     
-    func deleteObject(_ object: NSManagedObject) {
+    private func deleteObject(_ object: NSManagedObject) {
         coreDataStack.deleteObject(object)
     }
     

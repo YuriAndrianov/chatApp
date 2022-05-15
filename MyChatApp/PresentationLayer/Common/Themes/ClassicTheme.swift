@@ -9,6 +9,8 @@ import UIKit
 
 final class ClassicTheme: ITheme {
     
+    var statusBarStyle: UIStatusBarStyle = .lightContent
+    var keyboardAppearance: UIKeyboardAppearance = .light
     var backgroundColor: UIColor = UIColor(named: "classicThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "classicFontColor") ?? .label
     var incomingMessageColor: UIColor = UIColor(named: "classicIncoming") ?? .systemGray5
@@ -16,5 +18,5 @@ final class ClassicTheme: ITheme {
     var navBarColor: UIColor = UIColor(named: "classicNavBarBGColor") ?? .secondarySystemBackground
     var saveButtonColor: UIColor = UIColor(named: "classicSaveButtonColor") ?? .systemGray5
     var barButtonColor: UIColor = UIColor(named: "classicBarButtonColor") ?? .systemGray
-
+    
 }

@@ -13,8 +13,8 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
     var presenter: IConversationPresenter?
     
     private var tableView: UITableView
-    private var themePicker: ThemeService
-    
+    private var themePicker: IThemeService
+
     private var currentTheme: ITheme? {
         return themePicker.currentTheme
     }
@@ -38,7 +38,7 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
                                    constant: 0)
     }()
     
-    required override init(themePicker: ThemeService, tableView: UITableView) {
+    required override init(themePicker: IThemeService, tableView: UITableView) {
         self.themePicker = themePicker
         self.tableView = tableView
         super.init(themePicker: themePicker, tableView: tableView)
@@ -93,7 +93,7 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
     private func setupTableView() {
         view.addSubview(tableView)
         tableView.register(MessageTableViewCell.nib,
-                       forCellReuseIdentifier: MessageTableViewCell.identifier)
+                           forCellReuseIdentifier: MessageTableViewCell.identifier)
         tableView.separatorStyle = .none
         tableView.backgroundColor = currentTheme?.backgroundColor
         tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -199,7 +199,7 @@ extension ConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView
                 .dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier,
-                                                       for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
+                                     for: indexPath) as? MessageTableViewCell else { return UITableViewCell() }
         
         guard let dbMessage = presenter?.getMessageAtIndexPath(indexPath),
               let message = Message(dbMessage: dbMessage) else { return UITableViewCell() }

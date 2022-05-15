@@ -9,6 +9,8 @@ import UIKit
 
 final class DayTheme: ITheme {
     
+    var statusBarStyle: UIStatusBarStyle = .lightContent
+    var keyboardAppearance: UIKeyboardAppearance = .light
     var backgroundColor: UIColor = UIColor(named: "dayThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "dayFontColor") ?? .label
     var incomingMessageColor: UIColor = UIColor(named: "dayIncoming") ?? .systemGray5

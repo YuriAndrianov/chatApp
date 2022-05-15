@@ -7,9 +7,9 @@
 
 import Foundation
 
-final class DataManagerOperation: DataService {
+final class DataManagerOperation: IDataService {
     
-    static let shared = DataManagerOperation()
+    static let shared: IDataService = DataManagerOperation()
     
     private let queue = OperationQueue()
     

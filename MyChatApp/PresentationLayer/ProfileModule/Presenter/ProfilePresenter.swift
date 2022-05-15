@@ -11,17 +11,17 @@ final class ProfilePresenter: IProfilePresenter {
     
     weak var view: IProfileView?
     
-    var fileManager: DataService
-    var imageManager: ImageService
-    var themePicker: ThemeService
+    var fileManager: IDataService
+    var imageManager: IImageService
+    var themePicker: IThemeService
     var user: User = User()
     var router: IRouter
     
     init(
         view: IProfileView,
-        fileManager: DataService,
-        imageManager: ImageService,
-        themePicker: ThemeService,
+        fileManager: IDataService,
+        imageManager: IImageService,
+        themePicker: IThemeService,
         router: IRouter
     ) {
         self.view = view
@@ -33,11 +33,10 @@ final class ProfilePresenter: IProfilePresenter {
     
     func onViewDidLoad() {
         fileManager.readFromFile { [weak self] user in
-            guard let self = self else { return }
-            if let user = user {
-                self.user = user
-                self.view?.configureUIWith(user)
-            }
+            guard let self = self,
+                  let user = user else { return }
+            self.user = user
+            self.view?.configureUIWith(user)
         }
         
         imageManager.loadImageFromDiskWith(fileName: "User") { [weak self] image in
@@ -64,6 +63,12 @@ final class ProfilePresenter: IProfilePresenter {
     
     func saveUser(completion: @escaping ((Bool) -> Void)) {
         fileManager.writeToFile(user, completion: completion)
+    }
+    
+    func userInfoDidEnter(fullname: String?, occupation: String?, location: String?) {
+        user.fullname = fullname
+        user.occupation = occupation
+        user.location = location
     }
     
     func setNewPhoto(_ url: String) {

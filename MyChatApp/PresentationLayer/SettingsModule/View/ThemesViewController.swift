@@ -9,7 +9,7 @@ import UIKit
 
 final class ThemesViewController: UIViewController {
     
-    private let themePicker: ThemeService
+    private let themePicker: IThemeService
     private let classicThemeView = CustomThemeView()
     private let dayThemeView = CustomThemeView()
     private let nightThemeView = CustomThemeView()
@@ -23,7 +23,7 @@ final class ThemesViewController: UIViewController {
         return stack
     }()
     
-    init(with themePicker: ThemeService) {
+    init(with themePicker: IThemeService) {
         self.themePicker = themePicker
         super.init(nibName: nil, bundle: nil)
     }
@@ -69,7 +69,7 @@ final class ThemesViewController: UIViewController {
         [classicThemeView.tapGesture, dayThemeView.tapGesture, nightThemeView.tapGesture].forEach {
             $0?.addTarget(self, action: #selector(themeChosen(_:)))
         }
-
+        
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([

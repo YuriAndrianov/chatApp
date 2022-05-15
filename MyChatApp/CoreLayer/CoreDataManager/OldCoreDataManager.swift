@@ -8,7 +8,7 @@
 import CoreData
 
 final class OldCoreDataManager: CoreDataManager {
-
+    
     private lazy var managedObjectModel: NSManagedObjectModel = {
         guard
             let moduleURL = Bundle.main.url(forResource: "MyChatApp", withExtension: "momd"),
@@ -88,7 +88,7 @@ final class OldCoreDataManager: CoreDataManager {
             return []
         }
     }
-
+    
     func deleteObject(_ object: NSManagedObject) {
         guard let context = object.managedObjectContext else { return }
         context.delete(object)

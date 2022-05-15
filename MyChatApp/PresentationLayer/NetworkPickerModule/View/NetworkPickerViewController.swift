@@ -7,16 +7,17 @@
 
 import UIKit
 
-class NetworkPickerViewController: UIViewController, INetworkPickerView {
+final class NetworkPickerViewController: LogoAnimatableViewController, INetworkPickerView {
     
     var presenter: INetworkPickerPresenter?
+    var themePicker: IThemeService?
     
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 6
         layout.minimumInteritemSpacing = 6
         layout.scrollDirection = .vertical
-        layout.collectionView?.backgroundColor = ThemePicker.shared.currentTheme?.backgroundColor
+        layout.collectionView?.backgroundColor = themePicker?.currentTheme?.backgroundColor
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         cv.register(
@@ -25,7 +26,7 @@ class NetworkPickerViewController: UIViewController, INetworkPickerView {
         )
         return cv
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureCollectionView()
@@ -43,11 +44,11 @@ class NetworkPickerViewController: UIViewController, INetworkPickerView {
         collectionView.delaysContentTouches = false
     }
     
-    func success() {
+    func getPhotoItemsSuccess() {
         collectionView.reloadData()
     }
     
-    func failure() {
+    func getPhotoItemsFailure() {
         print("error")
         showErrorAlert()
     }
@@ -81,7 +82,7 @@ extension NetworkPickerViewController: UICollectionViewDataSource {
             for: indexPath
         ) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
         
-        guard let item = presenter?.photoURLs[indexPath.row] else { return UICollectionViewCell() }
+        guard let item = presenter?.photoURLs[safeIndex: indexPath.row] else { return UICollectionViewCell() }
         cell.configure(with: item, isSelected: false)
         
         return cell
@@ -93,7 +94,7 @@ extension NetworkPickerViewController: UICollectionViewDataSource {
 
 extension NetworkPickerViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let spacing = CGFloat(1.0)
+        let spacing: CGFloat = 1.0
         let cellWidth = collectionView.frame.size.width / 3 - 4 * spacing
         let cellHeight = cellWidth
         

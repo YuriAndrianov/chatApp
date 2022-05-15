@@ -48,8 +48,8 @@ extension Message {
     
     init?(dbMessage: DBMessage) {
         guard let senderId = dbMessage.senderId,
-        let content = dbMessage.content,
-        let created = dbMessage.created,
+              let content = dbMessage.content,
+              let created = dbMessage.created,
               let senderName = dbMessage.senderName else { return nil }
         
         self.content = content
@@ -60,8 +60,8 @@ extension Message {
     
     init?(from data: [String: Any]) {
         guard let senderId = data["senderId"] as? String,
-        let content = data["content"] as? String,
-        let created = data["created"] as? Timestamp,
+              let content = data["content"] as? String,
+              let created = data["created"] as? Timestamp,
               let senderName = data["senderName"] as? String else { return nil }
         
         self.content = content

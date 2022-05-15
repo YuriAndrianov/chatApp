@@ -17,10 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         
         let navController = CustomNavigationController()
-        let assembly = Assembly()
-        let router = Router(navigationController: navController, assembly: assembly)
+        let moduleAssembly = ModuleAssembly()
+        let router = Router(navigationController: navController, assembly: moduleAssembly)
         router.showConversationList()
-       
+        
         ThemePicker.shared.applySavedTheme()
         FirebaseApp.configure()
         

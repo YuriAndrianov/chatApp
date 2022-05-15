@@ -16,5 +16,5 @@ class User: Codable {
     var preferedTheme: String?
     
     static let userId = UIDevice.current.identifierForVendor?.uuidString ?? ""
-
+    
 }
