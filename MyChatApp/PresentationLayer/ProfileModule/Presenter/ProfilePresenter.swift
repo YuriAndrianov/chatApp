@@ -35,16 +35,15 @@ final class ProfilePresenter: IProfilePresenter {
         fileManager.readFromFile { [weak self] user in
             guard let self = self,
                   let user = user else { return }
+            
             self.user = user
             self.view?.configureUIWith(user)
-        }
-        
-        imageManager.loadImageFromDiskWith(fileName: "User") { [weak self] image in
-            guard let self = self else { return }
             
-            DispatchQueue.main.async {
-                self.view?.setUserImage(image)
-                self.view?.disableSaveButton()
+            self.imageManager.loadImageFromDiskWith(fileName: "User") { image in
+                DispatchQueue.main.async {
+                    self.view?.setUserImage(image)
+                    self.view?.disableSaveButton()
+                }
             }
         }
     }

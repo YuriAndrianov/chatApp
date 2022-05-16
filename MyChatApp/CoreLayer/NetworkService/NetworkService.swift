@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class NetworkService: Networking {
+final class NetworkService: INetworkService {
     
     func request(from url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)

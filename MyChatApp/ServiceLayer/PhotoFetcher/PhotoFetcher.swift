@@ -15,9 +15,9 @@ protocol PhotoFetching {
 
 final class PhotoFetcher: PhotoFetching {
     
-    private var networkService: Networking?
+    private var networkService: INetworkService?
     
-    init(networkService: Networking) {
+    init(networkService: INetworkService) {
         self.networkService = networkService
     }
     
