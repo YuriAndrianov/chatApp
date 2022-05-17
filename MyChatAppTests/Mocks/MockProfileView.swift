@@ -15,7 +15,7 @@ final class MockProfileView: IProfileView {
     var invokedConfigureUIWithParameters: (user: User, Void)?
     var invokedConfigureUIWithParametersList = [(user: User, Void)]()
 
-    func configureUI(_ user: User) {
+    func configureUI(with user: User) {
         invokedConfigureUIWith = true
         invokedConfigureUIWithCount += 1
         invokedConfigureUIWithParameters = (user, ())

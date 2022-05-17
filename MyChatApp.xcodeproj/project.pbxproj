@@ -126,6 +126,8 @@
 		E24164322821A86D00072B0D /* MyCustomTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyCustomTransition.swift; sourceTree = "<group>"; };
 		E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScreen+isLargeScreenDevice.swift"; sourceTree = "<group>"; };
 		E241643728244A3200072B0D /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		E253F74F283422CE00EC77F1 /* UnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitTests.xctestplan; sourceTree = "<group>"; };
+		E253F750283422DC00EC77F1 /* UITests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UITests.xctestplan; sourceTree = "<group>"; };
 		E2561C7327CE62B600EBD365 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		E2561C7927D5EA5F00EBD365 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		E2561C7A27D5EA5F00EBD365 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
@@ -273,6 +275,15 @@
 				E25D372927DCD71C00E6A746 /* NightTheme.swift */,
 			);
 			path = Themes;
+			sourceTree = "<group>";
+		};
+		E253F74E2834229B00EC77F1 /* TestPlans */ = {
+			isa = PBXGroup;
+			children = (
+				E253F74F283422CE00EC77F1 /* UnitTests.xctestplan */,
+				E253F750283422DC00EC77F1 /* UITests.xctestplan */,
+			);
+			path = TestPlans;
 			sourceTree = "<group>";
 		};
 		E2561C8327D60CDC00EBD365 /* ConversationsListModule */ = {
@@ -680,8 +691,9 @@
 		FAC70C5E27C61143000417F5 = {
 			isa = PBXGroup;
 			children = (
-				E2E756BA27EE32D60041279A /* .swiftlint.yml */,
 				FAC70C7E27C63E4C000417F5 /* .gitignore */,
+				E2E756BA27EE32D60041279A /* .swiftlint.yml */,
+				E253F74E2834229B00EC77F1 /* TestPlans */,
 				FAC70C6927C61143000417F5 /* MyChatApp */,
 				E2A4D4F4283120770053839C /* MyChatAppTests */,
 				E2705D982833E86B001B2EA9 /* MyChatAppUITests */,

@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "6BF6E2C3-5707-4288-B495-BE7BB18BAE4D",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:MyChatApp.xcodeproj",
+        "identifier" : "E2A4D4F2283120770053839C",
+        "name" : "MyChatAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}
