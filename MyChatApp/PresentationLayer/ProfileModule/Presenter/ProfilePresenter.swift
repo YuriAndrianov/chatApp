@@ -37,7 +37,7 @@ final class ProfilePresenter: IProfilePresenter {
                   let user = user else { return }
             
             self.user = user
-            self.view?.configureUIWith(user)
+            self.view?.configureUI(with: user)
             
             self.imageManager.loadImageFromDiskWith(fileName: "User") { image in
                 DispatchQueue.main.async {

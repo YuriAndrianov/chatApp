@@ -55,7 +55,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E2C011322832D1D4005BB322"
+               BlueprintIdentifier = "E2705D962833E86B001B2EA9"
                BuildableName = "MyChatAppUITests.xctest"
                BlueprintName = "MyChatAppUITests"
                ReferencedContainer = "container:MyChatApp.xcodeproj">
@@ -64,7 +64,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"

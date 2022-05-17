@@ -13,14 +13,3 @@ target 'MyChatApp' do
   inhibit_all_warnings!
   
 end
-
-target 'MyChatAppTests' do
-  
-  inherit! :search_paths
-  
-  pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
-  
-  inhibit_all_warnings!
-  
-end

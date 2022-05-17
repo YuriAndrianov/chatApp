@@ -31,9 +31,6 @@ class ThemeButton: UIButton {
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         
-        //        incomingMessageView?.backgroundColor = ClassicTheme().incomingMessageColor
-        //        outcomingMessageView?.backgroundColor = ClassicTheme().outcomingMessageColor
-        
         clipsToBounds = true
         layer.cornerRadius = 20
         layer.borderWidth = 3
