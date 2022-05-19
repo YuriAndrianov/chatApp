@@ -31,7 +31,7 @@ final class CustomInputView: UIView {
         field.layer.borderColor = UIColor.systemGray.cgColor
         field.layer.borderWidth = 0.5
         field.translatesAutoresizingMaskIntoConstraints = false
-        field.keyboardAppearance = currentTheme is NightTheme ? .dark : .default
+        field.keyboardAppearance = currentTheme?.keyboardAppearance ?? .default
         return field
     }()
     

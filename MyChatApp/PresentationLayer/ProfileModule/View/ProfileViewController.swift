@@ -84,7 +84,7 @@ final class ProfileViewController: LogoAnimatableViewController, IProfileView {
         title = "My Profile"
         view.backgroundColor = presenter?.themePicker.currentTheme?.backgroundColor
         
-        navigationController?.navigationBar.prefersLargeTitles = UIScreen.main.isLargeScreenDevice
+        navigationController?.navigationBar.prefersLargeTitles = UIScreen.isLargeScreenDevice
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
                                                             style: .plain,
                                                             target: self,
