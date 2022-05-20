@@ -84,8 +84,8 @@ final class MyProfileView: UIView {
     }
     
     private func setConstraints() {
-        let profileImageWidth: CGFloat = UIScreen.main.isLargeScreenDevice ? 220 : 150
-        let editPhotoButtonWidth: CGFloat = UIScreen.main.isLargeScreenDevice ? 50 : 30
+        let profileImageWidth: CGFloat = UIScreen.isLargeScreenDevice ? 220 : 150
+        let editPhotoButtonWidth: CGFloat = UIScreen.isLargeScreenDevice ? 50 : 30
         
         profileImageView.layer.cornerRadius = profileImageWidth / 2
         
@@ -133,14 +133,14 @@ final class MyProfileView: UIView {
         locationTextField.isEnabled = false
     }
     
-    func setup(editingAllowed bool: Bool) {
+    func setup(editingAllowed isAllowed: Bool) {
         // Turns true when edit button tapped and false when save button tapped
-        let isOn: CGFloat = bool ? 1 : 0
-        let isOff: CGFloat = bool ? 0 : 1
+        let isOn: CGFloat = isAllowed ? 1 : 0
+        let isOff: CGFloat = isAllowed ? 0 : 1
         
-        fullNameTextField.isEnabled = bool
-        occupationTextField.isEnabled = bool
-        locationTextField.isEnabled = bool
+        fullNameTextField.isEnabled = isAllowed
+        occupationTextField.isEnabled = isAllowed
+        locationTextField.isEnabled = isAllowed
         fullNameTextField.becomeFirstResponder()
         
         UIView.animate(withDuration: 0.2) {

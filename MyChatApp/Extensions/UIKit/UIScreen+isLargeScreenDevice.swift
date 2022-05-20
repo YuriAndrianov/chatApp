@@ -9,8 +9,8 @@ import UIKit
 
 extension UIScreen {
     
-    var isLargeScreenDevice: Bool {
-        return UIScreen.main.bounds.width > 375
+    static var isLargeScreenDevice: Bool {
+        return UIScreen.main.nativeBounds.height > 1136
     }
     
 }

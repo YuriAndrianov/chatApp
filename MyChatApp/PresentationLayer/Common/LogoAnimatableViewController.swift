@@ -47,16 +47,17 @@ class LogoAnimatableViewController: UIViewController {
             let position = sender.location(in: view)
             startLogoAnimation(position)
         case .changed:
-            stopLogoAnimation()
             let newPosition = sender.location(in: view)
-            startLogoAnimation(newPosition)
-        default:
+            logoLayer.emitterPosition = newPosition
+        case .cancelled, .ended:
             stopLogoAnimation()
+        default:
+            return
         }
     }
     
     private func startLogoAnimation(_ position: CGPoint) {
-        logoLayer.emitterPosition = CGPoint(x: position.x, y: position.y)
+        logoLayer.emitterPosition = position
         view.layer.addSublayer(logoLayer)
     }
     

@@ -40,7 +40,7 @@ protocol IProfilePresenter: AnyObject {
 
 protocol IProfileView: AnyObject {
     
-    func configureUIWith(_ user: User)
+    func configureUI(with user: User)
     
     func setUserImage(_ image: UIImage?)
     

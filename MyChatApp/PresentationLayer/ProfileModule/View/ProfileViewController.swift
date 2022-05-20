@@ -58,7 +58,7 @@ final class ProfileViewController: LogoAnimatableViewController, IProfileView {
                                                object: nil)
     }
     
-    func configureUIWith(_ user: User) {
+    func configureUI(with user: User) {
         customView.fullNameTextField.text = user.fullname
         customView.occupationTextField.text = user.occupation
         customView.locationTextField.text = user.location
@@ -84,7 +84,7 @@ final class ProfileViewController: LogoAnimatableViewController, IProfileView {
         title = "My Profile"
         view.backgroundColor = presenter?.themePicker.currentTheme?.backgroundColor
         
-        navigationController?.navigationBar.prefersLargeTitles = UIScreen.main.isLargeScreenDevice
+        navigationController?.navigationBar.prefersLargeTitles = UIScreen.isLargeScreenDevice
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
                                                             style: .plain,
                                                             target: self,
@@ -164,7 +164,11 @@ final class ProfileViewController: LogoAnimatableViewController, IProfileView {
             spinner.stopAnimating()
             self?.view.endEditing(true)
             
-            success ? self?.showSaveSuccessAlert() : self?.showSaveErrorAlert()
+            if success {
+                self?.showSaveSuccessAlert()
+            } else {
+                self?.showSaveErrorAlert()
+            }
         }
     }
     // MARK: - Methods showing alert VC's
