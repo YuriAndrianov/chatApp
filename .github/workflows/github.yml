@@ -11,9 +11,5 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: 2.6
-        bundler-cache: true
     - name: Build and test
       run: bundle exec fastlane build_and_test
