@@ -1,0 +1,15 @@
+name: CI-chat-app-YuriAndrianov
+
+on:
+  push:
+    branches: [ homework13-ci-cd ]
+
+jobs:
+  build-and-test:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build and test
+      run: bundle exec fastlane build_and_test
