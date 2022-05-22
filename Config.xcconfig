@@ -1,0 +1,11 @@
+//
+//  Config.xcconfig
+//  MyChatApp
+//
+//  Created by Юрий Андрианов on 22.05.2022.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+API_KEY = 27030980-c7535c65d84b7a9bcae7e1ad1
