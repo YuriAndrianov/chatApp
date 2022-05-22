@@ -2,7 +2,7 @@ name: CI-chat-app-YuriAndrianov
 
 on:
   push:
-    branches: [ homework13-ci-cd ]
+    branches: [ homework13-CICD ]
 
 jobs:
   build-and-test:
