@@ -211,6 +211,7 @@
 		E2A4D51F28329D660053839C /* MockThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockThemeService.swift; sourceTree = "<group>"; };
 		E2A9891C283A29BC00E7D164 /* PhotoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAPI.swift; sourceTree = "<group>"; };
 		E2A9891E283A2A5E00E7D164 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		E2A9891F283A318300E7D164 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E2E7568427EB8C9F0041279A /* ThemeButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeButton.xib; sourceTree = "<group>"; };
 		E2E7568627EB8D610041279A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
 		E2E756BA27EE32D60041279A /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -703,6 +704,7 @@
 		FAC70C5E27C61143000417F5 = {
 			isa = PBXGroup;
 			children = (
+				E2A9891F283A318300E7D164 /* README.md */,
 				E2A9891E283A2A5E00E7D164 /* Config.xcconfig */,
 				FAC70C7E27C63E4C000417F5 /* .gitignore */,
 				E2E756BA27EE32D60041279A /* .swiftlint.yml */,
