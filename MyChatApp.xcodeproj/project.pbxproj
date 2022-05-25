@@ -85,12 +85,13 @@
 		E2A4D51228328F760053839C /* MockPhotoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51128328F760053839C /* MockPhotoFetcher.swift */; };
 		E2A4D51428328FB90053839C /* MockRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51328328FB90053839C /* MockRouter.swift */; };
 		E2A4D51628328FED0053839C /* MockModuleAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51528328FED0053839C /* MockModuleAssembly.swift */; };
-		E2A4D51828329BA50053839C /* ProfilePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51728329BA50053839C /* ProfilePresenterTests.swift */; };
 		E2A4D51A28329C810053839C /* MockProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51928329C810053839C /* MockProfileView.swift */; };
 		E2A4D51C28329CDB0053839C /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51B28329CDB0053839C /* MockDataService.swift */; };
 		E2A4D51E28329D240053839C /* MockImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51D28329D240053839C /* MockImageService.swift */; };
 		E2A4D52028329D660053839C /* MockThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51F28329D660053839C /* MockThemeService.swift */; };
 		E2A9891D283A29BC00E7D164 /* PhotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A9891C283A29BC00E7D164 /* PhotoAPI.swift */; };
+		E2A9892C283ED9D600E7D164 /* PhotoFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A9892B283ED9D600E7D164 /* PhotoFetcherTests.swift */; };
+		E2A9892E283EDA5800E7D164 /* ProfilePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A9892D283EDA5800E7D164 /* ProfilePresenterTests.swift */; };
 		E2E7568527EB8C9F0041279A /* ThemeButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2E7568427EB8C9F0041279A /* ThemeButton.xib */; };
 		E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E7568627EB8D610041279A /* ThemeButton.swift */; };
 		E2E756BB27EE32D60041279A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = E2E756BA27EE32D60041279A /* .swiftlint.yml */; };
@@ -204,7 +205,6 @@
 		E2A4D51128328F760053839C /* MockPhotoFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoFetcher.swift; sourceTree = "<group>"; };
 		E2A4D51328328FB90053839C /* MockRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRouter.swift; sourceTree = "<group>"; };
 		E2A4D51528328FED0053839C /* MockModuleAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockModuleAssembly.swift; sourceTree = "<group>"; };
-		E2A4D51728329BA50053839C /* ProfilePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenterTests.swift; sourceTree = "<group>"; };
 		E2A4D51928329C810053839C /* MockProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProfileView.swift; sourceTree = "<group>"; };
 		E2A4D51B28329CDB0053839C /* MockDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataService.swift; sourceTree = "<group>"; };
 		E2A4D51D28329D240053839C /* MockImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockImageService.swift; sourceTree = "<group>"; };
@@ -212,6 +212,8 @@
 		E2A9891C283A29BC00E7D164 /* PhotoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAPI.swift; sourceTree = "<group>"; };
 		E2A9891E283A2A5E00E7D164 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		E2A9891F283A318300E7D164 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E2A9892B283ED9D600E7D164 /* PhotoFetcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoFetcherTests.swift; sourceTree = "<group>"; };
+		E2A9892D283EDA5800E7D164 /* ProfilePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenterTests.swift; sourceTree = "<group>"; };
 		E2E7568427EB8C9F0041279A /* ThemeButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeButton.xib; sourceTree = "<group>"; };
 		E2E7568627EB8D610041279A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
 		E2E756BA27EE32D60041279A /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -661,7 +663,8 @@
 			children = (
 				E2A4D50A28328BC70053839C /* Mocks */,
 				E2A4D50D28328E7C0053839C /* NetworkPickerPresenterTests.swift */,
-				E2A4D51728329BA50053839C /* ProfilePresenterTests.swift */,
+				E2A9892B283ED9D600E7D164 /* PhotoFetcherTests.swift */,
+				E2A9892D283EDA5800E7D164 /* ProfilePresenterTests.swift */,
 			);
 			path = MyChatAppTests;
 			sourceTree = "<group>";
@@ -957,12 +960,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2A9892C283ED9D600E7D164 /* PhotoFetcherTests.swift in Sources */,
 				E2A4D51428328FB90053839C /* MockRouter.swift in Sources */,
 				E2A4D50C28328BE00053839C /* MockNetworkService.swift in Sources */,
 				E2A4D51C28329CDB0053839C /* MockDataService.swift in Sources */,
 				E2A4D50E28328E7C0053839C /* NetworkPickerPresenterTests.swift in Sources */,
 				E2A4D51628328FED0053839C /* MockModuleAssembly.swift in Sources */,
-				E2A4D51828329BA50053839C /* ProfilePresenterTests.swift in Sources */,
+				E2A9892E283EDA5800E7D164 /* ProfilePresenterTests.swift in Sources */,
 				E2A4D51228328F760053839C /* MockPhotoFetcher.swift in Sources */,
 				E2A4D51A28329C810053839C /* MockProfileView.swift in Sources */,
 				E2A4D52028329D660053839C /* MockThemeService.swift in Sources */,
