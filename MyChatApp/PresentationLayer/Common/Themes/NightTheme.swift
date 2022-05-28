@@ -9,7 +9,7 @@ import UIKit
 
 final class NightTheme: ITheme {
     
-    var statusBarStyle: UIStatusBarStyle = .darkContent
+    var statusBarStyle: UIStatusBarStyle = .lightContent
     var keyboardAppearance: UIKeyboardAppearance = .dark
     var backgroundColor: UIColor = UIColor(named: "nightThemeBackgroundColor_") ?? .black
     var fontColor: UIColor = UIColor(named: "nightFontColor") ?? .label

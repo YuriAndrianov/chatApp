@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AF46E55D1A64B13C449FCA02 /* Pods_MyChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */; };
+		327DA2992543E4A7CAF33C2F /* Pods_MyChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 49EA9AD5FCF9610F156CCAED /* Pods_MyChatApp.framework */; };
 		E241643128217BB800072B0D /* LogoAnimatableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E241643028217BB800072B0D /* LogoAnimatableViewController.swift */; };
 		E24164332821A86D00072B0D /* MyCustomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164322821A86D00072B0D /* MyCustomTransition.swift */; };
 		E24164362823096A00072B0D /* UIScreen+isLargeScreenDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24164352823096A00072B0D /* UIScreen+isLargeScreenDevice.swift */; };
@@ -85,11 +85,13 @@
 		E2A4D51228328F760053839C /* MockPhotoFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51128328F760053839C /* MockPhotoFetcher.swift */; };
 		E2A4D51428328FB90053839C /* MockRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51328328FB90053839C /* MockRouter.swift */; };
 		E2A4D51628328FED0053839C /* MockModuleAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51528328FED0053839C /* MockModuleAssembly.swift */; };
-		E2A4D51828329BA50053839C /* ProfilePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51728329BA50053839C /* ProfilePresenterTests.swift */; };
 		E2A4D51A28329C810053839C /* MockProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51928329C810053839C /* MockProfileView.swift */; };
 		E2A4D51C28329CDB0053839C /* MockDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51B28329CDB0053839C /* MockDataService.swift */; };
 		E2A4D51E28329D240053839C /* MockImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51D28329D240053839C /* MockImageService.swift */; };
 		E2A4D52028329D660053839C /* MockThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A4D51F28329D660053839C /* MockThemeService.swift */; };
+		E2A9891D283A29BC00E7D164 /* PhotoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A9891C283A29BC00E7D164 /* PhotoAPI.swift */; };
+		E2A9892C283ED9D600E7D164 /* PhotoFetcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A9892B283ED9D600E7D164 /* PhotoFetcherTests.swift */; };
+		E2A9892E283EDA5800E7D164 /* ProfilePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2A9892D283EDA5800E7D164 /* ProfilePresenterTests.swift */; };
 		E2E7568527EB8C9F0041279A /* ThemeButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2E7568427EB8C9F0041279A /* ThemeButton.xib */; };
 		E2E7568727EB8D610041279A /* ThemeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2E7568627EB8D610041279A /* ThemeButton.swift */; };
 		E2E756BB27EE32D60041279A /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = E2E756BA27EE32D60041279A /* .swiftlint.yml */; };
@@ -203,11 +205,15 @@
 		E2A4D51128328F760053839C /* MockPhotoFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoFetcher.swift; sourceTree = "<group>"; };
 		E2A4D51328328FB90053839C /* MockRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRouter.swift; sourceTree = "<group>"; };
 		E2A4D51528328FED0053839C /* MockModuleAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockModuleAssembly.swift; sourceTree = "<group>"; };
-		E2A4D51728329BA50053839C /* ProfilePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenterTests.swift; sourceTree = "<group>"; };
 		E2A4D51928329C810053839C /* MockProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProfileView.swift; sourceTree = "<group>"; };
 		E2A4D51B28329CDB0053839C /* MockDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDataService.swift; sourceTree = "<group>"; };
 		E2A4D51D28329D240053839C /* MockImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockImageService.swift; sourceTree = "<group>"; };
 		E2A4D51F28329D660053839C /* MockThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockThemeService.swift; sourceTree = "<group>"; };
+		E2A9891C283A29BC00E7D164 /* PhotoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAPI.swift; sourceTree = "<group>"; };
+		E2A9891E283A2A5E00E7D164 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		E2A9891F283A318300E7D164 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E2A9892B283ED9D600E7D164 /* PhotoFetcherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoFetcherTests.swift; sourceTree = "<group>"; };
+		E2A9892D283EDA5800E7D164 /* ProfilePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenterTests.swift; sourceTree = "<group>"; };
 		E2E7568427EB8C9F0041279A /* ThemeButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeButton.xib; sourceTree = "<group>"; };
 		E2E7568627EB8D610041279A /* ThemeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeButton.swift; sourceTree = "<group>"; };
 		E2E756BA27EE32D60041279A /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
@@ -241,7 +247,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF46E55D1A64B13C449FCA02 /* Pods_MyChatApp.framework in Frameworks */,
+				327DA2992543E4A7CAF33C2F /* Pods_MyChatApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,6 +418,7 @@
 		E25CF541280C07BD002D166F /* CoreLayer */ = {
 			isa = PBXGroup;
 			children = (
+				E2A9891B283A29AA00E7D164 /* API */,
 				E25CF53028089EBB002D166F /* CoreDataStack */,
 				E25E7A8827F9A4B00039144D /* CoreDataManager */,
 				E25CF579281990DD002D166F /* NetworkService */,
@@ -656,7 +663,8 @@
 			children = (
 				E2A4D50A28328BC70053839C /* Mocks */,
 				E2A4D50D28328E7C0053839C /* NetworkPickerPresenterTests.swift */,
-				E2A4D51728329BA50053839C /* ProfilePresenterTests.swift */,
+				E2A9892B283ED9D600E7D164 /* PhotoFetcherTests.swift */,
+				E2A9892D283EDA5800E7D164 /* ProfilePresenterTests.swift */,
 			);
 			path = MyChatAppTests;
 			sourceTree = "<group>";
@@ -677,6 +685,14 @@
 			path = Mocks;
 			sourceTree = "<group>";
 		};
+		E2A9891B283A29AA00E7D164 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				E2A9891C283A29BC00E7D164 /* PhotoAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
 		E2E756B227EE2F2C0041279A /* CustomViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -691,6 +707,8 @@
 		FAC70C5E27C61143000417F5 = {
 			isa = PBXGroup;
 			children = (
+				E2A9891F283A318300E7D164 /* README.md */,
+				E2A9891E283A2A5E00E7D164 /* Config.xcconfig */,
 				FAC70C7E27C63E4C000417F5 /* .gitignore */,
 				E2E756BA27EE32D60041279A /* .swiftlint.yml */,
 				E253F74E2834229B00EC77F1 /* TestPlans */,
@@ -942,12 +960,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2A9892C283ED9D600E7D164 /* PhotoFetcherTests.swift in Sources */,
 				E2A4D51428328FB90053839C /* MockRouter.swift in Sources */,
 				E2A4D50C28328BE00053839C /* MockNetworkService.swift in Sources */,
 				E2A4D51C28329CDB0053839C /* MockDataService.swift in Sources */,
 				E2A4D50E28328E7C0053839C /* NetworkPickerPresenterTests.swift in Sources */,
 				E2A4D51628328FED0053839C /* MockModuleAssembly.swift in Sources */,
-				E2A4D51828329BA50053839C /* ProfilePresenterTests.swift in Sources */,
+				E2A9892E283EDA5800E7D164 /* ProfilePresenterTests.swift in Sources */,
 				E2A4D51228328F760053839C /* MockPhotoFetcher.swift in Sources */,
 				E2A4D51A28329C810053839C /* MockProfileView.swift in Sources */,
 				E2A4D52028329D660053839C /* MockThemeService.swift in Sources */,
@@ -992,6 +1011,7 @@
 				E25E7A8C27F9E7670039144D /* NSManagedObject+init.swift in Sources */,
 				E25CF553280C39E6002D166F /* IThemeService.swift in Sources */,
 				E25CF5782819902B002D166F /* INetworkPickerPresenter+INetworkPickerView.swift in Sources */,
+				E2A9891D283A29BC00E7D164 /* PhotoAPI.swift in Sources */,
 				E28DE38B27E76CB3009D9300 /* ProfileVCStyleSheet.swift in Sources */,
 				E28DE38427E642AB009D9300 /* DataManagerGCD.swift in Sources */,
 				E25CF557280C3A4E002D166F /* IFirestoreService.swift in Sources */,
@@ -1172,6 +1192,7 @@
 		};
 		FAC70C7927C61149000417F5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2A9891E283A2A5E00E7D164 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1233,6 +1254,7 @@
 		};
 		FAC70C7A27C61149000417F5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2A9891E283A2A5E00E7D164 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

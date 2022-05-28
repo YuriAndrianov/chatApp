@@ -1,0 +1,22 @@
+desc "Install pods and run tests"
+lane :"build_for_testing" do
+  cocoapods
+  scan(clean: true)
+
+  puts "build_for_testing is done!"
+end
+
+desc "Run tests on compiled project"
+lane :"run_tests" do 
+  scan(clean: false)
+
+  puts "run_tests is done!"
+end
+
+desc "Execute my two lanes"
+lane :"build_and_test" do 
+  build_for_testing
+  run_tests
+
+  puts "build_and_test is done!"
+end

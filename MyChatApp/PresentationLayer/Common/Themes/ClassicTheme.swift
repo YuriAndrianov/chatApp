@@ -9,7 +9,7 @@ import UIKit
 
 final class ClassicTheme: ITheme {
     
-    var statusBarStyle: UIStatusBarStyle = .lightContent
+    var statusBarStyle: UIStatusBarStyle = .darkContent
     var keyboardAppearance: UIKeyboardAppearance = .light
     var backgroundColor: UIColor = UIColor(named: "classicThemeBackgroundColor") ?? .systemBackground
     var fontColor: UIColor = UIColor(named: "classicFontColor") ?? .label
