@@ -64,7 +64,6 @@ final class NetworkPickerViewController: LogoAnimatableViewController, INetworkP
         
         present(alertVC, animated: true, completion: nil)
     }
-    
 }
 
 // MARK: - collectionView datasource
@@ -87,7 +86,6 @@ extension NetworkPickerViewController: UICollectionViewDataSource {
         
         return cell
     }
-    
 }
 
 // MARK: - collectionViewDelegateFlowLayout
@@ -100,12 +98,12 @@ extension NetworkPickerViewController: UICollectionViewDelegateFlowLayout {
         
         return CGSize(width: cellWidth, height: cellHeight)
     }
-    
 }
 
 // MARK: - collectionView delegate
 
 extension NetworkPickerViewController: UICollectionViewDelegate {
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let urlString = presenter?.photoURLs[indexPath.item].webformatURL else { return }
         presenter?.photoHasChosen(urlString)

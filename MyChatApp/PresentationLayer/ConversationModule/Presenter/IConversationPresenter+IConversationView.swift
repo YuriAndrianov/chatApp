@@ -22,17 +22,11 @@ protocol IConversationPresenter: AnyObject {
          channel: Channel)
     
     func onViewDidLoad()
-    
     func onViewDidAppear()
-    
     func sendButtonTapped()
-    
     func attachButtonTapped()
-    
     func sendButtonTappedWithoutUsername()
-    
     func getMessageAtIndexPath(_ indexPath: IndexPath) -> DBMessage
-    
 }
 
 protocol IConversationView: NSFetchedResultsControllerDelegate {
@@ -40,11 +34,7 @@ protocol IConversationView: NSFetchedResultsControllerDelegate {
     var containerView: CustomInputView { get set }
     
     func showNoUserAlert()
-    
     func deleteText()
-    
     func sendPhoto(_ url: String)
-    
     func enableSendButton(_ bool: Bool)
-    
 }

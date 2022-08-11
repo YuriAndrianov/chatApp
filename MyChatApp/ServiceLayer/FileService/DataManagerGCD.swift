@@ -46,5 +46,4 @@ final class DataManagerGCD: IDataService {
             print(error.localizedDescription)
         }
     }
-    
 }

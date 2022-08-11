@@ -64,5 +64,4 @@ class LogoAnimatableViewController: UIViewController {
     private func stopLogoAnimation() {
         logoLayer.removeFromSuperlayer()
     }
-    
 }

@@ -198,5 +198,4 @@ final class MyProfileView: UIView {
         
         editPhotoButton.layer.add(stopGroup, forKey: nil)
     }
-    
 }

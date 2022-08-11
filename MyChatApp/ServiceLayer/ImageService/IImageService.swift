@@ -10,9 +10,6 @@ import UIKit
 protocol IImageService: AnyObject {
     
     func saveImage(imageName: String, image: UIImage)
-    
     func loadImageFromDiskWith(fileName: String, completion: @escaping ((UIImage?) -> Void))
-    
     func deleteImage(imageName: String)
-    
 }

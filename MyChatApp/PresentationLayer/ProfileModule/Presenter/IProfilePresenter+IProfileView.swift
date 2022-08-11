@@ -23,29 +23,18 @@ protocol IProfilePresenter: AnyObject {
     )
     
     func onViewDidLoad()
-    
     func networkPickerButtonTapped()
-    
     func saveImage(imageName: String, image: UIImage)
-    
     func deleteImage(imageName: String)
-    
     func saveUser(completion: @escaping ((Bool) -> Void))
-    
     func setNewPhoto(_ url: String)
-    
     func userInfoDidEnter(fullname: String?, occupation: String?, location: String?)
-    
 }
 
 protocol IProfileView: AnyObject {
     
     func configureUI(with user: User)
-    
     func setUserImage(_ image: UIImage?)
-    
     func setNewPhoto(_ url: String)
-    
     func disableSaveButton()
-    
 }

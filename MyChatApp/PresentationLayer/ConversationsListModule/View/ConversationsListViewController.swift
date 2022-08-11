@@ -166,7 +166,6 @@ extension ConversationsListViewController: UITableViewDelegate {
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-    
 }
 
 // MARK: - tableview datasource
@@ -192,5 +191,4 @@ extension ConversationsListViewController: UITableViewDataSource {
         cell.configurate(with: Channel(dbChannel: dbChannel))
         return cell
     }
-    
 }

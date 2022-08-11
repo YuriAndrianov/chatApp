@@ -129,5 +129,4 @@ final class ConversationPresenter: IConversationPresenter {
     func getMessageAtIndexPath(_ indexPath: IndexPath) -> DBMessage {
         return coreDataManager.messagesFetchedResultsController.object(at: indexPath)
     }
-    
 }

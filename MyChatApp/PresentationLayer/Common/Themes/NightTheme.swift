@@ -18,5 +18,4 @@ final class NightTheme: ITheme {
     var navBarColor: UIColor = UIColor(named: "nightNavBarBGColor") ?? .secondarySystemBackground
     var saveButtonColor: UIColor = UIColor(named: "nightSaveButtonColor") ?? .systemGray5
     var barButtonColor: UIColor = UIColor(named: "nightBarButtonColor") ?? .systemGray
-    
 }

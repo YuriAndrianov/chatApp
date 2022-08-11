@@ -14,7 +14,6 @@ struct Message {
     var created: Date
     var senderId: String
     var senderName: String
-    
 }
 
 extension Message {
@@ -27,7 +26,6 @@ extension Message {
             "senderName": senderName as Any
         ]
     }
-    
 }
 
 extension Message: Comparable {
@@ -39,7 +37,6 @@ extension Message: Comparable {
     static func < (lhs: Message, rhs: Message) -> Bool {
         return lhs.created < rhs.created
     }
-    
 }
 
 // MARK: - Custom init
@@ -69,5 +66,4 @@ extension Message {
         self.senderId = senderId
         self.senderName = senderName
     }
-    
 }

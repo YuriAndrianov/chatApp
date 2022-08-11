@@ -14,7 +14,6 @@ struct Channel {
     let name: String
     let lastMessage: String?
     let lastActivity: Date?
-    
 }
 
 extension Channel {
@@ -25,7 +24,6 @@ extension Channel {
                 "lastMessage": lastMessage as Any,
                 "lastActivity": lastActivity as Any]
     }
-    
 }
 
 extension Channel: Comparable {
@@ -37,7 +35,6 @@ extension Channel: Comparable {
     static func < (lhs: Channel, rhs: Channel) -> Bool {
         return lhs.name < rhs.name
     }
-    
 }
 
 // MARK: - Custom init
@@ -64,5 +61,4 @@ extension Channel {
         self.lastMessage = lastMessage
         self.lastActivity = lastActivity?.dateValue()
     }
-    
 }

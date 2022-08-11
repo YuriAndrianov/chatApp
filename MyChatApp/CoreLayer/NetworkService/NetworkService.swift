@@ -9,7 +9,7 @@ import Foundation
 
 final class NetworkService: INetworkService {
     
-    func request(from url: URL, completion: @escaping (Result<Data, Error>) -> Void) {
+    func request(from url: URL, _ completion: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
         
         guard let dataTask = createDataTask(from: request, completion: completion) else {

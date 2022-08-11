@@ -13,7 +13,6 @@ final class CustomNavigationController: UINavigationController {
         let style: UIStatusBarStyle = ThemePicker.shared.currentTheme?.statusBarStyle ?? .default
         return style
     }
-    
 }
 
 extension CustomNavigationController: UIViewControllerTransitioningDelegate {
@@ -27,5 +26,4 @@ extension CustomNavigationController: UIViewControllerTransitioningDelegate {
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return MyCustomTransition(animationDuration: 0.6, animationType: .dismiss)
     }
-    
 }

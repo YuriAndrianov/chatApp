@@ -16,5 +16,4 @@ extension NSManagedObject {
         guard let entity = NSEntityDescription.entity(forEntityName: name, in: context) else { fatalError() }
         self.init(entity: entity, insertInto: context)
     }
-
 }

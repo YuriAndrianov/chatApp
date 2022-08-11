@@ -10,13 +10,8 @@ import UIKit
 protocol IModuleAssembly {
 
     func createConversationListModule(router: IRouter) -> UIViewController
-
     func createConversationModule(channel: Channel, router: IRouter) -> UIViewController
-    
     func createSettingsModule(router: IRouter) -> UIViewController
-    
     func createMyProfileModule(router: IRouter) -> UIViewController
-    
     func createNetworkPickerModule(router: IRouter) -> UIViewController
-
 }

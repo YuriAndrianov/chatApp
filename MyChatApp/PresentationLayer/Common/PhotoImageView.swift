@@ -44,8 +44,8 @@ final class PhotoImageView: UIImageView {
         
         // trying to get image from cache
         if let cachedResponse = URLCache.shared.cachedResponse(for: URLRequest(url: url)) {
-            self.image = UIImage(data: cachedResponse.data)
-            self.spinner.stopAnimating()
+            image = UIImage(data: cachedResponse.data)
+            spinner.stopAnimating()
             return
         }
         

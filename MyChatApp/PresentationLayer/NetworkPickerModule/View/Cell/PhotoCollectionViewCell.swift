@@ -22,5 +22,4 @@ final class PhotoCollectionViewCell: UICollectionViewCell {
         guard let urlString = item.webformatURL else { return }
         imageView?.setImage(from: urlString)
     }
-    
 }

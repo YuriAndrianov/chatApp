@@ -70,5 +70,4 @@ final class MyCustomTransition: NSObject, UIViewControllerAnimatedTransitioning 
             transitionContext.completeTransition(true)
         }
     }
-    
 }

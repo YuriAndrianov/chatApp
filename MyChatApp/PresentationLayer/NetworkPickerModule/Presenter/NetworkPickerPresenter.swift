@@ -49,5 +49,4 @@ final class NetworkPickerPresenter: INetworkPickerPresenter {
             }
         }
     }
-    
 }

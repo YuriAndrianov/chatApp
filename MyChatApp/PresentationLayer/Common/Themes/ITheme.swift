@@ -18,5 +18,4 @@ protocol ITheme: AnyObject {
     var navBarColor: UIColor { get }
     var saveButtonColor: UIColor { get }
     var barButtonColor: UIColor { get }
-    
 }

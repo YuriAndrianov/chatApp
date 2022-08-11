@@ -106,5 +106,4 @@ final class ConversationListPresenter: IConversationListPresenter {
         firestoreManager.deleteObject(with: id)
         print("Channel \"\(channel.name ?? "")\" deleted from DB")
     }
-    
 }

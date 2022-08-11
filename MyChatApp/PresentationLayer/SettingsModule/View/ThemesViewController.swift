@@ -122,5 +122,4 @@ final class ThemesViewController: UIViewController {
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
-    
 }

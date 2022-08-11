@@ -108,5 +108,4 @@ final class CustomInputView: UIView {
             sendButton.widthAnchor.constraint(equalToConstant: 60)
         ])
     }
-    
 }

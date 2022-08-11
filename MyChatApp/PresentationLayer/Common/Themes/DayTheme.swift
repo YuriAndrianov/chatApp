@@ -18,5 +18,4 @@ final class DayTheme: ITheme {
     var navBarColor: UIColor = UIColor(named: "dayNavBarBGColor") ?? .secondarySystemBackground
     var saveButtonColor: UIColor = UIColor(named: "daySaveButtonColor") ?? .systemGray5
     var barButtonColor: UIColor = UIColor(named: "dayBarButtonColor") ?? .systemGray
-    
 }

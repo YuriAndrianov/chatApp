@@ -117,5 +117,4 @@ final class ProfileVCStyleSheet {
         spinner.hidesWhenStopped = true
         return spinner
     }
-    
 }

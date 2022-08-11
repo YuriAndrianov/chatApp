@@ -87,7 +87,6 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
             containerViewBottomAnchorConstraint,
             containerView.heightAnchor.constraint(equalToConstant: 65)
         ])
-        
     }
     
     private func setupTableView() {
@@ -167,7 +166,10 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else { return }
+        guard let duration = notification.userInfo?[
+            UIResponder.keyboardAnimationDurationUserInfoKey
+        ] as? Double else { return }
+        
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             containerViewBottomAnchorConstraint.constant = -keyboardSize.height
             
@@ -184,7 +186,6 @@ final class ConversationViewController: BaseChatViewController, IConversationVie
             self.view.layoutIfNeeded()
         }
     }
-    
 }
 
 // MARK: - tableview datasource
@@ -211,7 +212,6 @@ extension ConversationViewController: UITableViewDataSource {
         cell.contentView.transform = CGAffineTransform(scaleX: 1, y: -1)
         return cell
     }
-    
 }
 
 // MARK: - tableview delegate
@@ -229,7 +229,6 @@ extension ConversationViewController: UITableViewDelegate {
             footer.backgroundColor = currentTheme?.backgroundColor
         }
     }
-    
 }
 
 extension ConversationViewController: UITextViewDelegate {
@@ -247,5 +246,4 @@ extension ConversationViewController: UITextViewDelegate {
         textView.text = result
         return false
     }
-    
 }

@@ -80,5 +80,4 @@ final class MessageTableViewCell: UITableViewCell {
         messageTextLabel?.text = text
         messageImageView?.setImage(from: text)
     }
-    
 }

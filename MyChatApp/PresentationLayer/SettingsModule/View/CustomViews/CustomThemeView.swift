@@ -77,5 +77,4 @@ final class CustomThemeView: UIView {
             label?.text = "Night"
         }
     }
-    
 }

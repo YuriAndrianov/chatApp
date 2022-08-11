@@ -15,5 +15,4 @@ extension UIWindow {
             addSubview($0)
         }
     }
-    
 }

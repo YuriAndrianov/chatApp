@@ -37,5 +37,4 @@ class ThemeButton: UIButton {
         layer.borderColor = UIColor.systemGray5.cgColor
         isUserInteractionEnabled = true
     }
-    
 }

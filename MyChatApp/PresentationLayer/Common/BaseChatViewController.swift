@@ -23,7 +23,6 @@ class BaseChatViewController: LogoAnimatableViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
 
 extension BaseChatViewController: NSFetchedResultsControllerDelegate {
@@ -60,5 +59,4 @@ extension BaseChatViewController: NSFetchedResultsControllerDelegate {
             return
         }
     }
-    
 }

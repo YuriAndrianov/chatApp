@@ -77,5 +77,4 @@ final class ThemePicker: IThemeService {
         
         DataManagerGCD.shared.writeToFile(user) { _ in }
     }
-    
 }

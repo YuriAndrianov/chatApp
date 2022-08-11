@@ -10,7 +10,6 @@ import Foundation
 final class WriteToFileOperation: Operation {
     
     var user: User?
-    
     var completion: ((Bool) -> Void)?
     
     init(user: User?) {
@@ -34,5 +33,4 @@ final class WriteToFileOperation: Operation {
             completion?(false)
         }
     }
-    
 }

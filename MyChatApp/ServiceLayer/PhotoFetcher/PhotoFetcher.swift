@@ -10,7 +10,6 @@ import UIKit
 protocol PhotoFetching {
     
     func getPhotoItems(query: String, quantity: Int, _ completion: @escaping (Result<[PhotoItem]?, Error>) -> Void)
-    
 }
 
 final class PhotoFetcher: PhotoFetching {
@@ -21,10 +20,14 @@ final class PhotoFetcher: PhotoFetching {
         self.networkService = networkService
     }
     
-    func getPhotoItems(query: String, quantity: Int, _ completion: @escaping (Result<[PhotoItem]?, Error>) -> Void) {
+    func getPhotoItems(
+        query: String,
+        quantity: Int,
+        _ completion: @escaping (Result<[PhotoItem]?, Error>
+        ) -> Void) {
         guard let url = PhotoAPI.getURL(with: query, quantity: quantity) else { return }
         
-        networkService?.request(from: url, completion: { result in
+        networkService?.request(from: url) { result in
             switch result {
             case .success(let data):
                 DispatchQueue.main.async {
@@ -43,7 +46,6 @@ final class PhotoFetcher: PhotoFetching {
                     completion(.failure(error))
                 }
             }
-        })
+        }
     }
-    
 }

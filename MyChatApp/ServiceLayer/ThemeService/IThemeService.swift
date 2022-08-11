@@ -12,9 +12,7 @@ protocol IThemeService: AnyObject {
     var currentTheme: ITheme? { get }
     
     func applySavedTheme()
-    
     func apply(_ theme: ThemeType, completion: ((ITheme) -> Void)?)
-    
 }
 
 enum ThemeType {
@@ -22,5 +20,4 @@ enum ThemeType {
     case classic
     case day
     case night
-    
 }

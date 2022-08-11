@@ -18,5 +18,4 @@ final class ClassicTheme: ITheme {
     var navBarColor: UIColor = UIColor(named: "classicNavBarBGColor") ?? .secondarySystemBackground
     var saveButtonColor: UIColor = UIColor(named: "classicSaveButtonColor") ?? .systemGray5
     var barButtonColor: UIColor = UIColor(named: "classicBarButtonColor") ?? .systemGray
-    
 }

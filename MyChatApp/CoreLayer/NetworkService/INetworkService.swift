@@ -9,6 +9,6 @@ import Foundation
 
 protocol INetworkService {
     
-    func request(from url: URL, completion: @escaping (Result<Data, Error>) -> Void)
+    func request(from url: URL, _ completion: @escaping (Result<Data, Error>) -> Void)
     
 }

@@ -14,5 +14,4 @@ protocol CoreDataStackProtocol {
     func saveObject(_ object: NSManagedObject)
     func deleteObject(_ object: NSManagedObject)
     func refreshObject(_ object: NSManagedObject)
-    
 }

@@ -12,5 +12,4 @@ extension UIScreen {
     static var isLargeScreenDevice: Bool {
         return UIScreen.main.nativeBounds.height > 1136
     }
-    
 }

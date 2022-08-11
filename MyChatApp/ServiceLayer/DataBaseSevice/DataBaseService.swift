@@ -12,9 +12,7 @@ final class DataBaseService: IDataBaseService {
     
     var messagePredicate: NSPredicate?
     
-    var context: NSManagedObjectContext {
-        return coreDataStack.context
-    }
+    var context: NSManagedObjectContext { coreDataStack.context }
     
     private var coreDataStack: CoreDataStackProtocol
     
@@ -176,5 +174,4 @@ final class DataBaseService: IDataBaseService {
     private func deleteObject(_ object: NSManagedObject) {
         coreDataStack.deleteObject(object)
     }
-    
 }

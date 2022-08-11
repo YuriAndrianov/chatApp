@@ -12,15 +12,9 @@ protocol IRouter {
     init(navigationController: CustomNavigationController, assembly: IModuleAssembly)
     
     func showConversationList()
-    
     func showConversation(channel: Channel)
-    
     func showSettings()
-    
     func showMyProfile()
-    
     func showNetworkPicker()
-    
     func showMyProfileWithNewPhoto(_ newPhotoURL: String)
-    
 }

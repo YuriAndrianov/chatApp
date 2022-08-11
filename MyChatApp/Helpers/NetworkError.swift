@@ -12,7 +12,6 @@ enum NetworkError: Error {
     case noData
     case noInternet
     case unknownErr
-    
 }
 
 extension NetworkError: LocalizedError {
@@ -27,5 +26,4 @@ extension NetworkError: LocalizedError {
             return "Something went wrong"
         }
     }
-    
 }

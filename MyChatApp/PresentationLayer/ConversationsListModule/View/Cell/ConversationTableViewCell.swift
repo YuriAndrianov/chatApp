@@ -44,5 +44,4 @@ final class ConversationTableViewCell: UITableViewCell {
         friendPhotoImageView?.tintColor = currentTheme?.barButtonColor
         backgroundColor = currentTheme?.backgroundColor
     }
-    
 }

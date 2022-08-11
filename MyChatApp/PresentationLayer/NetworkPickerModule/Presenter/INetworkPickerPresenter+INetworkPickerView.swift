@@ -20,12 +20,10 @@ protocol INetworkPickerPresenter: AnyObject {
     
     func onViewDidLoad()
     func photoHasChosen(_ url: String)
-    
 }
 
 protocol INetworkPickerView: AnyObject {
     
     func getPhotoItemsSuccess()
     func getPhotoItemsFailure()
-    
 }

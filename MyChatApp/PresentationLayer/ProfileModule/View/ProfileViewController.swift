@@ -291,5 +291,4 @@ extension ProfileViewController: UITextFieldDelegate {
         textField.text = result
         return false
     }
-    
 }

@@ -17,7 +17,7 @@ final class FirestoreService: IFirestoreService {
         guard let id = channel?.identifier else { return nil }
         return channelsCollectionReference.document(id).collection("messages")
     }()
-   
+    
     func fetch(_ objects: ObjectType, completion: @escaping (QuerySnapshot?) -> Void) {
         var reference: CollectionReference?
         
@@ -54,5 +54,4 @@ final class FirestoreService: IFirestoreService {
     func deleteObject(with id: String) {
         channelsCollectionReference.document(id).delete()
     }
-    
 }

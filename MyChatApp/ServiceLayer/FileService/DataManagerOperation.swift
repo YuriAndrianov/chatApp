@@ -38,5 +38,4 @@ final class DataManagerOperation: IDataService {
         
         queue.addOperation(readFromFileOperation)
     }
-
 }
