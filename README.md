@@ -1,4 +1,4 @@
-#  Tinkoff Chat App
+# Chat App
 
 ## Status of workflow:
 
